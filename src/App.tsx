@@ -278,7 +278,7 @@ export default function App() {
           MOBILE LAYOUT  (flex column, no absolute children compete)
           max-width: 640px (sm breakpoint)
           ================================================================ */}
-      <div className="sm:hidden relative flex flex-col w-full h-full" id="app-mobile-container">
+      <div className="sm:hidden flex flex-col w-full h-full overflow-hidden" id="app-mobile-container">
 
         {/* ── Top Bar  z-40, height 48px + safe area ─────────────────── */}
         <header
@@ -367,17 +367,10 @@ export default function App() {
           />
         </div>
 
-        {/* ── Bottom Sheet: absolute overlay, GPU translateY animates snap positions ── */}
-        {/* The inner wrapper has NO fixed height — it wraps the sheet naturally.       */}
-        {/* bottom-0 anchors the sheet's bottom to the viewport bottom.                */}
-        {/* translateY then slides it DOWN to reveal only the collapsed handle.         */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 20 }}>
-          <div className="absolute bottom-0 left-0 right-0 pointer-events-auto">
-            <Suspense fallback={<div style={{ height: 60, width: '100%' }} />}>
-              <BottomSheet {...panelProps} setShowSettings={setShowSettings} />
-            </Suspense>
-          </div>
-        </div>
+        {/* ── Bottom Sheet: in flex flow, height animation with GPU hints ───────── */}
+        <Suspense fallback={<div style={{ height: 60, flexShrink: 0 }} />}>
+          <BottomSheet {...panelProps} setShowSettings={setShowSettings} />
+        </Suspense>
       </div>
 
       {/* ════════════════════════════════════════════════════════════════════
