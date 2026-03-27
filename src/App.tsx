@@ -366,9 +366,11 @@ export default function App() {
         </div>
 
         {/* ── Bottom Sheet: absolute overlay, GPU translateY animates snap positions ── */}
-        {/* Wrapper spans full height so the always-full-height sheet can translate down off-screen */}
-        <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 20 }}>
-          <div className="absolute bottom-0 left-0 right-0 h-full pointer-events-auto">
+        {/* The inner wrapper has NO fixed height — it wraps the sheet naturally.       */}
+        {/* bottom-0 anchors the sheet's bottom to the viewport bottom.                */}
+        {/* translateY then slides it DOWN to reveal only the collapsed handle.         */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 20 }}>
+          <div className="absolute bottom-0 left-0 right-0 pointer-events-auto">
             <Suspense fallback={null}>
               <BottomSheet {...panelProps} setShowSettings={setShowSettings} />
             </Suspense>
