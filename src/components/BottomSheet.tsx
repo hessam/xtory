@@ -1,5 +1,4 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
 import { Sparkles, Loader2, Swords, Skull, Landmark, Globe2, User, Book, Lightbulb, Palette, Building2, MapPin, ChevronUp, AlertCircle } from 'lucide-react';
 import { HistoricalEvent } from '../data/historicalEvents';
 import { HistoricalFigure } from '../data/figures';
@@ -123,6 +122,13 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
   const snapRef = useRef<SnapPoint>(snap);
   useEffect(() => { snapRef.current = snap; }, [snap]);
 
+  // Full sheet height — always rendered at this size
+  const getFullHeight = useCallback((): number => {
+    if (typeof window === 'undefined') return 600;
+    const safeTop = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--safe-top') || '0');
+    return window.innerHeight - 48 - safeTop;
+  }, []);
+
   // Get pixel height for each snap detent
   const getDetentPixels = useCallback((point: SnapPoint): number => {
     if (typeof window === 'undefined') return 60;
@@ -137,22 +143,23 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
     }
   }, []);
 
+  // translateY offset: how far DOWN from full to show the current snap
+  const getTranslateY = useCallback((point: SnapPoint, extraDrag = 0): number => {
+    const full = getFullHeight();
+    const snap = getDetentPixels(point);
+    const offset = full - snap - extraDrag; // positive = translated down
+    return Math.max(0, offset);
+  }, [getFullHeight, getDetentPixels]);
+
   // Update CSS var for the Chatbot FAB offset
   useEffect(() => {
-    if (!sheetRef.current || typeof window === 'undefined' || window.innerWidth >= 640) {
+    if (typeof window === 'undefined' || window.innerWidth >= 640) {
       document.documentElement.style.setProperty(CSS_VAR, '0px');
       return;
     }
-    const updateHeight = () => {
-      if (sheetRef.current) {
-        document.documentElement.style.setProperty(CSS_VAR, `${sheetRef.current.offsetHeight}px`);
-      }
-    };
-    const observer = new ResizeObserver(updateHeight);
-    observer.observe(sheetRef.current);
-    updateHeight();
-    return () => observer.disconnect();
-  }, [snap, isDragging, dragOffset]);
+    const snapPx = getDetentPixels(snap) + dragOffset;
+    document.documentElement.style.setProperty(CSS_VAR, `${Math.max(60, snapPx)}px`);
+  }, [snap, isDragging, dragOffset, getDetentPixels]);
 
   // Layer 3: non-passive touchmove listener to block pull-to-refresh on Safari.
   // React synthetic events are always passive and cannot call preventDefault().
@@ -411,23 +418,27 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
     else                           onFetchAIArtifacts(year);
   };
 
-  const baseHeight = getDetentPixels(snap);
-  const computedHeight = isDragging ? Math.max(60, baseHeight + dragOffset) : baseHeight;
+  // ── GPU-accelerated translateY animation ──────────────────────────────────
+  // The sheet is always at full height. We slide it DOWN via translateY to simulate snap points.
+  // This avoids ANY layout recalculation during animation — pure compositor thread = 60fps.
+  const fullHeight = getFullHeight();
+  const translateY = isDragging
+    ? getTranslateY(snap, dragOffset)   // live drag: no transition
+    : getTranslateY(snap, 0);           // snapped: spring transition
 
   return (
     <div
       ref={sheetRef}
       id="tour-events-panel"
       style={{
-        height: computedHeight,
-        // GPU performance hints:
-        // will-change promotes this layer for height animation
-        // contain:layout limits layout recalc scope to just this element
-        willChange: 'height',
-        contain: 'layout',
-        transition: isDragging ? 'none' : 'height 0.28s cubic-bezier(0.16, 1, 0.3, 1)',
+        height: fullHeight,
+        transform: `translateY(${translateY}px)`,
+        transition: isDragging
+          ? 'none'
+          : 'transform 0.38s cubic-bezier(0.16, 1, 0.3, 1)',
         flexShrink: 0,
         zIndex: 20,
+        willChange: 'transform',
         userSelect: isDragging ? 'none' : 'auto',
       }}
       className="w-full relative bg-slate-900/95 backdrop-blur-xl border-t border-white/10 shadow-[0_-12px_40px_rgba(0,0,0,0.6)] overflow-hidden"
@@ -475,26 +486,24 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
         }}
       />
 
-      {/* ── Content (only rendered when not collapsed) ───────────────────── */}
-      <AnimatePresence>
-        {snap !== 'collapsed' && (
-          <motion.div
-            key="sheet-content"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.12 }}
-            className="flex flex-col"
-            style={{
-              height: 'calc(100% - 61px)',
-              touchAction: 'pan-y',
-              cursor: snap === 'half' ? 'grab' : 'default',
-            }}
-            onTouchStart={snap === 'half' ? onContentTouchStart : undefined}
-            onTouchMove={snap === 'half' ? onContentTouchMove : undefined}
-            onTouchEnd={snap === 'half' ? onContentTouchEnd : undefined}
-            onTouchCancel={snap === 'half' ? onContentTouchEnd : undefined}
-          >
+      {/* ── Content — always mounted, visibility driven by opacity + pointerEvents ── */}
+      <div
+        className="flex flex-col"
+        style={{
+          height: 'calc(100% - 61px)', // 60px handle + 1px separator
+          touchAction: 'pan-y',
+          cursor: snap === 'half' ? 'grab' : 'default',
+          // Pointer events only when sheet is expanded
+          pointerEvents: snap === 'collapsed' ? 'none' : 'auto',
+          // Fade content in/out quickly — GPU opacity, not layout
+          opacity: snap === 'collapsed' ? 0 : 1,
+          transition: isDragging ? 'none' : 'opacity 0.15s ease',
+        }}
+        onTouchStart={snap === 'half' ? onContentTouchStart : undefined}
+        onTouchMove={snap === 'half' ? onContentTouchMove : undefined}
+        onTouchEnd={snap === 'half' ? onContentTouchEnd : undefined}
+        onTouchCancel={snap === 'half' ? onContentTouchEnd : undefined}
+      >
             <div className="px-4 pb-3 pt-1 border-b border-white/5 shrink-0">
               <div className="flex bg-black/20 rounded-xl p-1 border border-white/5">
                 {(['events', 'figures', 'artifacts'] as const).map(tab => (
@@ -642,9 +651,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
                 </span>
               </button>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      </div>
     </div>
   );
 };
