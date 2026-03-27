@@ -532,17 +532,19 @@ export default function App() {
       <AnimatePresence>
         {!isQuizModalOpen && activeQuizQuestions && (
           <motion.div
-            initial={{ y: 50, opacity: 0, scale: 0.9 }}
+            initial={{ y: -20, opacity: 0, scale: 0.9 }}
             animate={{ y: 0, opacity: 1, scale: 1 }}
-            exit={{ y: 50, opacity: 0, scale: 0.9 }}
-            className="fixed bottom-24 right-4 z-40 sm:bottom-8 sm:right-[340px]"
+            exit={{ y: -20, opacity: 0, scale: 0.9 }}
+            className="fixed top-20 right-4 z-40 sm:top-auto sm:bottom-8 sm:right-[340px] sm:left-auto"
           >
             <button
               onClick={() => setIsQuizModalOpen(true)}
-              className="flex items-center gap-2 px-5 py-3.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-900 shadow-2xl rounded-full font-bold shadow-amber-500/20 active:scale-95 transition-all animate-bounce"
+              className="flex items-center gap-1.5 px-3 py-1.5 sm:px-5 sm:py-3.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-900 shadow-xl rounded-full font-bold shadow-amber-500/20 active:scale-95 transition-all"
             >
-              <HelpCircle className="w-4 h-4 shrink-0" />
-              <span className="text-sm">{lang === 'en' ? 'Resume Challenge' : 'ادامه چالش'}</span>
+              <HelpCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+              <span className="text-[10px] sm:text-sm uppercase tracking-tight sm:normal-case sm:tracking-normal">
+                {lang === 'en' ? 'Resume' : 'ادامه'}
+              </span>
             </button>
           </motion.div>
         )}
