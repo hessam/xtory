@@ -276,7 +276,7 @@ export default function App() {
           MOBILE LAYOUT  (flex column, no absolute children compete)
           max-width: 640px (sm breakpoint)
           ================================================================ */}
-      <div className="sm:hidden flex flex-col w-full h-full overflow-hidden" id="app-mobile-container">
+      <div className="sm:hidden relative flex flex-col w-full h-full" id="app-mobile-container">
 
         {/* ── Top Bar  z-40, height 48px + safe area ─────────────────── */}
         <header
@@ -365,8 +365,15 @@ export default function App() {
           />
         </div>
 
-        {/* ── Bottom Sheet  z-20, NOT absolute ────────────────────────── */}
-        <BottomSheet {...panelProps} setShowSettings={setShowSettings} />
+        {/* ── Bottom Sheet: absolute overlay, GPU translateY animates snap positions ── */}
+        {/* Wrapper spans full height so the always-full-height sheet can translate down off-screen */}
+        <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 20 }}>
+          <div className="absolute bottom-0 left-0 right-0 h-full pointer-events-auto">
+            <Suspense fallback={null}>
+              <BottomSheet {...panelProps} setShowSettings={setShowSettings} />
+            </Suspense>
+          </div>
+        </div>
       </div>
 
       {/* ════════════════════════════════════════════════════════════════════
