@@ -270,7 +270,9 @@ export default function App() {
       className={`w-screen h-[100dvh] bg-[#020617] text-slate-200 overflow-hidden selection:bg-indigo-500/30 ${lang === 'fa' ? 'font-vazirmatn' : 'font-sans'}`}
       dir={lang === 'fa' ? 'rtl' : 'ltr'}
     >
-      <TourGuide lang={lang} run={runTour} onFinish={() => setRunTour(false)} />
+      <Suspense fallback={null}>
+        <TourGuide lang={lang} run={runTour} onFinish={() => setRunTour(false)} />
+      </Suspense>
 
       {/* ════════════════════════════════════════════════════════════════════
           MOBILE LAYOUT  (flex column, no absolute children compete)
@@ -365,8 +367,11 @@ export default function App() {
           />
         </div>
 
-        {/* ── Bottom Sheet  z-20, NOT absolute ────────────────────────── */}
-        <BottomSheet {...panelProps} setShowSettings={setShowSettings} />
+        {/* ── Bottom Sheet  z-20 ──────────────────────────────────────── */}
+        {/* Suspense is required because BottomSheet is lazy-loaded */}
+        <Suspense fallback={<div style={{ height: 60, flexShrink: 0 }} />}>
+          <BottomSheet {...panelProps} setShowSettings={setShowSettings} />
+        </Suspense>
       </div>
 
       {/* ════════════════════════════════════════════════════════════════════
