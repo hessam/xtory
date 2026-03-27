@@ -59,6 +59,12 @@ export default function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
+  // Restart quiz if year changes
+  useEffect(() => {
+    setActiveQuizQuestions(null);
+    setIsQuizModalOpen(false);
+  }, [year]);
+
   // Parse Initial Route
   React.useEffect(() => {
     const handleHashChange = () => {

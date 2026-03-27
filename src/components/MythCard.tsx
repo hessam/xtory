@@ -3,6 +3,8 @@ import { motion } from 'motion/react';
 import { HelpCircle, Sparkles, Lock } from 'lucide-react';
 import { QuizQuestion } from '../types/quiz';
 
+import { formatYear } from '../utils/format';
+
 interface MythCardProps {
   question?: QuizQuestion;
   lang: 'en' | 'fa';
@@ -35,8 +37,8 @@ export const MythCard: React.FC<MythCardProps> = ({ question, lang, year, hasApi
             </div>
             <h4 className="font-bold text-white text-sm leading-tight line-clamp-2">
               {lang === 'en' 
-                ? `Generate a unique historical challenge for ${Math.abs(year!)} ${year! < 0 ? 'BCE' : 'CE'}`
-                : `تولید یک چالش تاریخی برای سال ${Math.abs(year!)}`}
+                ? `Generate a unique historical challenge for ${formatYear(year!, 'en')}`
+                : `تولید یک چالش تاریخی برای ${formatYear(year!, 'fa')}`}
             </h4>
             <p className="text-[11px] text-amber-200/60 mt-2 font-medium">
               {hasApiKey 

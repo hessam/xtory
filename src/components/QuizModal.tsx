@@ -11,7 +11,7 @@ interface QuizModalProps {
   isOpen: boolean;
   onClose: () => void;
   onJumpToYear: (year: number) => void;
-  onRequestAiQuestion: (year: number, askedMyths: string[]) => Promise<QuizQuestion | null>;
+  onRequestAiQuestion: (year: number, askedMyths: string[]) => Promise<QuizQuestion | string | null>;
   onEndQuiz?: () => void;
 }
 
@@ -34,6 +34,7 @@ export const QuizModal: React.FC<QuizModalProps> = ({
   );
   const [userAnswer, setUserAnswer] = useState<QuizQuestion['answer'] | null>(null);
   const [isLoadingNext, setIsLoadingNext] = useState(false);
+  const [errorStatus, setErrorStatus] = useState<string | null>(null);
 
   // Sync incoming new quiz seeds if changing sessions
   React.useEffect(() => {
@@ -54,9 +55,11 @@ export const QuizModal: React.FC<QuizModalProps> = ({
       onRequestAiQuestion(year, []).then(nextAi => {
         if (!active) return;
         setIsLoadingNext(false);
-        if (nextAi) {
+        if (nextAi && typeof nextAi !== 'string') {
           setQuestions([nextAi]);
           setState('question');
+        } else if (typeof nextAi === 'string') {
+          setErrorStatus(nextAi);
         } else {
           onClose();
           if (onEndQuiz) onEndQuiz();
@@ -95,11 +98,14 @@ export const QuizModal: React.FC<QuizModalProps> = ({
         const askedMyths = questions.map(q => q.myth);
         const nextAi = await onRequestAiQuestion(year, askedMyths);
         setIsLoadingNext(false);
-        if (nextAi) {
+        if (nextAi && typeof nextAi !== 'string') {
           setQuestions(prev => [...prev, nextAi]);
           setCurrentIndex(prev => prev + 1);
           setState('question');
           setUserAnswer(null);
+          return;
+        } else if (typeof nextAi === 'string') {
+          setErrorStatus(nextAi);
           return;
         }
       }
@@ -145,6 +151,32 @@ export const QuizModal: React.FC<QuizModalProps> = ({
           className="liquid-glass-heavy rounded-3xl shadow-2xl w-full max-w-md p-6 border border-white/10 max-h-[90vh] overflow-hidden flex flex-col calm-transition relative"
           dir={lang === 'fa' ? 'rtl' : 'ltr'}
         >
+          {errorStatus ? (
+            <div className="flex flex-col items-center justify-center p-8 gap-6 text-center">
+              <div className="p-4 bg-rose-500/20 rounded-full">
+                <XCircle className="w-12 h-12 text-rose-400" />
+              </div>
+              <div className="space-y-4">
+                <h3 className="text-lg font-bold text-white">
+                  {lang === 'en' ? 'Something went wrong' : 'خطایی رخ داد'}
+                </h3>
+                <div 
+                  className="text-sm text-slate-300 leading-relaxed bg-black/20 p-4 rounded-2xl border border-white/5 whitespace-pre-line"
+                  dangerouslySetInnerHTML={{ __html: errorStatus.replace(/\*\*/g, '<b>').replace(/\*\*/g, '</b>') }} 
+                />
+              </div>
+              <button
+                onClick={() => {
+                  onClose();
+                  if (onEndQuiz) onEndQuiz();
+                }}
+                className="w-full py-4 px-6 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl text-sm font-bold text-white transition-all"
+              >
+                {lang === 'en' ? 'Close' : 'بستن'}
+              </button>
+            </div>
+          ) : (
+            <>
           {/* Header */}
           <div className="flex items-start justify-between mb-6">
             <div className="flex flex-col gap-2">
@@ -346,6 +378,8 @@ export const QuizModal: React.FC<QuizModalProps> = ({
                 {lang === 'en' ? 'Explore the Map' : 'کاوش روی نقشه'}
               </button>
             </div>
+          )}
+          </>
           )}
         </motion.div>
       </motion.div>

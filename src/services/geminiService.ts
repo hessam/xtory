@@ -733,7 +733,7 @@ const ANGLES = [
   "Daily Life, Strange Customs, or Economics"
 ];
 
-export async function generateQuizQuestion(year: number, lang: 'en' | 'fa', askedMyths: string[] = []): Promise<QuizQuestion | null> {
+export async function generateQuizQuestion(year: number, lang: 'en' | 'fa', askedMyths: string[] = []): Promise<QuizQuestion | string | null> {
   try {
     const randomAngle = ANGLES[Math.floor(Math.random() * ANGLES.length)];
     
@@ -801,6 +801,6 @@ export async function generateQuizQuestion(year: number, lang: 'en' | 'fa', aske
     } as QuizQuestion;
   } catch (error) {
     console.error("Error generating quiz question:", error);
-    return null;
+    return handleAIError(error, lang);
   }
 }
