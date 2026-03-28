@@ -537,7 +537,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
   return (
     <div
       ref={sheetRef}
-      id="tour-events-panel"
+      id="tour-events-panel-mobile"
       style={{
         height: fullHeight,
         transform: `translateY(${translateY}px)`,
@@ -546,8 +546,9 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
         zIndex: 20,
         willChange: isDragging ? 'transform' : 'auto',
         userSelect: isDragging ? 'none' : 'auto',
+        pointerEvents: snap === 'collapsed' ? 'none' : 'auto',
       }}
-      className="w-full relative bg-slate-900/95 backdrop-blur-xl border-t border-white/10 shadow-[0_-12px_40px_rgba(0,0,0,0.6)] overflow-hidden pointer-events-auto"
+      className="w-full relative bg-slate-900/95 backdrop-blur-xl border-t border-white/10 shadow-[0_-12px_40px_rgba(0,0,0,0.6)] overflow-hidden"
       dir={lang === 'fa' ? 'rtl' : 'ltr'}
     >
       {/* ── Drag Handle ─────────────────────────────────────────────────── */}
@@ -559,6 +560,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
           flexShrink: 0,
           touchAction: 'none',
           cursor: snap === 'full' ? 'default' : 'grab',
+          pointerEvents: 'auto',
         }}
         onPointerDown={(e) => onPointerDown(e, false)}
         onPointerMove={onPointerMove}
@@ -785,7 +787,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
                 </div>
               )}
               <button
-                id="tour-ai-fetch"
+                id="tour-ai-fetch-mobile"
                 onClick={(e) => { e.stopPropagation(); handleFetch(); }}
                 disabled={isLoading || !apiKey}
                 className="w-full flex items-center justify-center gap-2 py-3.5 px-4 liquid-glass text-indigo-300 border border-white/10 rounded-2xl hover:bg-white/10 active:scale-[0.98] calm-transition disabled:opacity-50 disabled:cursor-not-allowed text-sm font-bold"

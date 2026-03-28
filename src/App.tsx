@@ -309,6 +309,7 @@ export default function App() {
           {/* Right: icon buttons */}
           <div className="flex items-center gap-1">
             <button
+              id="tour-search-mobile"
               onClick={() => setShowSearch(true)}
               className="p-2 rounded-xl liquid-glass hover:bg-white/10 calm-transition"
               title={lang === 'en' ? 'Search' : 'جستجو'}
@@ -324,7 +325,7 @@ export default function App() {
             </button>
             <AIKeyButton onClick={() => setShowSettings(true)} className="!p-1.5" />
             <button
-              id="tour-lang"
+              id="tour-lang-mobile"
               onClick={() => setLang(lang === 'en' ? 'fa' : 'en')}
               className="p-2 rounded-xl liquid-glass hover:bg-white/10 calm-transition text-xs font-bold text-white min-w-[36px]"
             >
@@ -334,7 +335,16 @@ export default function App() {
         </header>
 
         {/* ── Map area  flex-1, shrinks as sheet grows ─────────────────── */}
-        <div id="map-area" style={{ flex: 1, minHeight: 0, zIndex: 0 }} className="relative overflow-hidden">
+        <div 
+          id="tour-map-mobile" 
+          style={{ 
+            flex: 1, 
+            minHeight: 0, 
+            zIndex: 0,
+            pointerEvents: runTour ? 'none' : 'auto'
+          }} 
+          className="relative overflow-hidden"
+        >
           <Map
             year={year}
             lang={lang}
@@ -352,7 +362,7 @@ export default function App() {
 
         {/* ── Scrubber row  44px, z-30, BETWEEN map and spacer ─────────── */}
         <div
-          id="tour-timeline"
+          id="tour-timeline-mobile"
           style={{ 
             height: 'auto', 
             flexShrink: 0, 
@@ -401,7 +411,11 @@ export default function App() {
       <div className="hidden sm:block relative w-full h-full">
 
         {/* Map Background */}
-        <div id="tour-map" className="absolute inset-0 z-0">
+        <div 
+          id="tour-map-desktop" 
+          className="absolute inset-0 z-0"
+          style={{ pointerEvents: runTour ? 'none' : 'auto' }}
+        >
           <Map
             year={year}
             lang={lang}
@@ -427,7 +441,7 @@ export default function App() {
           </div>
 
           <div className="flex items-center gap-4 pointer-events-auto">
-            <div id="tour-search">
+            <div id="tour-search-desktop">
               <SearchBar lang={lang} onSearchResult={handleSearchResult} setShowSettings={setShowSettings} />
             </div>
             <button
@@ -452,7 +466,7 @@ export default function App() {
               {lang === 'en' ? 'API Key' : 'کلید API'}
             </button>
             <button
-              id="tour-lang"
+              id="tour-lang-desktop"
               onClick={() => setLang(lang === 'en' ? 'fa' : 'en')}
               className="flex items-center gap-2 px-5 py-4 rounded-3xl liquid-glass hover:bg-white/10 calm-transition text-sm font-medium text-white shrink-0"
             >
@@ -484,7 +498,7 @@ export default function App() {
         <EventsPanel {...panelProps} />
 
         {/* Bottom Timeline */}
-        <div id="tour-timeline" className="absolute bottom-0 left-0 right-0 p-4 md:p-6 z-10 pointer-events-none">
+        <div id="tour-timeline-desktop" className="absolute bottom-0 left-0 right-0 p-4 md:p-6 z-10 pointer-events-none">
           <div className="pointer-events-auto w-full max-w-7xl mx-auto liquid-glass-heavy rounded-[2rem] overflow-hidden flex flex-col h-[35vh] min-h-[250px] max-h-[400px] calm-transition">
             <Timeline
               year={year}

@@ -123,7 +123,7 @@ export const EventsPanel: React.FC<EventsPanelProps> = ({ year, lang, events, fi
 
   return (
     <div 
-      id="tour-events-panel" 
+      id="tour-events-panel-desktop" 
       className={`fixed sm:absolute bottom-0 sm:bottom-auto sm:top-24 left-0 sm:left-auto sm:right-6 w-full sm:w-80 z-20 flex flex-col pointer-events-none calm-transition ${isOpen ? 'h-[70vh] sm:h-auto' : 'h-16 sm:h-auto'}`}
     >
       {/* Mobile Drag Handle / Header */}
@@ -316,7 +316,7 @@ export const EventsPanel: React.FC<EventsPanelProps> = ({ year, lang, events, fi
 
             <div className="p-4 sm:p-5 border-t border-white/5 bg-white/5 sm:bg-transparent">
               <button
-                id="tour-ai-fetch"
+                id="tour-ai-fetch-desktop"
                 onClick={handleFetch}
                 disabled={isLoading || !apiKey}
                 className="w-full flex items-center justify-center gap-2 py-3.5 px-4 liquid-glass text-indigo-300 border border-white/10 rounded-2xl hover:bg-white/20 active:scale-[0.98] calm-transition disabled:opacity-50 disabled:cursor-not-allowed text-sm font-bold"

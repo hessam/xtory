@@ -427,7 +427,7 @@ export const Timeline: React.FC<TimelineProps> = ({ year, setYear, lang, onEvent
 
         {onYearContextClick && (
           <button
-            id="tour-timeline-ai"
+            id="tour-timeline-ai-desktop"
             onClick={() => onYearContextClick(year)}
             disabled={isLoadingAI || !apiKey}
             className="hidden sm:flex items-center justify-center gap-1.5 px-4 py-2 liquid-glass text-amber-400 border border-white/10 hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed rounded-2xl text-sm font-medium calm-transition whitespace-nowrap shrink-0 pointer-events-auto"

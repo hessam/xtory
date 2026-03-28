@@ -98,3 +98,17 @@
     line-height: 1.75;
   }
 }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Joyride Overlays & Stacking Context Fixes
+   Ensures the tour remains interactive and sits above all app layers.
+   ───────────────────────────────────────────────────────────────────────────── */
+.__floater__open {
+  pointer-events: auto !important;
+  z-index: 10000 !important;
+}
+
+[data-test-id="overlay"] {
+  pointer-events: auto !important;
+  z-index: 9999 !important;
+}
