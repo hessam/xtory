@@ -118,27 +118,49 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
   // Touch-based drag for half-state content area
   const touchDragActive = useRef(false);
   const touchDragStartY = useRef(0);
+  const lastScrollTopRef = useRef(0);
+
   // Keep snap in a ref so non-passive event listeners have current value
   const snapRef = useRef<SnapPoint>(snap);
   useEffect(() => { snapRef.current = snap; }, [snap]);
 
+  // Cache safe area and layout dimensions to prevent Chrome 'Forced Reflow' layout thrashing
+  // Calling getComputedStyle or window.innerHeight during React's render loop destroys 60fps.
+  const layoutCache = useRef({
+    windowHeight: typeof window !== 'undefined' ? window.innerHeight : 600,
+    safeTop: 0,
+    safeBottom: 0
+  });
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const updateCache = () => {
+      const style = getComputedStyle(document.documentElement);
+      layoutCache.current = {
+        windowHeight: window.innerHeight,
+        safeTop: parseInt(style.getPropertyValue('--safe-top') || '0'),
+        safeBottom: parseInt(style.getPropertyValue('--safe-bottom') || '0')
+      };
+    };
+    updateCache();
+    window.addEventListener('resize', updateCache);
+    return () => window.removeEventListener('resize', updateCache);
+  }, []);
+
   // Full sheet height — always rendered at this size
   const getFullHeight = useCallback((): number => {
     if (typeof window === 'undefined') return 600;
-    const safeTop = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--safe-top') || '0');
-    return window.innerHeight - 48 - safeTop;
+    return layoutCache.current.windowHeight - 48 - layoutCache.current.safeTop;
   }, []);
 
   // Get pixel height for each snap detent
   const getDetentPixels = useCallback((point: SnapPoint): number => {
     if (typeof window === 'undefined') return 60;
-    const vh = window.innerHeight;
-    const safeTop = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--safe-top') || '0');
-    const safeBottom = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--safe-bottom') || '0');
+    const { windowHeight, safeTop, safeBottom } = layoutCache.current;
     switch (point) {
       case 'collapsed': return 60 + safeBottom;
-      case 'half': return vh * 0.5;
-      case 'full': return vh - 48 - safeTop;
+      case 'half': return windowHeight * 0.5;
+      case 'full': return windowHeight - 48 - safeTop;
       default: return 60;
     }
   }, []);
@@ -195,8 +217,8 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
       } else if (currentSnap === 'full') {
         // In full-mode only intercept when the scroll container is at the top.
         // If there's scroll remaining, let the browser scroll normally.
-        const scrollTop = scrollRef.current?.scrollTop ?? 0;
-        if (scrollTop === 0 && deltaY > 0) {
+        const scrollTop = lastScrollTopRef.current;
+        if (scrollTop <= 1 && deltaY > 0) {
           e.preventDefault();
         }
       }
@@ -232,8 +254,8 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
 
     // In full snap + dragging on content: only allow downward drag when scrolled to top
     if (dragOnContent.current && snap === 'full') {
-      const scrollTop = scrollRef.current?.scrollTop ?? 0;
-      if (scrollTop > 0 || deltaY > 0) return; // let the scroll handle it
+      const scrollTop = lastScrollTopRef.current;
+      if (scrollTop > 1 || deltaY > 0) return; // let the scroll handle it // Note: deltaY > 0 means dragging up in mouse space
     }
 
     setDragOffset(deltaY);
@@ -299,7 +321,9 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
   // Track scroll position for the separator line
   const onScrollContent = useCallback(() => {
     if (scrollRef.current) {
-      setIsScrolled(scrollRef.current.scrollTop > 2);
+      const top = scrollRef.current.scrollTop;
+      lastScrollTopRef.current = top;
+      setIsScrolled(top > 2);
     }
   }, []);
 
@@ -360,7 +384,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
   // Touch handlers for full-mode scroll: drag down when at top to collapse
   const onFullScrollTouchStart = useCallback((e: React.TouchEvent) => {
     if (snap !== 'full') return;
-    if ((scrollRef.current?.scrollTop ?? 0) > 0) return; // only intercept at top
+    if (lastScrollTopRef.current > 1) return; // only intercept at top
     touchDragActive.current = true;
     touchDragStartY.current = e.touches[0].clientY;
     dragStartY.current = e.touches[0].clientY;
@@ -371,7 +395,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
 
   const onFullScrollTouchMove = useCallback((e: React.TouchEvent) => {
     if (snap !== 'full' || !touchDragActive.current) return;
-    if ((scrollRef.current?.scrollTop ?? 0) > 0) {
+    if (lastScrollTopRef.current > 1) {
       // User scrolled, stop intercepting
       touchDragActive.current = false;
       setIsDragging(false);
