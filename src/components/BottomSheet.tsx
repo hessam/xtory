@@ -183,6 +183,9 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
       document.documentElement.style.setProperty(CSS_VAR, '0px');
       return;
     }
+    // Skip work during drag to prevent forced reflows for external components (e.g. FAB)
+    if (isDragging) return;
+
     const raf = requestAnimationFrame(() => {
       const snapPx = snapHeightsCache.current[snap] + dragOffset;
       document.documentElement.style.setProperty(CSS_VAR, `${Math.max(60, snapPx)}px`);
@@ -467,12 +470,11 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
   const transitionStr = isDragging ? 'none' : 'transform 0.38s cubic-bezier(0.16, 1, 0.3, 1)';
 
   useEffect(() => {
+    // Skip work during drag to prevent forced reflows for external components (e.g. Timeline)
+    if (isDragging) return;
+
     const raf = requestAnimationFrame(() => {
-      // Only update the extra height offset when NOT dragging to prevent 
-      // layout thrashing. The Timeline will snap to position when the drag ends.
-      if (!isDragging) {
-        document.documentElement.style.setProperty('--sheet-extra-height', `${extraHeight}`);
-      }
+      document.documentElement.style.setProperty('--sheet-extra-height', `${extraHeight}`);
       document.documentElement.style.setProperty('--sheet-transition', transitionStr);
     });
     return () => cancelAnimationFrame(raf);

@@ -22,13 +22,8 @@ export const initClarity = () => {
   };
 
   const scheduleInitialization = () => {
-    if ('requestIdleCallback' in window) {
-      (window as any).requestIdleCallback(() => {
-        setTimeout(init, 1000); // 1s after idle to stay safe
-      });
-    } else {
-      setTimeout(init, 2000);
-    }
+    // Increased delay to 3 seconds to ensure zero impact on initial TBT/INP.
+    setTimeout(init, 3000);
   };
 
   // If already loaded, schedule; otherwise wait for load event
