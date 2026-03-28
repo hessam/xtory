@@ -109,7 +109,9 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
 
   // Drag tracking
   const [isDragging, setIsDragging] = useState(false);
+  const isDraggingRef = useRef(false);
   const [dragOffset, setDragOffset] = useState(0); 
+  const dragOffsetRef = useRef(0);
   const dragStartY = useRef(0);
   const lastTime = useRef(0);
   const lastY = useRef(0);
@@ -120,10 +122,14 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
   const touchDragActive = useRef(false);
   const touchDragStartY = useRef(0);
   const lastScrollTopRef = useRef(0);
+  const scrollRafRef = useRef<number | null>(null);
 
   // Keep snap in a ref so non-passive event listeners have current value
   const snapRef = useRef<SnapPoint>(snap);
   useEffect(() => { snapRef.current = snap; }, [snap]);
+
+  // Sync isDraggingRef
+  useEffect(() => { isDraggingRef.current = isDragging; }, [isDragging]);
 
   // Cache safe area and layout dimensions to prevent Chrome 'Forced Reflow' layout thrashing
   // Calling getComputedStyle or window.innerHeight during React's render loop destroys 60fps.
@@ -245,12 +251,15 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
   // Pointer drag handlers
   const onPointerDown = useCallback((e: React.PointerEvent, onContent = false) => {
     dragOnContent.current = onContent;
-    setIsDragging(true);
+    startTransition(() => {
+      setIsDragging(true);
+      setDragOffset(0);
+    });
+    dragOffsetRef.current = 0;
     dragStartY.current = e.clientY;
     lastY.current = e.clientY;
     lastTime.current = Date.now();
     velocity.current = 0;
-    setDragOffset(0);
     // Only capture pointer on the handle — content drags should not steal clicks from buttons
     if (!onContent) {
       (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
@@ -258,56 +267,63 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
   }, []);
 
   const onPointerMove = useCallback((e: React.PointerEvent) => {
-    if (!isDragging) return;
+    if (!isDraggingRef.current) return;
     
     const deltaY = dragStartY.current - e.clientY;
 
     // In full snap + dragging on content: only allow downward drag when scrolled to top
-    if (dragOnContent.current && snap === 'full') {
+    if (dragOnContent.current && snapRef.current === 'full') {
       const scrollTop = lastScrollTopRef.current;
-      if (scrollTop > 1 || deltaY > 0) return; // let the scroll handle it // Note: deltaY > 0 means dragging up in mouse space
+      if (scrollTop > 1 || deltaY > 0) return;
     }
 
-    setDragOffset(deltaY);
+    // DIRECT DOM UPDATE: Bypass React state/render for 60fps dragging
+    dragOffsetRef.current = deltaY;
+    if (sheetRef.current) {
+        // Calculate the translate directly using cached detents
+        const full = snapHeightsCache.current.full;
+        const snapPx = snapHeightsCache.current[snapRef.current];
+        const offset = Math.max(0, full - snapPx - deltaY);
+        sheetRef.current.style.transform = `translateY(${offset}px)`;
+    }
 
-    // Calculate velocity (px/ms)
     const now = Date.now();
     const dt = now - lastTime.current;
-    if (dt > 0) {
-        velocity.current = (lastY.current - e.clientY) / dt;
-    }
+    if (dt > 0) velocity.current = (lastY.current - e.clientY) / dt;
     lastY.current = e.clientY;
     lastTime.current = now;
-  }, [isDragging, snap]);
+  }, []); // isDraggingRef and snapRef are used for stability
 
   const onPointerUp = useCallback((e?: React.PointerEvent) => {
-    if (!isDragging) return;
-    setIsDragging(false);
+    if (!isDraggingRef.current) return;
+    
+    const currentDragOffset = dragOffsetRef.current;
 
-    // If drag started on content and total movement was tiny, treat as a tap — let the click fire naturally
+    // If drag started on content and total movement was tiny, treat as a tap
     const totalDrag = Math.abs(dragStartY.current - (e?.clientY ?? dragStartY.current));
     if (dragOnContent.current && totalDrag < 8) {
-      setDragOffset(0);
+      startTransition(() => {
+        setIsDragging(false);
+        setDragOffset(0);
+      });
+      dragOffsetRef.current = 0;
       return;
     }
 
-    const currentHeight = getDetentPixels(snap) + dragOffset;
+    const currentHeight = getDetentPixels(snapRef.current) + currentDragOffset;
     const detents: SnapPoint[] = ['collapsed', 'half', 'full'];
     const detentHeights = detents.map(d => getDetentPixels(d));
 
-    let finalSnap = snap;
+    let finalSnap = snapRef.current;
 
     // Fast flick logic
     if (Math.abs(velocity.current) > 0.5) {
         if (velocity.current > 0) {
-            // Flick up
-            finalSnap = snap === 'collapsed' ? 'half' : 'full';
+            finalSnap = snapRef.current === 'collapsed' ? 'half' : 'full';
         } else {
-            // Flick down
-            finalSnap = snap === 'full' ? 'half' : 'collapsed';
+            finalSnap = snapRef.current === 'full' ? 'half' : 'collapsed';
         }
     } else {
-        // Snap to nearest
         let minDiff = Infinity;
         detentHeights.forEach((h, i) => {
             const diff = Math.abs(h - currentHeight);
@@ -318,22 +334,32 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
         });
     }
 
-    if (finalSnap !== snap) {
+    if (finalSnap !== snapRef.current) {
         try { navigator.vibrate(6); } catch(e) {}
     }
     
     startTransition(() => {
+        setIsDragging(false);
         setSnap(finalSnap);
+        setDragOffset(0);
     });
-    setDragOffset(0);
-  }, [isDragging, dragOffset, snap, getDetentPixels]);
+    dragOffsetRef.current = 0;
+  }, [getDetentPixels]);
 
   // Track scroll position for the separator line
   const onScrollContent = useCallback(() => {
-    if (scrollRef.current) {
-      const top = scrollRef.current.scrollTop;
-      lastScrollTopRef.current = top;
-      setIsScrolled(top > 2);
+    if (!scrollRef.current) return;
+    const top = scrollRef.current.scrollTop;
+    lastScrollTopRef.current = top;
+
+    // Throttle React state update with requestAnimationFrame
+    if (scrollRafRef.current === null) {
+      scrollRafRef.current = requestAnimationFrame(() => {
+        startTransition(() => {
+          setIsScrolled(top > 2);
+        });
+        scrollRafRef.current = null;
+      });
     }
   }, []);
 
@@ -349,34 +375,38 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
   }, [snap]);
 
   const onContentTouchMove = useCallback((e: React.TouchEvent) => {
-    if (snap !== 'half' || !touchDragActive.current) return;
+    if (snapRef.current !== 'half' || !touchDragActive.current) return;
     const touchY = e.touches[0].clientY;
-    const delta = touchDragStartY.current - touchY; // positive = up
+    const delta = touchDragStartY.current - touchY;
 
-    // Only intercept if dragging upward (expand) or downward (collapse)
-    // Let scroll handle if content is already at bottom and dragging down
+    // DIRECT DOM UPDATE
+    if (delta < 0) {
+      dragOffsetRef.current = delta;
+      if (sheetRef.current) {
+        const full = snapHeightsCache.current.full;
+        const half = snapHeightsCache.current.half;
+        const offset = Math.max(0, full - half - delta);
+        sheetRef.current.style.transform = `translateY(${offset}px)`;
+      }
+    }
+
     const now = Date.now();
     const dt = now - lastTime.current;
-    if (dt > 0) {
-      velocity.current = (lastY.current - touchY) / dt;
-    }
+    if (dt > 0) velocity.current = (lastY.current - touchY) / dt;
     lastY.current = touchY;
     lastTime.current = now;
 
-    // If dragging up significantly, expand to full
+    // Expand to full if dragged up significantly
     if (delta > 20) {
       touchDragActive.current = false;
-      setSnap('full');
+      startTransition(() => {
+        setSnap('full');
+        setDragOffset(0);
+      });
+      dragOffsetRef.current = 0;
       try { navigator.vibrate(6); } catch(err) {}
-      return;
     }
-
-    // Update drag offset for visual feedback (downward only)
-    if (delta < 0) {
-      setIsDragging(true);
-      setDragOffset(delta);
-    }
-  }, [snap]);
+  }, []);
 
   const onContentTouchEnd = useCallback(() => {
     if (!touchDragActive.current) return;
@@ -384,11 +414,20 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
 
     // If was dragging down and fast flick, collapse
     if (velocity.current < -0.5) {
-      setSnap('collapsed');
+      startTransition(() => {
+        setSnap('collapsed');
+        setDragOffset(0);
+      });
+      dragOffsetRef.current = 0;
       try { navigator.vibrate(6); } catch(err) {}
+    } else {
+        // Handle snap-back to half if not flicked
+        startTransition(() => {
+            setIsDragging(false);
+            setDragOffset(0);
+        });
+        dragOffsetRef.current = 0;
     }
-    setIsDragging(false);
-    setDragOffset(0);
   }, []);
 
   // Touch handlers for full-mode scroll: drag down when at top to collapse
@@ -404,42 +443,57 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
   }, [snap]);
 
   const onFullScrollTouchMove = useCallback((e: React.TouchEvent) => {
-    if (snap !== 'full' || !touchDragActive.current) return;
+    if (snapRef.current !== 'full' || !touchDragActive.current) return;
     if (lastScrollTopRef.current > 1) {
-      // User scrolled, stop intercepting
       touchDragActive.current = false;
-      setIsDragging(false);
-      setDragOffset(0);
+      startTransition(() => {
+        setIsDragging(false);
+        setDragOffset(0);
+      });
+      dragOffsetRef.current = 0;
       return;
     }
     const touchY = e.touches[0].clientY;
-    const delta = touchDragStartY.current - touchY; // positive=up, negative=down
+    const delta = touchDragStartY.current - touchY;
+
+    // DIRECT DOM UPDATE
+    if (delta < 0) {
+        dragOffsetRef.current = delta;
+        if (sheetRef.current) {
+            const offset = Math.max(0, 0 - delta); // Full mode has 0 translate Down
+            sheetRef.current.style.transform = `translateY(${offset}px)`;
+        }
+    }
 
     const now = Date.now();
     const dt = now - lastTime.current;
     if (dt > 0) velocity.current = (lastY.current - touchY) / dt;
     lastY.current = touchY;
     lastTime.current = now;
-
-    if (delta < 0) { // dragging down
-      setIsDragging(true);
-      setDragOffset(delta);
-    }
-  }, [snap]);
+  }, []);
 
   const onFullScrollTouchEnd = useCallback(() => {
     if (!touchDragActive.current) return;
     touchDragActive.current = false;
 
-    if (velocity.current < -0.5 || dragOffset < -60) {
+    const currentDragOffset = dragOffsetRef.current;
+
+    if (velocity.current < -0.5 || currentDragOffset < -60) {
       startTransition(() => {
         setSnap('half');
+        setIsDragging(false);
+        setDragOffset(0);
       });
+      dragOffsetRef.current = 0;
       try { navigator.vibrate(6); } catch(err) {}
+    } else {
+        startTransition(() => {
+            setIsDragging(false);
+            setDragOffset(0);
+        });
+        dragOffsetRef.current = 0;
     }
-    setIsDragging(false);
-    setDragOffset(0);
-  }, [dragOffset]);
+  }, []);
 
   const activeEvents    = events.filter(e  => Math.abs(e.year - year)        <= 25 ).sort((a,b)=>a.year-b.year);
   const activeFigures   = figures.filter(f => year >= f.birthYear - 10 && year <= f.deathYear + 10).sort((a,b)=>a.birthYear-b.birthYear);

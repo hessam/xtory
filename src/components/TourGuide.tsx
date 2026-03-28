@@ -9,6 +9,7 @@ interface TourGuideProps {
 
 export const TourGuide: React.FC<TourGuideProps> = ({ lang, run, onFinish }) => {
   const [steps, setSteps] = useState<Step[]>([]);
+  const [stepIndex, setStepIndex] = useState(0);
 
   useEffect(() => {
     const enSteps: Step[] = [
@@ -136,11 +137,18 @@ export const TourGuide: React.FC<TourGuideProps> = ({ lang, run, onFinish }) => 
   }, [lang]);
 
   const handleJoyrideCallback = (data: CallBackProps) => {
-    const { status } = data;
+    const { action, index, status } = data;
     const finishedStatuses: string[] = [STATUS.FINISHED, STATUS.SKIPPED];
 
     if (finishedStatuses.includes(status)) {
+      setStepIndex(0);
       onFinish();
+    } else if (action === 'next' || action === 'prev') {
+      // Defer the step transition until the next frame to allow the 
+      // previous frame to paint, breaking the reflow cycle.
+      requestAnimationFrame(() => {
+        setStepIndex(index);
+      });
     }
   };
 
@@ -148,6 +156,7 @@ export const TourGuide: React.FC<TourGuideProps> = ({ lang, run, onFinish }) => 
     <Joyride
       steps={steps}
       run={run}
+      stepIndex={stepIndex}
       continuous={true}
       showProgress={false}
       showSkipButton={true}
