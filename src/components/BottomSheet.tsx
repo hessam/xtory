@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react';
+import React, { useState, useRef, useCallback, useEffect, useLayoutEffect, startTransition } from 'react';
 import { Sparkles, Loader2, Swords, Skull, Landmark, Globe2, User, Book, Lightbulb, Palette, Building2, MapPin, ChevronUp, AlertCircle } from 'lucide-react';
 import { HistoricalEvent } from '../data/historicalEvents';
 import { HistoricalFigure } from '../data/figures';
@@ -290,7 +290,9 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
         try { navigator.vibrate(6); } catch(e) {}
     }
     
-    setSnap(finalSnap);
+    startTransition(() => {
+        setSnap(finalSnap);
+    });
     setDragOffset(0);
   }, [isDragging, dragOffset, snap, getDetentPixels]);
 
@@ -396,7 +398,9 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
     touchDragActive.current = false;
 
     if (velocity.current < -0.5 || dragOffset < -60) {
-      setSnap('half');
+      startTransition(() => {
+        setSnap('half');
+      });
       try { navigator.vibrate(6); } catch(err) {}
     }
     setIsDragging(false);
@@ -426,6 +430,16 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
     ? getTranslateY(snap, dragOffset)   // live drag: no transition
     : getTranslateY(snap, 0);           // snapped: spring transition
 
+  // Ensure Timeline slides in sync with BottomSheet using CSS variables
+  const collapsedTranslateY = getTranslateY('collapsed', 0);
+  const extraHeight = Math.max(0, collapsedTranslateY - translateY);
+  const transitionStr = isDragging ? 'none' : 'transform 0.38s cubic-bezier(0.16, 1, 0.3, 1)';
+
+  useLayoutEffect(() => {
+    document.documentElement.style.setProperty('--sheet-extra-height', `${extraHeight}`);
+    document.documentElement.style.setProperty('--sheet-transition', transitionStr);
+  }, [extraHeight, transitionStr]);
+
   return (
     <div
       ref={sheetRef}
@@ -433,9 +447,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
       style={{
         height: fullHeight,
         transform: `translateY(${translateY}px)`,
-        transition: isDragging
-          ? 'none'
-          : 'transform 0.38s cubic-bezier(0.16, 1, 0.3, 1)',
+        transition: transitionStr,
         flexShrink: 0,
         zIndex: 20,
         willChange: 'transform',
@@ -509,7 +521,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
                 {(['events', 'figures', 'artifacts'] as const).map(tab => (
                   <button
                     key={tab}
-                    onClick={() => setActiveTab(tab)}
+                    onClick={() => startTransition(() => { setActiveTab(tab); })}
                     className={`flex-1 py-2 text-xs font-medium rounded-lg transition-all ${activeTab === tab ? 'bg-white/10 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'}`}
                   >
                     {lang === 'en'

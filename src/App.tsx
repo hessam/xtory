@@ -344,10 +344,17 @@ export default function App() {
           />
         </div>
 
-        {/* ── Scrubber row  44px, z-30, BETWEEN map and sheet ─────────── */}
+        {/* ── Scrubber row  44px, z-30, BETWEEN map and spacer ─────────── */}
         <div
           id="tour-timeline"
-          style={{ height: 'auto', flexShrink: 0, zIndex: 30 }}
+          style={{ 
+            height: 'auto', 
+            flexShrink: 0, 
+            zIndex: 30,
+            transform: 'translateY(calc(-1px * var(--sheet-extra-height, 0)))',
+            transition: 'var(--sheet-transition, none)',
+            willChange: 'transform'
+          }}
           className="flex items-center bg-slate-900/95 backdrop-blur-xl border-t border-white/10"
         >
           <Timeline
