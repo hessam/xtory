@@ -34,7 +34,7 @@ export default defineConfig(({ mode }) => {
     build: {
       // Raise the chunk warning threshold since we're intentionally splitting
       chunkSizeWarningLimit: 600,
-      sourcemap: false,
+      sourcemap: true,
       rollupOptions: {
         output: {
           // Manual chunk splitting: isolate heavy vendor libs for independent caching
