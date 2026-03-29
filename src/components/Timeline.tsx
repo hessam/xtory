@@ -273,19 +273,37 @@ export const Timeline: React.FC<TimelineProps> = ({ year, setYear, lang, onEvent
     }
   }
 
-  const persianPresenceByEra = useMemo(() => {
-    return ERAS.map(era => {
-      const eraEvents = events.filter(e => e.startDate >= era.start && e.startDate < era.end);
-      const persianCount = eraEvents.filter(e => {
+  const persianPresenceWaveform = useMemo(() => {
+    // Calculate granularity: a bucket every 50 years for a more "waveform" feel
+    const BUCKET_SIZE = 50;
+    const numBuckets = Math.ceil((MAX_YEAR - MIN_YEAR) / BUCKET_SIZE);
+    
+    return Array.from({ length: numBuckets }).map((_, i) => {
+      const bucketStart = MIN_YEAR + (i * BUCKET_SIZE);
+      const bucketEnd = bucketStart + BUCKET_SIZE;
+      
+      // Get all active reign events in this 50-year window across ALL regions
+      const activeInWindow = events.filter(e => {
+        // Overlap logic: Event starts within window OR ends within window OR spans entire window
+        return (e.startDate < bucketEnd && e.endDate > bucketStart);
+      });
+      
+      if (activeInWindow.length === 0) return { start: bucketStart, end: bucketEnd, ratio: 0 };
+
+      // Among these reign events, how many are 'persian' dynasty origin?
+      // Since one region can have one ruler, the maximum possible count is coreRegions.length
+      // But we just want a ratio of "how much of the maps lanes are purple"
+      const persianEvents = activeInWindow.filter(e => {
         const dynasty = dynasties[e.rulerId ? rulers[e.rulerId]?.dynastyId : ''];
         return dynasty?.colorFamily === 'persian';
-      }).length;
-      const total = eraEvents.length;
+      });
+
+      // Ratio is persian events / total events active in this slice
+      // This roughly tracks "cultural dominance" 
       return {
-        eraId: era.id,
-        start: era.start,
-        end: era.end,
-        ratio: total > 0 ? persianCount / total : 0,
+        start: bucketStart,
+        end: bucketEnd,
+        ratio: persianEvents.length / activeInWindow.length,
       };
     });
   }, [events, dynasties, rulers]);
@@ -401,22 +419,25 @@ export const Timeline: React.FC<TimelineProps> = ({ year, setYear, lang, onEvent
               dir="ltr"
             />
 
-            {/* ─── Persian Presence Waveform ──────────────────────────────── */}
-            <div className="absolute bottom-0 left-0 right-0 flex pointer-events-none" style={{ height: 3 }}>
-              {persianPresenceByEra.map(era => {
-                const leftPct = ((era.start - MIN_YEAR) / (MAX_YEAR - MIN_YEAR)) * 100;
-                const widthPct = ((era.end - era.start) / (MAX_YEAR - MIN_YEAR)) * 100;
+            {/* ─── Persian Presence Waveform (Granular footprint) ────────── */}
+            <div className="absolute -bottom-[2px] left-0 right-0 flex pointer-events-none gap-[1px]" style={{ height: 4 }}>
+              {persianPresenceWaveform.map((bucket, i) => {
+                const widthPct = (50 / (MAX_YEAR - MIN_YEAR)) * 100;
+                const leftPct = ((bucket.start - MIN_YEAR) / (MAX_YEAR - MIN_YEAR)) * 100;
+                
                 return (
                   <div
-                    key={era.eraId}
-                    className="absolute bg-amber-400/60"
+                    key={`presence-${i}`}
+                    className="absolute bg-indigo-400 transition-all duration-500"
                     style={{
                       left: `${leftPct}%`,
-                      width: `${widthPct}%`,
-                      height: `${Math.max(1, era.ratio * 4)}px`, // 1px min, 4px max
+                      width: `calc(${widthPct}% - 1px)`,
+                      height: `${Math.max(0.5, bucket.ratio * 4)}px`, // 0.5px min if ratio > 0, 4px max
                       bottom: 0,
+                      opacity: bucket.ratio > 0 ? 0.3 + (bucket.ratio * 0.5) : 0,
+                      borderRadius: '1px 1px 0 0'
                     }}
-                    title={`Persian presence: ${Math.round(era.ratio * 100)}%`}
+                    title={`Persian cultural footprint: ${Math.round(bucket.ratio * 100)}%`}
                   />
                 );
               })}
