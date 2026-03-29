@@ -224,12 +224,12 @@ icons at the end of this sprint:
 
 ## Definition of Done (DoD)
 
-- [ ] Desktop shows: Header → [Left Panel | Map | Right Panel] → Timeline
-- [ ] Left panel collapses to a 32px sliver; map expands to fill space
-- [ ] Right panel collapses to a 32px sliver; map expands to fill space
-- [ ] Both panels can be collapsed simultaneously (full-screen map mode)
-- [ ] All existing event handlers work (click map region → modal opens)
-- [ ] BYOK banner appears at bottom center of the map area when no API key
-- [ ] Mobile layout at `<640px` viewport is visually unchanged
-- [ ] `npm run build` produces zero TypeScript errors
-- [ ] All `id="tour-*"` attributes are present and correct
+- [x] Desktop shows: Header → [Left Panel | Map | Right Panel] → Timeline
+- [x] Left panel collapses to a 32px sliver; map expands to fill space
+- [x] Right panel collapses to a 32px sliver; map expands to fill space
+- [x] Both panels can be collapsed simultaneously (full-screen map mode)
+- [x] All existing event handlers work (click map region → modal opens)
+- [x] BYOK banner appears at bottom center of the map area when no API key
+- [x] Mobile layout at `<640px` viewport is visually unchanged
+- [x] `npm run build` produces zero TypeScript errors
+- [x] All `id="tour-*"` attributes are present and correct

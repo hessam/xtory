@@ -445,16 +445,16 @@ Add `<HistorianCardSection>` as the **first child** inside this div, before any 
 
 ## Definition of Done (DoD)
 
-- [ ] `src/data/historianCards.ts` exists with 15 valid, contiguous era cards
-- [ ] `src/utils/getHistorianCard.ts` exists and returns a result for every year including -5000
-- [ ] `src/components/HistorianCardSection.tsx` exists and renders correctly
-- [ ] `src/components/ContextStrip.tsx` exists and renders correctly
-- [ ] Desktop: Context Strip is visible below the header at all times, updates when era changes
-- [ ] Desktop: HistorianCard is visible at the top of the right sidebar panel, above tabs
-- [ ] Mobile: Drawer handle shows the current era name instead of "Explore this Era"
-- [ ] Mobile: Situation one-liner is visible in the collapsed handle state
-- [ ] Mobile: HistorianCard is the first section in the open drawer, above tabs
-- [ ] Connection chips (← Parthian | Sasanian →) navigate correctly when clicked
-- [ ] `isEnriching` pulse appears when `isLoadingAI` is true
-- [ ] No TypeScript errors (`npm run build` passes cleanly)
-- [ ] No existing tab functionality is broken (Events / Figures / Heritage still work)
+- [x] `src/data/historianCards.ts` exists with 15 valid, contiguous era cards
+- [x] `src/utils/getHistorianCard.ts` exists and returns a result for every year including -5000
+- [x] `src/components/HistorianCardSection.tsx` exists and renders correctly
+- [x] `src/components/ContextStrip.tsx` exists and renders correctly
+- [x] Desktop: Context Strip is visible below the header at all times, updates when era changes
+- [x] Desktop: HistorianCard is visible at the top of the right sidebar panel, above tabs
+- [x] Mobile: Drawer handle shows the current era name instead of "Explore this Era"
+- [x] Mobile: Situation one-liner is visible in the collapsed handle state
+- [x] Mobile: HistorianCard is the first section in the open drawer, above tabs
+- [x] Connection chips (← Parthian | Sasanian →) navigate correctly when clicked
+- [x] `isEnriching` pulse appears when `isLoadingAI` is true
+- [x] No TypeScript errors (`npm run build` passes cleanly)
+- [x] No existing tab functionality is broken (Events / Figures / Heritage still work)

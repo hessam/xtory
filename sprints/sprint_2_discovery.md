@@ -465,14 +465,14 @@ Then in JSX, after the `<input>`, render the bar:
 
 ## Definition of Done (DoD)
 
-- [ ] `src/data/vazirs.ts` exists with 6 valid entries, all `regionId` and `dynastyId` fields verified
-- [ ] `src/components/VazirDot.tsx` exists and renders single dots and cluster badges
-- [ ] Vazir amber/gold dots are visible on the map when the year is within a Vazir's active period
-- [ ] Clicking a Vazir dot logs `[Vazir clicked]` to the browser console (full panel wired Sprint 3)
-- [ ] Hovering a single Vazir dot shows the tooltip with name, ruler, and contribution
-- [ ] Multiple Vazirs in the same region cluster into a count-badge dot
-- [ ] `Timeline.tsx` has tiny coloured dots on the minimap scrubber track
-- [ ] `Timeline.tsx` has a Persian presence bar at the bottom of the scrubber track
-- [ ] The `<input type="range">` scrubber is still fully interactive (not blocked by dot layer)
-- [ ] Mobile layout is visually unchanged at `<640px`
-- [ ] `npm run build` passes with zero TypeScript errors
+- [x] `src/data/vazirs.ts` exists with 6 valid entries, all `regionId` and `dynastyId` fields verified
+- [x] `src/components/VazirDot.tsx` exists and renders single dots and cluster badges
+- [x] Vazir amber/gold dots are visible on the map when the year is within a Vazir's active period
+- [x] Clicking a Vazir dot logs `[Vazir clicked]` to the browser console (full panel wired Sprint 3)
+- [x] Hovering a single Vazir dot shows the tooltip with name, ruler, and contribution
+- [x] Multiple Vazirs in the same region cluster into a count-badge dot
+- [x] `Timeline.tsx` has tiny coloured dots on the minimap scrubber track
+- [x] `Timeline.tsx` has a Persian presence bar at the bottom of the scrubber track
+- [x] The `<input type="range">` scrubber is still fully interactive (not blocked by dot layer)
+- [x] Mobile layout is visually unchanged at `<640px`
+- [x] `npm run build` passes with zero TypeScript errors
