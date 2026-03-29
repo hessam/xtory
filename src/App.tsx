@@ -343,7 +343,14 @@ export default function App() {
           </div>
         </header>
 
-        <ContextStrip year={year} lang={lang} />
+        <motion.div
+           key={`mobile-strip-${lang}`}
+           initial={{ opacity: 0.8 }}
+           animate={{ opacity: 1 }}
+           transition={{ duration: 0.2 }}
+        >
+          <ContextStrip year={year} lang={lang} />
+        </motion.div>
 
         {/* ── Map area  flex-1, shrinks as sheet grows ─────────────────── */}
         <div 
@@ -468,7 +475,14 @@ export default function App() {
           </div>
         </header>
 
-        <ContextStrip year={year} lang={lang} />
+        <motion.div
+          key={`desktop-strip-${lang}`}
+          initial={{ opacity: 0.8 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.2 }}
+        >
+          <ContextStrip year={year} lang={lang} />
+        </motion.div>
 
         {/* ─── 3-Column Middle Row ─────────────────────────────────────── */}
         <div className="flex flex-1 min-h-0 overflow-hidden">
