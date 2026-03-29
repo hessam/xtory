@@ -15,6 +15,7 @@ interface Props {
   aiNarrative?: string | null;          // AI text to show beneath the card (null = not yet loaded)
   selectedVazir?: Vazir | null;
   onVazirClose?: () => void;
+  onVazirSelect?: (v: Vazir) => void;
   onBannerClick?: (url: string, title: string) => void;
 }
 
@@ -26,6 +27,7 @@ export const HistorianCardSection: React.FC<Props> = ({
   aiNarrative = null,
   selectedVazir = null,
   onVazirClose = () => {},
+  onVazirSelect = (_v: any) => {},
   onBannerClick = (_url: string, _title: string) => {},
 }) => {
   const { card, isBetweenEras } = result;
@@ -81,9 +83,9 @@ export const HistorianCardSection: React.FC<Props> = ({
         transition={{ duration: 0.4, ease: "easeOut" }}
         className="flex flex-col"
       >
-        {/* Era Banner Illustration */}
+        {/* Era Banner Illustration - Slim on mobile, Atmospheric */}
         <div 
-          className="relative h-[160px] sm:h-[240px] md:h-[280px] w-full flex-shrink-0 overflow-hidden cursor-zoom-in group/banner"
+          className="relative h-[90px] sm:h-[240px] md:h-[280px] w-full flex-shrink-0 overflow-hidden cursor-zoom-in group/banner"
           onClick={() => onBannerClick(eraBanner, card.eraName[lang])}
         >
           <img 
@@ -91,11 +93,10 @@ export const HistorianCardSection: React.FC<Props> = ({
             className="w-full h-full object-cover transition-transform duration-700 group-hover/banner:scale-105" 
             alt={card.eraName[lang]} 
           />
-          {/* Fading gradient into the background slate-900 (liquid-glass-heavy base) */}
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/10 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent" />
           
-          {/* Era Title Floating on Banner */}
-          <div className="absolute bottom-4 left-4 right-4 z-10">
+          {/* Era Title - Desktop Only */}
+          <div className="absolute bottom-4 left-4 right-4 z-10 hidden sm:block">
              {isBetweenEras && (
               <div className="text-[10px] text-amber-500/80 font-bold uppercase tracking-widest mb-1 drop-shadow-md">
                 {lang === 'en' ? 'Transition Era' : 'دوران گذار'}
@@ -108,116 +109,132 @@ export const HistorianCardSection: React.FC<Props> = ({
         </div>
 
         {/* Text Content Area */}
-        <div className="p-4 flex flex-col gap-4">
-          {/* Year info - styled as a parchment detail */}
-          <div className="flex items-center gap-2">
-            <span className="h-px bg-white/10 flex-1" />
-            <p className="text-slate-400 text-xs font-mono bg-white/5 px-2 py-0.5 rounded-md border border-white/10 whitespace-nowrap">
-              {Math.abs(card.yearRange.start)}{card.yearRange.start < 0 ? ' BC' : ' AD'}
-              {' – '}
-              {Math.abs(card.yearRange.end)}{card.yearRange.end < 0 ? ' BC' : ' AD'}
+        <div className="px-4 py-2 flex flex-col gap-4">
+          {/* Year info - Whisper Volume */}
+          <div className="flex items-center gap-2 opacity-30">
+            <span className="h-px bg-white/30 flex-1" />
+            <p className="text-[9px] font-mono text-white tracking-widest uppercase">
+              {Math.abs(card.yearRange.start)}{card.yearRange.start < 0 ? ' BC' : ' AD'} – {Math.abs(card.yearRange.end)}{card.yearRange.end < 0 ? ' BC' : ' AD'}
             </p>
-            <span className="h-px bg-white/10 flex-1" />
+            <span className="h-px bg-white/30 flex-1" />
           </div>
 
           {/* Full Summary */}
-          <p className="text-slate-300 text-sm leading-relaxed font-normal">
+          <p className="text-slate-200 text-sm leading-relaxed font-normal">
             {lang === 'fa' && card.fullSummary.fa
               ? card.fullSummary.fa
               : card.fullSummary.en}
           </p>
 
-          {/* AI Enrichment State */}
-          {isEnriching && !aiNarrative && (
-            <div className="flex items-center gap-2 text-indigo-400 text-[10px] font-bold uppercase tracking-widest animate-pulse">
-              <div className="w-1 h-1 rounded-full bg-indigo-500" />
-              {lang === 'en' ? 'Expanding context...' : 'در حال گسترش زمینه...'}
-            </div>
-          )}
-
-          {/* AI Narrative */}
-          {aiNarrative && (
-            <div className="pt-3 border-t border-amber-500/20">
-              <p className="text-slate-400 text-sm italic leading-relaxed">
-                {aiNarrative}
-              </p>
-            </div>
-          )}
-
-          {/* Connection Navigation */}
-          <div className="flex flex-col gap-2 mt-4" dir={lang === 'fa' ? 'rtl' : 'ltr'}>
-            {nextCard && (
-              <button
-                onClick={() => onNavigate(nextCard.card.yearRange.start)}
-                className="w-full flex items-center justify-between px-4 py-3 bg-indigo-500/15 hover:bg-indigo-500/25 border border-indigo-500/30 hover:border-indigo-400/50 rounded-2xl text-indigo-100 calm-transition active:scale-95 group shadow-lg shadow-indigo-500/10 cursor-pointer"
-              >
-                <div className="flex flex-col text-start items-start space-y-0.5">
-                  <span className={`text-[9px] text-indigo-300/80 font-bold uppercase tracking-widest ${lang === 'fa' ? 'font-vazirmatn' : ''}`}>{lang === 'en' ? 'Next Era' : 'دوره بعدی'}</span>
-                  <span className={`text-xs sm:text-sm font-bold uppercase tracking-widest leading-tight ${lang === 'fa' ? 'font-vazirmatn' : ''}`}>{nextCard.card.eraName[lang]}</span>
-                </div>
-                <ChevronRight className="w-5 h-5 shrink-0 text-indigo-400 ltr:group-hover:translate-x-1 rtl:rotate-180 rtl:group-hover:-translate-x-1 transition-transform" />
-              </button>
-            )}
-
+          {/* Connection Navigation - Compact 2-col on mobile */}
+          <div className="flex sm:flex-col items-stretch gap-2 mt-2" dir={lang === 'fa' ? 'rtl' : 'ltr'}>
             {prevCard && (
               <button
                 onClick={() => onNavigate(prevCard.card.yearRange.start)}
-                className="w-full flex items-center justify-between px-4 py-2.5 bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/10 rounded-2xl text-slate-300 calm-transition active:scale-95 group shadow-lg cursor-pointer"
+                className="flex-1 flex items-center gap-3 px-3 py-2.5 bg-white/5 border border-white/10 rounded-xl text-slate-400 hover:text-white active:scale-95 group transition-all"
               >
-                <ChevronLeft className="w-4 h-4 shrink-0 text-slate-500 ltr:group-hover:-translate-x-1 rtl:rotate-180 rtl:group-hover:translate-x-1 transition-transform" />
-                <div className="flex flex-col text-end items-end space-y-0.5">
-                  <span className={`text-[8px] text-slate-500 font-bold uppercase tracking-widest ${lang === 'fa' ? 'font-vazirmatn' : ''}`}>{lang === 'en' ? 'Previous Era' : 'دوره قبلی'}</span>
-                  <span className={`text-[11px] sm:text-xs font-bold uppercase tracking-widest leading-tight ${lang === 'fa' ? 'font-vazirmatn' : ''}`}>{prevCard.card.eraName[lang]}</span>
+                <ChevronLeft className="w-3.5 h-3.5 shrink-0 ltr:group-hover:-translate-x-0.5 transition-transform" />
+                <div className="flex flex-col items-start overflow-hidden">
+                  <span className="text-[8px] uppercase tracking-wider opacity-60 leading-none mb-1">{lang === 'en' ? 'PREV' : 'قبلی'}</span>
+                  <span className="text-[10px] font-bold truncate w-full uppercase tracking-widest">{prevCard.card.eraName[lang]}</span>
                 </div>
+              </button>
+            )}
+            
+            {nextCard && (
+              <button
+                onClick={() => onNavigate(nextCard.card.yearRange.start)}
+                className="flex-1 flex items-center justify-between px-3 py-2.5 bg-indigo-500/10 border border-indigo-500/30 rounded-xl text-indigo-300 hover:text-indigo-100 active:scale-95 group transition-all"
+              >
+                <div className="flex flex-col items-start overflow-hidden">
+                  <span className="text-[8px] uppercase tracking-wider opacity-60 leading-none mb-1">{lang === 'en' ? 'NEXT' : 'بعدی'}</span>
+                  <span className="text-[10px] font-bold truncate w-full uppercase tracking-widest">{nextCard.card.eraName[lang]}</span>
+                </div>
+                <ChevronRight className="w-3.5 h-3.5 shrink-0 ltr:group-hover:translate-x-0.5 transition-transform" />
               </button>
             )}
           </div>
 
-          {/* Vazir Profile (Full mode) */}
-          {selectedVazir && (
-            <div className="mt-2 p-4 rounded-3xl border border-amber-500/30 bg-amber-500/5 relative overflow-hidden group hover:bg-amber-500/10 transition-colors shadow-lg">
-              <div className="absolute top-0 right-0 w-24 h-24 bg-amber-500/10 blur-3xl pointer-events-none" />
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-[10px] font-bold text-amber-500 uppercase tracking-widest bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">
-                  {lang === 'en' ? 'Vazir Signature' : 'دست‌خط وزیر'}
+          {/* Vazir Interaction Logic */}
+          {selectedVazir ? (
+            /* 1. Detailed Advisor Card - Full Volume */
+            <div className="mt-4 p-5 rounded-3xl border border-amber-500/30 bg-amber-500/5 relative overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 blur-3xl pointer-events-none" />
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-[10px] font-bold text-amber-500 uppercase tracking-widest bg-amber-500/20 px-3 py-1 rounded-full border border-amber-500/30 shadow-inner">
+                  {lang === 'en' ? 'Vazir advisor' : 'وزیر مشاور'}
                 </span>
                 <button
                   onClick={onVazirClose}
-                  className="p-1 text-slate-500 hover:text-white hover:bg-white/10 rounded-full transition-all active:scale-90"
+                  className="p-1.5 text-slate-500 hover:text-white hover:bg-white/10 rounded-full transition-all active:scale-90"
                 >
                   <X className="w-4 h-4" />
                 </button>
               </div>
-              <h3 className="font-serif font-bold text-white text-base leading-snug">
-                {selectedVazir.name[lang]}
-              </h3>
-              <p className="text-slate-400 text-xs mt-1 font-medium">
-                {selectedVazir.title[lang]} <span className="text-slate-600 mx-1">·</span> <span className="text-amber-200/60 ">{selectedVazir.rulerName[lang]}</span>
-              </p>
-              <p className="text-slate-200 text-sm mt-3 leading-relaxed italic border-l-2 border-amber-500/30 pl-3">
+              
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-12 h-12 rounded-full bg-amber-500/20 border-2 border-amber-500/40 flex items-center justify-center font-serif text-amber-500 font-bold text-2xl shadow-[0_0_15px_rgba(245,158,11,0.2)]">
+                  {selectedVazir.name.en?.charAt(0) || 'V'}
+                </div>
+                <div>
+                  <h3 className="font-serif font-bold text-white text-lg leading-tight">
+                    {selectedVazir.name[lang]}
+                  </h3>
+                  <p className="text-amber-500/60 text-xs font-semibold uppercase tracking-widest mt-0.5">
+                    {selectedVazir.title[lang]}
+                  </p>
+                </div>
+              </div>
+              
+              <p className="text-slate-200 text-[13px] leading-relaxed italic border-l-2 border-amber-500/40 pl-4 py-1 bg-white/5 rounded-r-lg">
                 "{selectedVazir.contribution[lang]}"
               </p>
-              <p className="text-slate-500 text-[11px] mt-3 leading-relaxed font-medium">
-                {selectedVazir.paradox[lang]}
-              </p>
+              
+              <div className="mt-4 pt-4 border-t border-white/5">
+                <p className="text-slate-400 text-[11px] leading-snug font-medium">
+                  {selectedVazir.paradox[lang]}
+                </p>
+              </div>
             </div>
+          ) : eraVazir && (
+            /* 2. Person Row - Scannable Point of Entry */
+            <button 
+              onClick={() => onVazirSelect?.(eraVazir)}
+              className="mt-4 flex items-center gap-3 p-3 rounded-2xl bg-amber-500/5 hover:bg-amber-500/10 border border-amber-500/10 transition-all text-left rtl:text-right w-full group shadow-md"
+            >
+              <div className="w-10 h-10 rounded-full bg-amber-500/20 border border-amber-500/30 flex items-center justify-center font-serif text-amber-500 font-bold text-lg shrink-0 group-hover:scale-105 transition-transform shadow-inner">
+                {eraVazir.name.en?.charAt(0) || 'V'}
+              </div>
+              
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-1.5 mb-0.5">
+                  <span className="text-amber-500/80 text-[9px] font-bold uppercase tracking-[0.2em]">{lang === 'en' ? 'Vazir advisor' : 'وزیر مشاور'}</span>
+                  <div className="w-1 h-1 rounded-full bg-amber-500/40" />
+                </div>
+                <h4 className="text-white text-sm font-bold truncate tracking-wide">{eraVazir.name[lang]}</h4>
+                <p className="text-slate-500 text-[10px] truncate leading-tight mt-0.5 opacity-80">
+                  {eraVazir.paradox[lang]}
+                </p>
+              </div>
+              
+              <ChevronRight className="w-4 h-4 text-slate-700 group-hover:text-amber-500/60 transition-colors" />
+            </button>
           )}
 
-          {/* Vazir Highlight */}
-          {!selectedVazir && eraVazir && (
-            <div className="mt-2 p-3 rounded-2xl border border-amber-500/20 bg-amber-500/5 hover:bg-amber-500/10 transition-colors calm-transition group cursor-pointer">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.6)]" />
-                <span className="text-[10px] font-bold text-amber-500/80 uppercase tracking-widest">
-                  {lang === 'en' ? 'Vazir Highlight' : 'چهره برجسته دیوان'}
-                </span>
-              </div>
-              <p className="text-slate-300 text-xs font-medium leading-snug">
-                <span className="text-white font-bold">{eraVazir.name[lang]}:</span> {eraVazir.paradox[lang]}
-              </p>
-              <div className="mt-2 text-[10px] text-amber-200/40 italic group-hover:text-amber-200/60 transition-colors">
-                {lang === 'en' ? 'Find his marker on the map to read his full story →' : 'برای خواندن داستان او، نشانگرش را روی نقشه بیابید ←'}
-              </div>
+          {/* AI Narrative Integration */}
+          {(isEnriching || aiNarrative) && (
+            <div className="pt-4 mt-2 border-t border-white/5">
+                {isEnriching && !aiNarrative && (
+                <div className="flex items-center gap-2 text-indigo-400 text-[9px] font-bold uppercase tracking-wider animate-pulse">
+                    <span className="w-1 h-1 rounded-full bg-indigo-500" />
+                    {lang === 'en' ? 'Expanding context...' : 'در حال گسترش زمینه...'}
+                </div>
+                )}
+                {aiNarrative && (
+                <p className="text-slate-400 text-sm italic leading-relaxed">
+                    {aiNarrative}
+                </p>
+                )}
             </div>
           )}
         </div>

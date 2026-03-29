@@ -20,12 +20,12 @@ export const ContextStrip: React.FC<Props> = ({ year, lang }) => {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0.7 }}
         transition={{ duration: 0.15 }}
-        className="flex items-center gap-3 px-4 liquid-glass border-b border-white/10 overflow-hidden"
+        className="flex items-center gap-3 px-4 liquid-glass bg-slate-950/80 sm:bg-transparent backdrop-blur-sm sm:backdrop-blur-none border-b border-white/5 sm:border-white/10 overflow-hidden"
         style={{ height: 36, flexShrink: 0 }}
         dir={lang === 'fa' ? 'rtl' : 'ltr'}
       >
-        {/* Era Name */}
-        <span className="font-serif font-bold text-white text-xs whitespace-nowrap">
+        {/* Era Name - Whisper Volume on mobile */}
+        <span className="font-serif font-bold text-white/30 text-[9px] sm:text-xs uppercase tracking-[0.2em] sm:normal-case sm:tracking-normal whitespace-nowrap">
           {card.eraName[lang]}
         </span>
 

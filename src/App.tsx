@@ -277,17 +277,16 @@ export default function App() {
     onFetchAIEvents: handleFetchAIEvents,
     onFetchAIFigures: handleFetchAIFigures,
     onFetchAIArtifacts: handleFetchAIArtifacts,
-    isLoadingAI: isLoadingAIEvents,
-    isLoadingAIFigures,
-    isLoadingAIArtifacts,
+    isLoadingAI: isLoadingAIEvents || isLoadingAIFigures || isLoadingAIArtifacts,
+    selectedVazir,
+    onVazirClose: () => setSelectedVazir(null),
+    onVazirClick: (v: any) => setSelectedVazir(v),
     setShowSettings,
     onOpenQuiz: (questions: QuizQuestion[]) => {
       setActiveQuizQuestions(questions);
       setIsQuizModalOpen(true);
     },
     onJumpToYear: (y: number) => { setYear(y); },
-    selectedVazir,
-    onVazirClose: () => setSelectedVazir(null),
   };
 
   return (
@@ -389,18 +388,17 @@ export default function App() {
           />
         </div>
 
-        {/* ── Scrubber row  44px, z-30, BETWEEN map and spacer ─────────── */}
+        {/* Timeline ─ always highest z-index in the mobile stack */}
+        {/* z-38: above BottomSheet, below modals/TopBar */}
         <div
           id="tour-timeline-mobile"
           style={{ 
             height: 'auto', 
             flexShrink: 0, 
-            zIndex: 30,
-            transform: 'translateY(calc(-1px * var(--sheet-extra-height, 0)))',
-            transition: 'var(--sheet-transition, none)',
-            willChange: 'transform'
+            zIndex: 38,
+            boxSizing: 'content-box'
           }}
-          className="flex items-center liquid-glass-heavy border-t border-white/10"
+          className="flex liquid-glass-heavy border-t border-white/10 overflow-hidden"
         >
           <Timeline
             year={year}
@@ -419,18 +417,27 @@ export default function App() {
           />
         </div>
 
-        {/* ── Spacer: keeps Timeline exactly above the BottomSheet handler ── */}
-        <div style={{ height: 'calc(60px + var(--safe-bottom))', flexShrink: 0 }} aria-hidden="true" />
-
-        {/* ── Bottom Sheet: absolute overlay, GPU translateY animates snap positions ── */}
-        {/* zIndex 35 puts it above Timeline (30) but below TopBar (40) */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 35 }}>
+        {/* BottomSheet ─ z-30, always below Timeline (z-38) */}
+        {/* When dragged down, the Timeline paints on top — it is the visual floor */}
+        {/* overflow-visible lets the sheet render below the wrapper during drag */}
+        <div className="absolute inset-x-0 top-0 pointer-events-none overflow-visible" 
+             style={{ 
+               zIndex: 30,
+               bottom: 'calc(104px + max(var(--safe-bottom), 16px))' 
+             }}>
           <div className="absolute bottom-0 left-0 right-0 pointer-events-none">
             <Suspense fallback={<div style={{ height: 60, width: '100%' }} />}>
               <BottomSheet {...panelProps} setShowSettings={setShowSettings} />
             </Suspense>
           </div>
         </div>
+
+
+
+
+
+
+
       </div>
 
       {/* ════════════════════════════════════════════════════════════════════

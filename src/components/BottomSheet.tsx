@@ -93,6 +93,10 @@ interface BottomSheetProps {
   setShowSettings?:    (show: boolean) => void;
   onOpenQuiz: (questions: QuizQuestion[]) => void;
   onJumpToYear?: (year: number) => void;
+  selectedVazir?: any;
+  onVazirClose?: () => void;
+  onVazirClick?: (v: any) => void;
+  onSnapChange?: (snap: 'collapsed' | 'half' | 'full') => void;
 }
 
 // ── Component ────────────────────────────────────────────────────────────────
@@ -103,7 +107,11 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
   isLoadingAI, isLoadingAIFigures, isLoadingAIArtifacts,
   setShowSettings,
   onOpenQuiz,
-  onJumpToYear
+  onJumpToYear,
+  selectedVazir,
+  onVazirClose,
+  onVazirClick,
+  onSnapChange
 }) => {
   const [snap, setSnap] = useState<SnapPoint>('collapsed');
   const [activeTab, setActiveTab] = useState<'events' | 'figures' | 'artifacts'>('events');
@@ -135,6 +143,9 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
   const snapRef = useRef<SnapPoint>(snap);
   useEffect(() => { snapRef.current = snap; }, [snap]);
 
+  // Notify parent of snap changes so it can manage z-index layering
+  useEffect(() => { onSnapChange?.(snap); }, [snap, onSnapChange]);
+
   // Sync isDraggingRef
   useEffect(() => { isDraggingRef.current = isDragging; }, [isDragging]);
 
@@ -160,11 +171,12 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
       const safeBottom = parseInt(style.getPropertyValue('--safe-bottom') || '0');
       const windowHeight = window.innerHeight;
       
+      const bottomOffset = 104 + Math.max(safeBottom, 16); // Syncing with App.tsx min-16 padding
       layoutCache.current = { windowHeight, safeTop, safeBottom };
       snapHeightsCache.current = {
         collapsed: 60 + safeBottom,
-        half: windowHeight * 0.5,
-        full: windowHeight - 48 - safeTop
+        half: (windowHeight - bottomOffset - safeTop) * 0.5,
+        full: windowHeight - safeTop - 72 - bottomOffset // Stop well below TopBar
       };
     };
     updateCache();
@@ -257,27 +269,36 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
 
   // Pointer drag handlers
   const onPointerDown = useCallback((e: React.PointerEvent, onContent = false) => {
+    // Only allow drag on content if it's not a button or link
+    if (onContent) {
+      const target = e.target as HTMLElement;
+      if (target.closest('button') || target.closest('a') || target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
+        return;
+      }
+    }
+
     dragOnContent.current = onContent;
-    startTransition(() => {
-      setIsDragging(true);
-      setDragOffset(0);
-    });
     dragOffsetRef.current = 0;
     dragStartY.current = e.clientY;
     lastY.current = e.clientY;
     lastTime.current = Date.now();
     velocity.current = 0;
-    // Only capture pointer on the handle — content drags should not steal clicks from buttons
     if (!onContent) {
       (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
     }
   }, []);
 
   const onPointerMove = useCallback((e: React.PointerEvent) => {
-    if (!isDraggingRef.current) return;
-    
     const deltaY = dragStartY.current - e.clientY;
 
+    // Movement threshold to distinguish drag from tap
+    if (!isDraggingRef.current && Math.abs(deltaY) > 5) {
+      startTransition(() => { setIsDragging(true); });
+      try { navigator.vibrate(6); } catch(err) {}
+    }
+
+    if (!isDraggingRef.current) return;
+    
     // In full snap + dragging on content: only allow downward drag when scrolled to top
     if (dragOnContent.current && snapRef.current === 'full') {
       const scrollTop = lastScrollTopRef.current;
@@ -287,10 +308,12 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
     // DIRECT DOM UPDATE: Bypass React state/render for 60fps dragging
     dragOffsetRef.current = deltaY;
     if (sheetRef.current) {
-        // Calculate the translate directly using cached detents
         const full = snapHeightsCache.current.full;
         const snapPx = snapHeightsCache.current[snapRef.current];
-        const offset = Math.max(0, full - snapPx - deltaY);
+        const collapsed = snapHeightsCache.current.collapsed;
+        // Max offset = full - collapsed: handle floor is exactly at the Timeline top edge
+        const maxOffset = full - collapsed;
+        const offset = Math.min(maxOffset, Math.max(0, full - snapPx - deltaY));
         sheetRef.current.style.transform = `translateY(${offset}px)`;
     }
 
@@ -530,16 +553,9 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
   const extraHeight = Math.max(0, collapsedTranslateY - translateY);
   const transitionStr = isDragging ? 'none' : 'transform 0.38s cubic-bezier(0.16, 1, 0.3, 1)';
 
-  useEffect(() => {
-    // Skip work during drag to prevent forced reflows for external components (e.g. Timeline)
-    if (isDragging) return;
+  // Ensure Timeline slides in sync with BottomSheet using CSS variables
+  // (DEPRECATED: Timeline is now fixed at bottom)
 
-    const raf = requestAnimationFrame(() => {
-      document.documentElement.style.setProperty('--sheet-extra-height', `${extraHeight}`);
-      document.documentElement.style.setProperty('--sheet-transition', transitionStr);
-    });
-    return () => cancelAnimationFrame(raf);
-  }, [extraHeight, transitionStr, isDragging]);
 
   return (
     <div
@@ -550,18 +566,21 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
         transform: `translateY(${translateY}px)`,
         transition: transitionStr,
         flexShrink: 0,
-        zIndex: 20,
         willChange: isDragging ? 'transform' : 'auto',
         userSelect: isDragging ? 'none' : 'auto',
         pointerEvents: snap === 'collapsed' ? 'none' : 'auto',
       }}
-      className="w-full relative liquid-glass-heavy border-t border-white/10 shadow-[0_-12px_40px_rgba(0,0,0,0.6)] overflow-hidden"
+      className="w-full relative mobile-sheet-glass border-t border-white/10 overflow-hidden"
       dir={lang === 'fa' ? 'rtl' : 'ltr'}
+      onPointerDown={(e) => onPointerDown(e, true)}
+      onPointerMove={onPointerMove}
+      onPointerUp={onPointerUp}
+      onPointerCancel={onPointerUp}
     >
       {/* ── Drag Handle ─────────────────────────────────────────────────── */}
       {/* Always draggable handle strip */}
       <div
-        className="drag-handle flex flex-col items-center justify-start pt-3 pb-5 w-full select-none"
+        className="drag-handle flex flex-col items-center justify-start pt-3 pb-5 w-full select-none bg-slate-950/30"
         style={{
           height: 60,
           flexShrink: 0,
@@ -576,27 +595,18 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
       >
         {/* Pill indicator */}
         <div className="w-10 h-1.5 rounded-full bg-white/30 mb-2" />
-        <div className="flex w-full px-5 justify-between items-center">
-          <div className="flex flex-col items-start gap-0.5">
-            <span className="font-serif font-bold text-white text-sm">
-              {historianResult.card.eraName[lang]}
-            </span>
-            {snap === 'collapsed' && (
-              <p className="text-slate-400 text-[10px] truncate max-w-[240px]">
-                {historianResult.card.situationOneLiner[lang]}
-              </p>
-            )}
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="text-xs font-mono text-slate-400 bg-black/20 px-2 py-0.5 rounded-lg border border-white/10">
+          <div className="flex w-full px-5 justify-between items-center">
+            <span className="text-[10px] font-mono text-slate-500 bg-white/5 px-2 py-0.5 rounded-lg border border-white/5">
               {Math.abs(year)}{year < 0 ? ' BC' : ' AD'}
             </span>
+            <span className="font-cinzel font-bold text-amber-400 text-sm tracking-widest leading-none grow text-center">
+               {historianResult.card.eraName[lang]}
+            </span>
             <ChevronUp
-              className="w-4 h-4 text-slate-400 transition-transform"
+              className="w-4 h-4 text-slate-500 transition-transform"
               style={{ transform: snap === 'full' ? 'rotate(180deg)' : snap === 'half' ? 'rotate(90deg)' : 'rotate(0deg)' }}
             />
           </div>
-        </div>
       </div>
       {/* Thin separator line — appears only when full + scrolled (like Google Maps) */}
       <div
@@ -626,15 +636,57 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
         onTouchEnd={snap === 'half' ? onContentTouchEnd : undefined}
         onTouchCancel={snap === 'half' ? onContentTouchEnd : undefined}
       >
+
+          {/* ── HALF: Full context header ─────────────────────────────────── */}
+          {snap !== 'full' && (
             <div className="border-b border-white/10 shrink-0">
               <HistorianCardSection
                 result={historianResult}
                 lang={lang}
                 onNavigate={onJumpToYear ?? (() => {})}
                 isEnriching={isLoadingAI}
+                selectedVazir={selectedVazir}
+                onVazirClose={onVazirClose}
+                onVazirSelect={onVazirClick}
               />
             </div>
+          )}
 
+          {/* ── FULL: Compact sticky bar — era name + tabs only ───────────── */}
+          {snap === 'full' && (
+            <div className="shrink-0 border-b border-white/10 bg-slate-950/80 backdrop-blur-sm">
+              {/* Era name micro-strip */}
+              <div className="flex items-center gap-2 px-4 py-2">
+                <span className="font-cinzel text-amber-400 text-[11px] font-bold tracking-widest truncate flex-1">
+                  {historianResult.card.eraName[lang]}
+                </span>
+                <span className="text-[9px] font-mono text-slate-600 shrink-0">
+                  {Math.abs(historianResult.card.yearRange.start)}{historianResult.card.yearRange.start < 0 ? ' BC' : ' AD'}
+                  {' – '}
+                  {Math.abs(historianResult.card.yearRange.end)}{historianResult.card.yearRange.end < 0 ? ' BC' : ' AD'}
+                </span>
+              </div>
+              {/* Tab switcher */}
+              <div className="px-3 pb-2">
+                <div className="flex bg-black/20 rounded-xl p-1 border border-white/5">
+                  {(['events', 'figures', 'artifacts'] as const).map(tab => (
+                    <button
+                      key={tab}
+                      onClick={() => startTransition(() => { setActiveTab(tab); })}
+                      className={`flex-1 py-1.5 text-xs font-medium rounded-lg transition-all ${activeTab === tab ? 'bg-white/10 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'}`}
+                    >
+                      {lang === 'en'
+                        ? tab === 'events' ? 'Events' : tab === 'figures' ? 'Figures' : 'Heritage'
+                        : tab === 'events' ? 'رویدادها' : tab === 'figures' ? 'شخصیت‌ها' : 'میراث'}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Tab switcher for half snap (below the full HistorianCardSection) */}
+          {snap !== 'full' && (
             <div className="px-4 pb-3 pt-1 border-b border-white/5 shrink-0">
               <div className="flex bg-black/20 rounded-xl p-1 border border-white/5">
                 {(['events', 'figures', 'artifacts'] as const).map(tab => (
@@ -650,9 +702,10 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
                 ))}
               </div>
             </div>
+          )}
 
             <div
-              className="flex-1 overflow-hidden"
+              className="flex-1 min-h-0 overflow-hidden"
               onTouchStart={snap === 'full' ? onFullScrollTouchStart : undefined}
               onTouchMove={snap === 'full' ? onFullScrollTouchMove : undefined}
               onTouchEnd={snap === 'full' ? onFullScrollTouchEnd : undefined}
@@ -668,6 +721,15 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
                   components={{
                     Header: () => (
                       <div className="px-4 pt-3 pb-2 flex flex-col gap-2">
+                        {activeEvents.length === 0 && !mythsForEra.length && (
+                          <div className="text-center py-8 text-slate-500 text-sm italic">
+                            {lang === 'en' ? 'No major events in this era.' : 'رویداد مهمی در این دوره ثبت نشده است.'}
+                          </div>
+                        )}
+                      </div>
+                    ),
+                    Footer: () => (
+                      <div className="px-4 pt-4 pb-6 flex flex-col gap-3">
                         <MythCard 
                           question={mythsForEra.length > 0 ? mythsForEra[0] : undefined} 
                           lang={lang} 
@@ -676,11 +738,14 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
                           onOpenQuiz={() => onOpenQuiz(mythsForEra)}
                           onOpenSettings={() => setShowSettings && setShowSettings(true)}
                         />
-                        {activeEvents.length === 0 && !mythsForEra.length && (
-                          <div className="text-center py-12 text-slate-500 text-sm italic">
-                            {lang === 'en' ? 'No major events in this era.' : 'رویداد مهمی در این دوره ثبت نشده است.'}
-                          </div>
-                        )}
+                        <button
+                          onClick={(e) => { e.stopPropagation(); onFetchAIEvents(year); }}
+                          disabled={isLoading || !apiKey}
+                          className="w-full flex items-center justify-center gap-2 py-3 px-4 liquid-glass text-indigo-300 border border-white/10 rounded-2xl hover:bg-white/10 active:scale-[0.98] calm-transition disabled:opacity-40 disabled:cursor-not-allowed text-xs font-semibold"
+                        >
+                          {isLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
+                          {lang === 'en' ? 'Discover More Events with AI' : 'کشف رویدادهای بیشتر'}
+                        </button>
                       </div>
                     )
                   }}
@@ -717,11 +782,23 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
                   components={{
                     Header: activeFigures.length === 0 ? () => (
                       <div className="px-4 pt-3">
-                        <div className="text-center py-12 text-slate-500 text-sm italic">
+                        <div className="text-center py-8 text-slate-500 text-sm italic">
                           {lang === 'en' ? 'No major figures in this era.' : 'شخصیت مهمی در این دوره ثبت نشده است.'}
                         </div>
                       </div>
-                    ) : () => <div className="h-3" />
+                    ) : () => <div className="h-3" />,
+                    Footer: () => (
+                      <div className="px-4 pt-4 pb-6">
+                        <button
+                          onClick={(e) => { e.stopPropagation(); onFetchAIFigures(year); }}
+                          disabled={isLoadingAIFigures || !apiKey}
+                          className="w-full flex items-center justify-center gap-2 py-3 px-4 liquid-glass text-indigo-300 border border-white/10 rounded-2xl hover:bg-white/10 active:scale-[0.98] calm-transition disabled:opacity-40 disabled:cursor-not-allowed text-xs font-semibold"
+                        >
+                          {isLoadingAIFigures ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
+                          {lang === 'en' ? 'Find More Figures with AI' : 'یافتن شخصیت‌های بیشتر'}
+                        </button>
+                      </div>
+                    )
                   }}
                   itemContent={(index, figure) => (
                     <div className="px-4 pb-2">
@@ -758,11 +835,23 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
                   components={{
                     Header: activeArtifacts.length === 0 ? () => (
                       <div className="px-4 pt-3">
-                        <div className="text-center py-12 text-slate-500 text-sm italic">
+                        <div className="text-center py-8 text-slate-500 text-sm italic">
                           {lang === 'en' ? 'No major heritage in this era.' : 'میراث مهمی در این دوره ثبت نشده است.'}
                         </div>
                       </div>
-                    ) : () => <div className="h-3" />
+                    ) : () => <div className="h-3" />,
+                    Footer: () => (
+                      <div className="px-4 pt-4 pb-6">
+                        <button
+                          onClick={(e) => { e.stopPropagation(); onFetchAIArtifacts(year); }}
+                          disabled={isLoadingAIArtifacts || !apiKey}
+                          className="w-full flex items-center justify-center gap-2 py-3 px-4 liquid-glass text-indigo-300 border border-white/10 rounded-2xl hover:bg-white/10 active:scale-[0.98] calm-transition disabled:opacity-40 disabled:cursor-not-allowed text-xs font-semibold"
+                        >
+                          {isLoadingAIArtifacts ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
+                          {lang === 'en' ? 'Find More Heritage with AI' : 'مشاهده میراث بیشتر'}
+                        </button>
+                      </div>
+                    )
                   }}
                   itemContent={(index, artifact) => (
                     <div className="px-4 pb-2">
@@ -791,33 +880,19 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
               )}
             </div>
 
-            <div 
-              className="px-4 py-3 border-t border-white/5 shrink-0 flex flex-col gap-3"
-              style={{ paddingBottom: 'calc(12px + var(--safe-bottom))' }}
-            >
-              {!apiKey && (
-                <div className="border border-amber-500/30 rounded-3xl overflow-hidden mb-3">
-                  <ByokGate
-                    year={year}
-                    lang={lang}
-                    onUnlock={() => setShowSettings?.(true)}
-                  />
-                </div>
-              )}
-              <button
-                id="tour-ai-fetch-mobile"
-                onClick={(e) => { e.stopPropagation(); handleFetch(); }}
-                disabled={isLoading || !apiKey}
-                className="w-full flex items-center justify-center gap-2 py-3.5 px-4 liquid-glass text-indigo-300 border border-white/10 rounded-2xl hover:bg-white/10 active:scale-[0.98] calm-transition disabled:opacity-50 disabled:cursor-not-allowed text-sm font-bold"
+            {/* Fixed bottom — BYOK editorial insight whisper only, always visible */}
+            {!apiKey && (
+              <div
+                className="px-4 border-t border-[rgba(201,169,110,0.1)] shrink-0 pb-1"
+                style={{ paddingBottom: 'calc(4px + var(--safe-bottom))' }}
               >
-                {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
-                <span>
-                  {lang === 'en'
-                    ? (activeTab === 'events' ? 'Discover More with AI' : activeTab === 'figures' ? 'Find More Figures with AI' : 'Find More Heritage with AI')
-                    : (activeTab === 'events' ? 'کشف رویدادهای بیشتر' : activeTab === 'figures' ? 'یافتن شخصیت‌های بیشتر' : 'مشاهده میراث بیشتر')}
-                </span>
-              </button>
-            </div>
+                <ByokGate
+                  year={year}
+                  lang={lang}
+                  onUnlock={() => setShowSettings?.(true)}
+                />
+              </div>
+            )}
       </div>
     </div>
   );

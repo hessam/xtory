@@ -79,7 +79,20 @@
     will-change: transform, backdrop-filter;
   }
 
+  /* Mobile bottom sheet: higher opacity so map doesn't bleed through */
+  @media (max-width: 639.98px) {
+    .mobile-sheet-glass {
+      background: rgba(8, 12, 28, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      border-top: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+  }
+
   /* Calm UX Transitions */
+
   .calm-transition {
     transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   }
@@ -88,7 +101,7 @@
   @media (max-width: 639.98px) {
     .chat-fab-mobile {
       position: absolute !important;
-      bottom: var(--bottom-offset, 24px) !important;
+      bottom: var(--sheet-height, 60px) !important;
     }
   }
 

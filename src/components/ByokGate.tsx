@@ -14,31 +14,30 @@ export const ByokGate: React.FC<Props> = ({ year, lang, onUnlock }) => {
   const { text, cta } = getTeaserText(teaser, lang);
 
   return (
-    <div className="flex flex-col gap-3 p-4 w-full max-w-sm">
+    <button 
+      onClick={onUnlock}
+      className={`w-full text-left rtl:text-right py-5 pl-4 pr-2 group active:opacity-70 transition-all border-l-2 border-amber-500/30 bg-[rgba(201,169,110,0.04)] rounded-r-xl my-2`}
+    >
+      <div className="flex flex-col items-start min-w-0">
+        {/* Label: Diamond + Cinzel */}
+        <div className="flex items-center gap-1.5 mb-2.5 opacity-60 group-hover:opacity-100 transition-opacity">
+          <span className="text-amber-500/80 text-[8px] leading-none mb-0.5">◆</span>
+          <span className="font-cinzel text-[9px] font-bold uppercase tracking-[0.2em] text-amber-500/80">
+            {lang === 'en' ? 'Historian Insight' : 'بینش مورخ'}
+          </span>
+        </div>
 
-      {/* Blurred Skeleton Lines — implies locked content above */}
-      <div className="flex flex-col gap-1.5 pointer-events-none select-none" aria-hidden="true">
-        <div className="h-2.5 rounded-full bg-white/10 blur-[2px] w-full" />
-        <div className="h-2.5 rounded-full bg-white/10 blur-[2px] w-4/5" />
-        <div className="h-2.5 rounded-full bg-white/10 blur-[2px] w-3/5" />
+        {/* Teaser Text: No truncation, full wrapping */}
+        <p className="text-slate-300 text-[11px] font-medium leading-[1.6] mb-3 whitespace-normal">
+          {text}
+        </p>
+
+        {/* CTA: Separate line, Cinzel + Arrow */}
+        <div className="flex items-center gap-1.5 font-cinzel text-[10px] font-bold text-amber-500/60 group-hover:text-amber-500 transition-colors uppercase tracking-wider">
+          <span>{lang === 'en' ? 'Unlock this story' : 'باز کردن این داستان'}</span>
+          <span className="text-[12px] leading-none">→</span>
+        </div>
       </div>
-
-      {/* Teaser Story */}
-      <p className="text-amber-100 text-sm leading-relaxed font-medium italic">
-        {text}
-      </p>
-
-      {/* CTA Button */}
-      <button
-        onClick={onUnlock}
-        className="flex items-center justify-center gap-2 px-4 py-2.5
-                   bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40
-                   rounded-2xl text-amber-300 text-sm font-bold calm-transition
-                   active:scale-[0.98]"
-      >
-        <Sparkles className="w-4 h-4" />
-        {cta}
-      </button>
-    </div>
+    </button>
   );
 };

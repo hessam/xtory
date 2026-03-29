@@ -311,7 +311,12 @@ export const Timeline: React.FC<TimelineProps> = ({ year, setYear, lang, onEvent
   return (
     <div className="flex flex-col h-full w-full sm:w-auto bg-transparent">
       {/* Slider Control & Zoom */}
-      <div className="px-0 sm:px-4 pt-2 pb-6 sm:py-4 flex flex-col sm:flex-row items-center gap-2 sm:gap-3 liquid-glass border-b border-white/5 z-20 calm-transition shadow-lg">
+      <div 
+        style={{ 
+          paddingBottom: viewWidth < 640 ? 'max(var(--safe-bottom), 16px)' : undefined 
+        }}
+        className="px-0 sm:px-4 pt-2 sm:py-4 flex flex-col sm:flex-row items-center gap-2 sm:gap-3 liquid-glass border-b border-white/5 z-20 calm-transition shadow-lg"
+      >
         <div className="px-4 sm:hidden w-full flex items-center justify-between gap-4 h-8 overflow-hidden">
           <span className="text-[10px] sm:text-base font-bold text-slate-100 shrink-0 truncate max-w-[140px] sm:max-w-none whitespace-nowrap bg-indigo-500/10 px-2 py-1 rounded-lg border border-indigo-500/20 uppercase tracking-wider">
             {activeDynasty ? activeDynasty.name[lang] : (lang === 'en' ? 'Explore with AI' : 'جستجو با هوش مصنوعی')}
@@ -342,20 +347,21 @@ export const Timeline: React.FC<TimelineProps> = ({ year, setYear, lang, onEvent
           className="w-full flex-1 flex items-center gap-2 px-2"
           dir="ltr"
         >
-          {/* Labels horizontally adjacent to arrows */}
-          <span className="text-[7px] sm:text-[8px] uppercase tracking-[0.3em] font-medium text-slate-500/60 font-cinzel leading-none shrink-0 pointer-events-none select-none">
-            {lang === 'en' ? 'Ancient' : 'گذشته'}
-          </span>
+          {/* Arrow-Label Stack Left */}
+          <div className="flex flex-col items-center gap-0.5 min-w-[32px]">
+            <button 
+              onClick={() => setYear(Math.max(MIN_YEAR, year - 5))}
+              className="p-1 hover:bg-white/10 rounded-lg calm-transition text-slate-400 hover:text-white shrink-0 active:scale-125 z-10"
+              title={lang === 'en' ? "-5 years" : "-۵ سال"}
+            >
+              <ChevronLeft className="w-5 h-5 sm:w-4 sm:h-4" />
+            </button>
+            <span className="text-[7px] sm:text-[8px] uppercase tracking-[0.2em] font-medium text-slate-500/60 font-cinzel leading-none shrink-0 pointer-events-none select-none">
+              {lang === 'en' ? 'Anc' : 'گذشته'}
+            </span>
+          </div>
 
-          <button 
-            onClick={() => setYear(Math.max(MIN_YEAR, year - 5))}
-            className="p-1 hover:bg-white/10 rounded-lg calm-transition text-slate-400 hover:text-white shrink-0 active:scale-125 z-10"
-            title={lang === 'en' ? "-5 years" : "-۵ سال"}
-          >
-            <ChevronLeft className="w-5 h-5 sm:w-4 sm:h-4" />
-          </button>
-
-          <div className="flex-1 relative flex items-center h-10 sm:h-8">
+          <div className="flex-1 relative flex items-center h-12 sm:h-8">
             {/* Era Background Tracks (Slider Minimap) */}
             <div className="absolute left-0 right-0 h-2 sm:h-2.5 rounded-full overflow-hidden flex pointer-events-none opacity-60">
               {ERAS.map(era => {
@@ -423,11 +429,12 @@ export const Timeline: React.FC<TimelineProps> = ({ year, setYear, lang, onEvent
               dir="ltr"
             />
 
-            {/* Persian Presence Waveform */}
-            <div className="absolute -bottom-[2px] left-0 right-0 flex pointer-events-none gap-[1px]" style={{ height: 4 }}>
+            {/* Persian Presence Waveform - taller on mobile */}
+            <div className="absolute -bottom-[4px] left-0 right-0 flex pointer-events-none gap-[1px]" style={{ height: viewWidth < 640 ? 8 : 4 }}>
               {persianPresenceWaveform.map((bucket, i) => {
                 const widthPct = (50 / (MAX_YEAR - MIN_YEAR)) * 100;
                 const leftPct = ((bucket.start - MIN_YEAR) / (MAX_YEAR - MIN_YEAR)) * 100;
+                const waveHeight = viewWidth < 640 ? 8 : 4;
                 
                 return (
                   <div
@@ -436,7 +443,7 @@ export const Timeline: React.FC<TimelineProps> = ({ year, setYear, lang, onEvent
                     style={{
                       left: `${leftPct}%`,
                       width: `calc(${widthPct}% - 1px)`,
-                      height: `${Math.max(0.5, bucket.ratio * 4)}px`,
+                      height: `${Math.max(0.5, bucket.ratio * waveHeight)}px`,
                       bottom: 0,
                       opacity: bucket.ratio > 0 ? 0.3 + (bucket.ratio * 0.5) : 0,
                       borderRadius: '1px 1px 0 0'
@@ -448,18 +455,21 @@ export const Timeline: React.FC<TimelineProps> = ({ year, setYear, lang, onEvent
             </div>
           </div>
 
-          <button 
-            onClick={() => setYear(Math.min(MAX_YEAR, year + 5))}
-            className="p-1 hover:bg-white/10 rounded-lg calm-transition text-slate-400 hover:text-white shrink-0 active:scale-125 z-10"
-            title={lang === 'en' ? "+5 years" : "+۵ سال"}
-          >
-            <ChevronRight className="w-5 h-5 sm:w-4 sm:h-4" />
-          </button>
-
-          <span className="text-[7px] sm:text-[8px] uppercase tracking-[0.3em] font-medium text-slate-500/60 font-cinzel leading-none shrink-0 pointer-events-none select-none">
-            {lang === 'en' ? 'Modern' : 'اخیر'}
-          </span>
+          {/* Arrow-Label Stack Right */}
+          <div className="flex flex-col items-center gap-0.5 min-w-[32px]">
+            <button 
+              onClick={() => setYear(Math.min(MAX_YEAR, year + 5))}
+              className="p-1 hover:bg-white/10 rounded-lg calm-transition text-slate-400 hover:text-white shrink-0 active:scale-125 z-10"
+              title={lang === 'en' ? "+5 years" : "+۵ سال"}
+            >
+              <ChevronRight className="w-5 h-5 sm:w-4 sm:h-4" />
+            </button>
+            <span className="text-[7px] sm:text-[8px] uppercase tracking-[0.2em] font-medium text-slate-500/60 font-cinzel leading-none shrink-0 pointer-events-none select-none">
+              {lang === 'en' ? 'Mod' : 'اخیر'}
+            </span>
+          </div>
         </div>
+
 
         <div className="hidden sm:flex items-center gap-1 bg-black/20 rounded-xl p-1 shrink-0 ml-auto sm:ml-0" dir="ltr">
           <button 
