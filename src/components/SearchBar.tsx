@@ -44,7 +44,7 @@ export function SearchBar({ lang, onSearchResult, setShowSettings }: SearchBarPr
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder={lang === 'en' ? 'AI Search...' : 'جستجوی هوشمند...'}
-          className="w-40 sm:w-56 md:w-72 bg-slate-900/60 border border-white/10 hover:border-indigo-500/30 text-white text-[13px] rounded-2xl py-2 px-10 focus:outline-none focus:ring-1 focus:ring-indigo-500/50 placeholder-slate-500 backdrop-blur-md transition-all shadow-inner"
+          className="w-40 sm:w-56 md:w-72 liquid-glass hover:border-indigo-500/30 text-white text-[13px] rounded-2xl py-2 px-10 focus:outline-none focus:ring-1 focus:ring-indigo-500/50 placeholder-slate-500 transition-all shadow-inner"
           dir={lang === 'fa' ? 'rtl' : 'ltr'}
         />
         <div className="absolute left-3 p-1.5 text-indigo-400/50">

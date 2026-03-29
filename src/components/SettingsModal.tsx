@@ -115,7 +115,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ onClose, lang }) =
                   setError(null);
                 }}
                 placeholder={t.keyPlaceholder}
-                className="w-full bg-black/40 border border-white/10 text-white placeholder-slate-500 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all font-mono text-sm"
+                className="w-full liquid-glass text-white placeholder-slate-500 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all font-mono text-sm"
               />
             </div>
             <a 

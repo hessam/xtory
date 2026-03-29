@@ -149,7 +149,7 @@ export const EventsPanel: React.FC<EventsPanelProps> = ({ year, lang, events, fi
       `}
     >
       {/* Mobile Drag Handle / Header — hidden on desktop */}
-      <div className="sm:hidden flex flex-col items-center pointer-events-auto bg-slate-900/90 backdrop-blur-xl border-t border-x border-white/10 rounded-t-3xl shadow-[0_-10px_20px_rgba(0,0,0,0.5)]">
+      <div className="sm:hidden flex flex-col items-center pointer-events-auto liquid-glass border-t border-x border-white/10 rounded-t-3xl shadow-[0_-10px_20px_rgba(0,0,0,0.5)]">
         <div 
           onClick={() => setIsOpen(!isOpen)}
           className="w-full py-3 flex flex-col items-center gap-1 cursor-pointer active:bg-white/5 transition-colors rounded-t-3xl"
@@ -181,7 +181,7 @@ export const EventsPanel: React.FC<EventsPanelProps> = ({ year, lang, events, fi
               /* Mobile: glass card rising from bottom */
               /* Desktop: transparent, fills sidebar, no border/shadow of its own */
               `w-full
-               bg-slate-900/95 sm:bg-transparent
+               liquid-glass-heavy sm:bg-transparent
                border-x border-white/10 sm:border-0
                rounded-t-none
                overflow-hidden pointer-events-auto

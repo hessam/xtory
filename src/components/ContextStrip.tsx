@@ -20,7 +20,7 @@ export const ContextStrip: React.FC<Props> = ({ year, lang }) => {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0.7 }}
         transition={{ duration: 0.15 }}
-        className="flex items-center gap-3 px-4 bg-slate-900/90 backdrop-blur-xl border-b border-white/10 overflow-hidden"
+        className="flex items-center gap-3 px-4 liquid-glass border-b border-white/10 overflow-hidden"
         style={{ height: 36, flexShrink: 0 }}
         dir={lang === 'fa' ? 'rtl' : 'ltr'}
       >

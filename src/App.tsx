@@ -305,7 +305,7 @@ export default function App() {
             paddingTop: 'var(--safe-top)',
             boxSizing: 'content-box' 
           }}
-          className="flex items-center justify-between px-3 bg-slate-900/90 backdrop-blur-xl border-b border-white/10 gap-2"
+          className="flex items-center justify-between px-3 liquid-glass border-b border-white/10 gap-2"
         >
           {/* Left: Globe + year */}
           <div className="flex items-center gap-2 shrink-0">
@@ -390,7 +390,7 @@ export default function App() {
             transition: 'var(--sheet-transition, none)',
             willChange: 'transform'
           }}
-          className="flex items-center bg-slate-900/95 backdrop-blur-xl border-t border-white/10"
+          className="flex items-center liquid-glass-heavy border-t border-white/10"
         >
           <Timeline
             year={year}

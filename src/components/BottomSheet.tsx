@@ -555,7 +555,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
         userSelect: isDragging ? 'none' : 'auto',
         pointerEvents: snap === 'collapsed' ? 'none' : 'auto',
       }}
-      className="w-full relative bg-slate-900/95 backdrop-blur-xl border-t border-white/10 shadow-[0_-12px_40px_rgba(0,0,0,0.6)] overflow-hidden"
+      className="w-full relative liquid-glass-heavy border-t border-white/10 shadow-[0_-12px_40px_rgba(0,0,0,0.6)] overflow-hidden"
       dir={lang === 'fa' ? 'rtl' : 'ltr'}
     >
       {/* ── Drag Handle ─────────────────────────────────────────────────── */}
