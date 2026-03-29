@@ -242,45 +242,57 @@ export const EventsPanel: React.FC<EventsPanelProps> = ({ year, lang, events, fi
             <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-3 custom-scrollbar">
               {activeTab === 'events' && (
                 <>
-                  <MythCard 
-                    question={mythsForEra.length > 0 ? mythsForEra[0] : undefined} 
-                    lang={lang} 
-                    year={year}
-                    hasApiKey={!!apiKey}
-                    onOpenQuiz={() => onOpenQuiz(mythsForEra)}
-                    onOpenSettings={() => setShowSettings && setShowSettings(true)}
-                  />
                   {activeEvents.length > 0 ? (
-                  activeEvents.map(event => (
-                    <motion.div
-                      key={event.id}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      onClick={() => onEventClick(event)}
-                      className={`p-4 rounded-2xl border cursor-pointer transition-all ${getEventColor(event.type)} hover:brightness-125 min-h-[44px] flex items-center mb-1 text-left rtl:text-right shrink-0`}
-                    >
-                      <div className="flex items-start gap-3 w-full">
-                        <div className="mt-0.5 p-2 bg-black/20 rounded-full shadow-inner shrink-0">
-                          {getEventIcon(event.type)}
-                        </div>
-                        <div className="flex-1 min-w-0 overflow-hidden">
-                          <div className="flex items-center gap-2 mb-1">
-                            <h4 className="font-bold text-slate-200 text-sm leading-tight truncate flex-1">{event.title[lang]}</h4>
-                            <span className="text-[10px] font-mono text-slate-400 whitespace-nowrap shrink-0">
-                              {Math.abs(event.year)} {event.year < 0 ? 'BC' : 'AD'}
-                            </span>
+                    activeEvents.map(event => (
+                      <motion.div
+                        key={event.id}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => onEventClick(event)}
+                        className={`p-4 rounded-2xl border cursor-pointer transition-all ${getEventColor(event.type)} hover:brightness-125 min-h-[44px] flex items-center mb-1 text-left rtl:text-right shrink-0`}
+                      >
+                        <div className="flex items-start gap-3 w-full">
+                          <div className="mt-0.5 p-2 bg-black/20 rounded-full shadow-inner shrink-0">
+                            {getEventIcon(event.type)}
                           </div>
-                          <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed">{event.description[lang]}</p>
+                          <div className="flex-1 min-w-0 overflow-hidden">
+                            <div className="flex items-center gap-2 mb-1">
+                              <h4 className="font-bold text-slate-200 text-sm leading-tight truncate flex-1">{event.title[lang]}</h4>
+                              <span className="text-[10px] font-mono text-slate-400 whitespace-nowrap shrink-0">
+                                {Math.abs(event.year)} {event.year < 0 ? 'BC' : 'AD'}
+                              </span>
+                            </div>
+                            <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed">{event.description[lang]}</p>
+                          </div>
                         </div>
-                      </div>
-                    </motion.div>
+                      </motion.div>
                     ))
                   ) : (
-                    !mythsForEra.length && (
-                      <div className="text-center py-12 text-slate-500 text-sm italic">
-                        {lang === 'en' ? 'No major events recorded in this era.' : 'هیچ رویداد مهمی در این دوره ثبت نشده است.'}
-                      </div>
-                    )
+                    <div className="text-center py-12 text-slate-500 text-sm italic">
+                      {lang === 'en' ? 'No major events recorded in this era.' : 'هیچ رویداد مهمی در این دوره ثبت نشده است.'}
+                    </div>
+                  )}
+
+                  {/* Myth card — reward at the bottom, not a competing headline */}
+                  {mythsForEra.length > 0 && (
+                    <MythCard
+                      question={mythsForEra[0]}
+                      lang={lang}
+                      year={year}
+                      hasApiKey={!!apiKey}
+                      onOpenQuiz={() => onOpenQuiz(mythsForEra)}
+                      onOpenSettings={() => setShowSettings && setShowSettings(true)}
+                    />
+                  )}
+                  {mythsForEra.length === 0 && (
+                    <MythCard
+                      question={undefined}
+                      lang={lang}
+                      year={year}
+                      hasApiKey={!!apiKey}
+                      onOpenQuiz={() => onOpenQuiz(mythsForEra)}
+                      onOpenSettings={() => setShowSettings && setShowSettings(true)}
+                    />
                   )}
                 </>
               )}
