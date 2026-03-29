@@ -338,7 +338,7 @@ export const Timeline: React.FC<TimelineProps> = ({ year, setYear, lang, onEvent
               ) : (
                 <Sparkles className="w-3.5 h-3.5" />
               )}
-              <span>{lang === 'en' ? 'Era' : 'دوران'}</span>
+              <span>{lang === 'en' ? 'Rulers' : 'حاکمان'}</span>
             </button>
           )}
         </div>
@@ -502,7 +502,7 @@ export const Timeline: React.FC<TimelineProps> = ({ year, setYear, lang, onEvent
             ) : (
               <Sparkles className="w-4 h-4" />
             )}
-            <span className="hidden sm:inline">{lang === 'en' ? 'Era Context' : 'زمینه دوران'}</span>
+            <span className="hidden sm:inline">{lang === 'en' ? 'Who Ruled Here?' : 'حکومتهای این دوره'}</span>
           </button>
         )}
       </div>

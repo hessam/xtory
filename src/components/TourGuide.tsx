@@ -38,7 +38,7 @@ export const TourGuide: React.FC<TourGuideProps> = ({ lang, run, onFinish }) => 
       },
       {
         target: isMobile ? '#tour-timeline-ai-mobile' : '#tour-timeline-ai-desktop',
-        content: 'Want to know the global context? Click the "Era Context" button to fetch historical events happening around the world during this specific year.',
+        content: 'Want to know the global context? Click the "Who Ruled Here?" button to fetch historical events happening around the world during this specific year.',
         placement: 'top',
       },
       {
@@ -92,7 +92,7 @@ export const TourGuide: React.FC<TourGuideProps> = ({ lang, run, onFinish }) => 
       },
       {
         target: isMobile ? '#tour-timeline-ai-mobile' : '#tour-timeline-ai-desktop',
-        content: 'می‌خواهید زمینه جهانی را بدانید؟ روی دکمه "زمینه دوران" کلیک کنید تا رویدادهای تاریخی که در سراسر جهان در این سال خاص رخ داده‌اند را دریافت کنید.',
+        content: 'می‌خواهید زمینه جهانی را بدانید؟ روی دکمه "حکومتهای این دوره" کلیک کنید تا رویدادهای تاریخی که در سراسر جهان در این سال خاص رخ داده‌اند را دریافت کنید.',
         placement: 'top',
       },
       {
