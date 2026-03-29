@@ -613,7 +613,7 @@ export default function App() {
               onVazirClick={(vazir) => setSelectedVazir(vazir)}
             />
             
-            {/* BYOK Banner moved inside the map container, now bottom-center */}
+            {/* BYOK Banner temporarily hidden until layout matures
             {isReady && !apiKey && (
               <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-50 pointer-events-auto">
                 <div className="liquid-glass border border-amber-500/30 rounded-3xl shadow-xl overflow-hidden">
@@ -624,7 +624,7 @@ export default function App() {
                   />
                 </div>
               </div>
-            )}
+            )} */}
             </div>
             </div>
 
