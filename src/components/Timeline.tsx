@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Sparkles, Loader2, Swords, Skull, Landmark, Globe2, Crown, Shield, ZoomIn, ZoomOut, Building2, Book, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useApiKey } from '../context/ApiKeyContext';
 import { formatYear } from '../utils/format';
+import { ERAS } from '../data/eras';
 
 interface TimelineProps {
   year: number;
@@ -261,45 +262,33 @@ export const Timeline: React.FC<TimelineProps> = ({ year, setYear, lang, onEvent
     }
   };
 
-  const ERAS = [
-    {
-      id: 'ancient',
-      start: -2700,
-      end: 651,
-      label: { en: 'Ancient / Pre-Islamic', fa: 'پیش از اسلام' },
-      color: 'bg-purple-900/10',
-      borderColor: 'border-purple-500/30',
-      marker: { en: 'Islamic Conquest', fa: 'فتح اسلامی' }
-    },
-    {
-      id: 'early-islamic',
-      start: 651,
-      end: 1219,
-      label: { en: 'Early Islamic', fa: 'دوره اسلامی اولیه' },
-      color: 'bg-teal-900/10',
-      borderColor: 'border-teal-500/30',
-      marker: { en: 'Mongol Invasion', fa: 'حمله مغول' }
-    },
-    {
-      id: 'middle',
-      start: 1219,
-      end: 1501,
-      label: { en: 'Middle Era', fa: 'دوره میانه' },
-      color: 'bg-amber-900/10',
-      borderColor: 'border-amber-500/30',
-      marker: { en: 'Safavid Rise', fa: 'ظهور صفویه' }
-    },
-    {
-      id: 'modern',
-      start: 1501,
-      end: MAX_YEAR,
-      label: { en: 'Modern Era', fa: 'دوران مدرن' },
-      color: 'bg-blue-900/10',
-      borderColor: 'border-blue-500/30',
-      marker: null
+  function getMinimapDotColor(type: string): string {
+    switch (type) {
+      case 'battle':    return 'bg-rose-400';
+      case 'downfall':  return 'bg-purple-400';
+      case 'political': return 'bg-sky-400';
+      case 'cultural':  return 'bg-emerald-400';
+      case 'tradition': return 'bg-amber-400';
+      default:          return 'bg-slate-400';
     }
-  ];
+  }
 
+  const persianPresenceByEra = useMemo(() => {
+    return ERAS.map(era => {
+      const eraEvents = events.filter(e => e.startDate >= era.start && e.startDate < era.end);
+      const persianCount = eraEvents.filter(e => {
+        const dynasty = dynasties[e.rulerId ? rulers[e.rulerId]?.dynastyId : ''];
+        return dynasty?.colorFamily === 'persian';
+      }).length;
+      const total = eraEvents.length;
+      return {
+        eraId: era.id,
+        start: era.start,
+        end: era.end,
+        ratio: total > 0 ? persianCount / total : 0,
+      };
+    });
+  }, [events, dynasties, rulers]);
   return (
     <div className="flex flex-col h-full w-full sm:w-auto bg-transparent">
       {/* Slider Control & Zoom */}
@@ -377,6 +366,26 @@ export const Timeline: React.FC<TimelineProps> = ({ year, setYear, lang, onEvent
               />
             )}
 
+            {/* ─── Minimap Event Dots (pointer-events-none, below the input) ──── */}
+            <div className="absolute inset-0 pointer-events-none">
+              {historicalEvents.map(event => {
+                const pct = ((event.year - MIN_YEAR) / (MAX_YEAR - MIN_YEAR)) * 100;
+                return (
+                  <div
+                    key={event.id}
+                    className={`absolute w-1.5 h-1.5 rounded-full ${getMinimapDotColor(event.type)}`}
+                    style={{
+                      left: `${pct}%`,
+                      top: '50%',
+                      transform: 'translate(-50%, -50%)',
+                    }}
+                    title={`${event.title[lang]} · ${Math.abs(event.year)} ${event.year < 0 ? 'BC' : 'AD'}`}
+                  />
+                );
+              })}
+            </div>
+            {/* ─── End Minimap Event Dots ─────────────────────────────────── */}
+
             <input
               type="range"
               min={MIN_YEAR}
@@ -391,6 +400,28 @@ export const Timeline: React.FC<TimelineProps> = ({ year, setYear, lang, onEvent
                          [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-6 [&::-webkit-slider-thumb]:h-6 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-indigo-400 [&::-webkit-slider-thumb]:shadow-[0_0_10px_rgba(99,102,241,0.5)] [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white/20 sm:[&::-webkit-slider-thumb]:w-4 sm:[&::-webkit-slider-thumb]:h-4"
               dir="ltr"
             />
+
+            {/* ─── Persian Presence Waveform ──────────────────────────────── */}
+            <div className="absolute bottom-0 left-0 right-0 flex pointer-events-none" style={{ height: 3 }}>
+              {persianPresenceByEra.map(era => {
+                const leftPct = ((era.start - MIN_YEAR) / (MAX_YEAR - MIN_YEAR)) * 100;
+                const widthPct = ((era.end - era.start) / (MAX_YEAR - MIN_YEAR)) * 100;
+                return (
+                  <div
+                    key={era.eraId}
+                    className="absolute bg-amber-400/60"
+                    style={{
+                      left: `${leftPct}%`,
+                      width: `${widthPct}%`,
+                      height: `${Math.max(1, era.ratio * 4)}px`, // 1px min, 4px max
+                      bottom: 0,
+                    }}
+                    title={`Persian presence: ${Math.round(era.ratio * 100)}%`}
+                  />
+                );
+              })}
+            </div>
+            {/* ─── End Persian Presence Waveform ──────────────────────────── */}
 
             {/* Subtle Directional Hints (Mobile Only) */}
             <div className="sm:hidden absolute -bottom-5 left-0 right-0 flex justify-between px-2 pointer-events-none opacity-80 select-none">

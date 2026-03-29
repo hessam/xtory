@@ -9,6 +9,8 @@ import { Artifact } from '../data/artifacts';
 import { Sparkles, ZoomIn, ZoomOut, Maximize, Swords, Skull, Landmark, Globe2, Building2, Book, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { rivers, mountains } from '../data/geography';
+import { vazirs as allVazirs, Vazir, VAZIR_CLUSTER_PX } from '../data/vazirs';
+import { VazirDot } from './VazirDot';
 
 interface MapProps {
   year: number;
@@ -20,13 +22,49 @@ interface MapProps {
   dynasties: Record<string, Dynasty>;
   historicalEvents?: HistoricalEvent[];
   artifacts?: Artifact[];
+  vazirs?: Vazir[];
   onHistoricalEventClick?: (event: HistoricalEvent) => void;
   onArtifactClick?: (artifact: Artifact) => void;
+  onVazirClick?: (vazir: Vazir) => void;
 }
 
-export const Map: React.FC<MapProps> = ({ year, lang, onRegionClick, onGlobalContextClick, events, rulers, dynasties, historicalEvents = [], artifacts = [], onHistoricalEventClick, onArtifactClick }) => {
+export const Map: React.FC<MapProps> = ({ year, lang, onRegionClick, onGlobalContextClick, events, rulers, dynasties, historicalEvents = [], artifacts = [], vazirs, onHistoricalEventClick, onArtifactClick, onVazirClick }) => {
   const [currentScale, setCurrentScale] = useState(1);
   const [tooltip, setTooltip] = useState<{ x: number, y: number, text: string, subtext?: string } | null>(null);
+
+  // Filter Vazirs active at the current year
+  const activeVazirs = useMemo(
+    () => (vazirs ?? allVazirs).filter(v => year >= v.activeYearStart && year <= v.activeYearEnd),
+    [vazirs, year]
+  );
+
+  type VazirCluster = { vazirs: Vazir[]; x: number; y: number };
+
+  const vazirClusters = useMemo((): VazirCluster[] => {
+    const clusters: VazirCluster[] = [];
+
+    activeVazirs.forEach(v => {
+      const region = regions.find(r => r.id === v.regionId);
+      const center = region?.center;
+      if (!center) return;
+
+      const [x, y] = center;
+
+      const nearby = clusters.find(c => {
+        const dx = c.x - x;
+        const dy = c.y - y;
+        return Math.sqrt(dx * dx + dy * dy) < VAZIR_CLUSTER_PX;
+      });
+
+      if (nearby) {
+        nearby.vazirs.push(v);
+      } else {
+        clusters.push({ vazirs: [v], x, y });
+      }
+    });
+
+    return clusters;
+  }, [activeVazirs]);
 
   const resolveCoordinates = (coords?: [number, number], regionId?: string): [number, number] | undefined => {
     if (!coords) return undefined;
@@ -633,6 +671,24 @@ export const Map: React.FC<MapProps> = ({ year, lang, onRegionClick, onGlobalCon
                     </text>
                   </g>
                 ))}
+
+                {/* ── Vazir Dot Overlay ─────────────────────────────────────── */}
+                <foreignObject x="0" y="0" width="1000" height="600" className="pointer-events-none" style={{ overflow: 'visible' }}>
+                  <div className="relative w-full h-full pointer-events-none">
+                    {vazirClusters.map((cluster, i) => (
+                      <div className="pointer-events-auto" key={i}>
+                        <VazirDot
+                          vazirs={cluster.vazirs}
+                          x={cluster.x}
+                          y={cluster.y}
+                          lang={lang}
+                          onClick={onVazirClick ?? (() => {})}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </foreignObject>
+
                   {/* Atmospheric Vignette */}
                   <rect x="-5000" y="-5000" width="11000" height="10600" fill="url(#water-depth)" fillOpacity="0.2" pointerEvents="none" />
 

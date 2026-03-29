@@ -362,6 +362,9 @@ export default function App() {
             artifacts={allArtifacts}
             onHistoricalEventClick={handleHistoricalEventClick}
             onArtifactClick={handleArtifactClick}
+            onVazirClick={(vazir) => {
+              console.log('[Vazir clicked]', vazir);
+            }}
           />
         </div>
 
@@ -515,6 +518,9 @@ export default function App() {
               artifacts={allArtifacts}
               onHistoricalEventClick={handleHistoricalEventClick}
               onArtifactClick={handleArtifactClick}
+              onVazirClick={(vazir) => {
+                console.log('[Vazir clicked]', vazir);
+              }}
             />
             
             {/* BYOK Banner moved inside the map container, now bottom-center */}
