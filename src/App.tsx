@@ -281,6 +281,7 @@ export default function App() {
     selectedVazir,
     onVazirClose: () => setSelectedVazir(null),
     onVazirClick: (v: any) => setSelectedVazir(v),
+    onBannerClick: (url: string, title: string) => setSelectedBanner({ url, title }),
     setShowSettings,
     onOpenQuiz: (questions: QuizQuestion[]) => {
       setActiveQuizQuestions(questions);
@@ -685,7 +686,6 @@ export default function App() {
             <div className={`flex-1 flex flex-col overflow-hidden transition-all duration-700 ${isRightPanelOpen ? 'opacity-100' : 'opacity-0 pointer-events-none whitespace-nowrap'}`}>
               <EventsPanel 
                 {...panelProps} 
-                onBannerClick={(url, title) => setSelectedBanner({ url, title })}
               />
             </div>
           </div>

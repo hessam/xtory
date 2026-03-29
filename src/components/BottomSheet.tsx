@@ -96,6 +96,7 @@ interface BottomSheetProps {
   selectedVazir?: any;
   onVazirClose?: () => void;
   onVazirClick?: (v: any) => void;
+  onBannerClick?: (url: string, title: string) => void;
   onSnapChange?: (snap: 'collapsed' | 'half' | 'full') => void;
 }
 
@@ -111,6 +112,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
   selectedVazir,
   onVazirClose,
   onVazirClick,
+  onBannerClick,
   onSnapChange
 }) => {
   const [snap, setSnap] = useState<SnapPoint>('collapsed');
@@ -698,6 +700,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
                               selectedVazir={selectedVazir}
                               onVazirClose={onVazirClose}
                               onVazirSelect={onVazirClick}
+                              onBannerClick={onBannerClick}
                             />
                           </div>
                         )}
