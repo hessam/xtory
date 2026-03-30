@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, Key, Shield, AlertTriangle, CheckCircle, ExternalLink, Loader2 } from 'lucide-react';
 import { useApiKey } from '../context/ApiKeyContext';
+import { pushToDataLayer } from '../services/tagManager';
 
 interface SettingsModalProps {
   onClose: () => void;
@@ -65,6 +66,11 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ onClose, lang }) =
 
       setApiKey(inputKey.trim(), localPersist ? 'local' : 'memory');
       setSuccess(true);
+      
+      pushToDataLayer('api_key_added', {
+        persistence_type: localPersist ? 'local' : 'memory'
+      });
+
       setTimeout(() => {
         onClose();
       }, 1500);
