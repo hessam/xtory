@@ -11,6 +11,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { rivers, mountains } from '../data/geography';
 import { vazirs as allVazirs, Vazir, VAZIR_CLUSTER_PX } from '../data/vazirs';
 import { VazirDot } from './VazirDot';
+import { pushToDataLayer } from '../services/tagManager';
 
 interface MapProps {
   year: number;
@@ -443,7 +444,14 @@ export const Map: React.FC<MapProps> = ({ year, lang, onRegionClick, onGlobalCon
                     return (
                       <g
                         key={region.id}
-                        onClick={() => onRegionClick(region.id)}
+                        onClick={() => {
+                          onRegionClick(region.id);
+                          pushToDataLayer('map_region_click', {
+                            region_id: region.id,
+                            region_name: region.name.en,
+                            current_year: year
+                          });
+                        }}
                         onMouseMove={(e) => {
                           setTooltip({ x: e.clientX, y: e.clientY, text: region.name[lang], subtext: controlText });
                         }}
@@ -561,7 +569,15 @@ export const Map: React.FC<MapProps> = ({ year, lang, onRegionClick, onGlobalCon
                     className="cursor-pointer group calm-transition"
                     onClick={(e) => {
                       e.stopPropagation();
-                      if (onHistoricalEventClick) onHistoricalEventClick(event);
+                      if (onHistoricalEventClick) {
+                        onHistoricalEventClick(event);
+                        pushToDataLayer('historical_event_click', {
+                          event_id: event.id,
+                          event_title: event.title.en,
+                          event_year: event.year,
+                          current_map_year: year
+                        });
+                      }
                     }}
                   >
                     <circle
@@ -620,7 +636,15 @@ export const Map: React.FC<MapProps> = ({ year, lang, onRegionClick, onGlobalCon
                     className="cursor-pointer group calm-transition"
                     onClick={(e) => {
                       e.stopPropagation();
-                      if (onArtifactClick) onArtifactClick(artifact);
+                      if (onArtifactClick) {
+                        onArtifactClick(artifact);
+                        pushToDataLayer('artifact_click', {
+                          artifact_id: artifact.id,
+                          artifact_name: artifact.name.en,
+                          artifact_type: artifact.type,
+                          current_map_year: year
+                        });
+                      }
                     }}
                   >
                     <circle
@@ -682,7 +706,14 @@ export const Map: React.FC<MapProps> = ({ year, lang, onRegionClick, onGlobalCon
                           x={cluster.x}
                           y={cluster.y}
                           lang={lang}
-                          onClick={onVazirClick ?? (() => {})}
+                          onClick={(vazir) => {
+                            if (onVazirClick) onVazirClick(vazir);
+                            pushToDataLayer('vazir_click', {
+                              vazir_id: vazir.id,
+                              vazir_name: vazir.name.en,
+                              current_map_year: year
+                            });
+                          }}
                         />
                       </div>
                     ))}

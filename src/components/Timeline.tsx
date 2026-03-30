@@ -10,6 +10,7 @@ import { Sparkles, Loader2, Swords, Skull, Landmark, Globe2, Crown, Shield, Zoom
 import { useApiKey } from '../context/ApiKeyContext';
 import { formatYear } from '../utils/format';
 import { ERAS } from '../data/eras';
+import { pushToDataLayer } from '../services/tagManager';
 
 interface TimelineProps {
   year: number;
@@ -329,7 +330,13 @@ export const Timeline: React.FC<TimelineProps> = ({ year, setYear, lang, onEvent
           {onYearContextClick && (
             <button
               id="tour-timeline-ai-mobile"
-              onClick={() => onYearContextClick(year)}
+              onClick={() => {
+                onYearContextClick(year);
+                pushToDataLayer('ai_year_context_click', {
+                  target_year: year,
+                  is_mobile: true
+                });
+              }}
               disabled={isLoadingAI || !apiKey}
               className="sm:hidden flex items-center justify-center gap-1.5 px-3 py-1.5 liquid-glass text-amber-400 border border-white/10 hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl text-[10px] font-medium calm-transition whitespace-nowrap pointer-events-auto shadow-inner"
             >
@@ -492,7 +499,13 @@ export const Timeline: React.FC<TimelineProps> = ({ year, setYear, lang, onEvent
         {onYearContextClick && (
           <button
             id="tour-timeline-ai-desktop"
-            onClick={() => onYearContextClick(year)}
+            onClick={() => {
+              onYearContextClick(year);
+              pushToDataLayer('ai_year_context_click', {
+                target_year: year,
+                is_mobile: false
+              });
+            }}
             disabled={isLoadingAI || !apiKey}
             className="hidden sm:flex items-center justify-center gap-1.5 px-4 py-2 liquid-glass text-amber-400 border border-white/10 hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed rounded-2xl text-sm font-medium calm-transition whitespace-nowrap shrink-0 pointer-events-auto"
             title={!apiKey ? (lang === 'en' ? 'Add your free Gemini key to unlock AI features' : 'برای استفاده از ویژگی‌های هوش مصنوعی کلید جمینای خود را وارد کنید') : (lang === 'en' ? 'Get AI Historical Context for this year' : 'دریافت زمینه تاریخی هوش مصنوعی برای این سال')}
@@ -651,6 +664,11 @@ export const Timeline: React.FC<TimelineProps> = ({ year, setYear, lang, onEvent
                 onClick={() => {
                   if (isSingle && onHistoricalEventClick) {
                     onHistoricalEventClick(primaryEvent);
+                    pushToDataLayer('timeline_historical_event_click', {
+                      event_id: primaryEvent.id,
+                      event_title: primaryEvent.title.en,
+                      event_year: primaryEvent.year
+                    });
                   } else if (!isSingle) {
                     setZoomLevel(z => Math.min(maxZoom, z + 1));
                     setYear(Math.round(cluster.x / PIXELS_PER_YEAR) + MIN_YEAR);
@@ -728,6 +746,11 @@ export const Timeline: React.FC<TimelineProps> = ({ year, setYear, lang, onEvent
                   e.stopPropagation();
                   if (isSingle && onArtifactClick) {
                     onArtifactClick(primaryArtifact);
+                    pushToDataLayer('timeline_artifact_click', {
+                      artifact_id: primaryArtifact.id,
+                      artifact_name: primaryArtifact.name.en,
+                      artifact_year: primaryArtifact.year
+                    });
                   } else {
                     // Zoom into cluster
                     const newZoom = Math.min(maxZoom, zoomLevel * 2);

@@ -4,6 +4,7 @@ import { MessageSquare, X, Send, Loader2, Minimize2, Maximize2 } from 'lucide-re
 import { chatWithAssistant } from '../services/geminiService';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { pushToDataLayer } from '../services/tagManager';
 
 interface ChatbotProps {
   lang: 'en' | 'fa';
@@ -59,6 +60,10 @@ export const Chatbot: React.FC<ChatbotProps> = ({ lang }) => {
     setInput('');
     setIsLoading(true);
 
+    pushToDataLayer('chatbot_message_sent', {
+      user_message_length: userMessage.text.length
+    });
+
     // Prepare history for API
     const history = messages.map(m => ({ role: m.role, text: m.text }));
     
@@ -91,7 +96,10 @@ export const Chatbot: React.FC<ChatbotProps> = ({ lang }) => {
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
-            onClick={() => setIsOpen(true)}
+            onClick={() => {
+              setIsOpen(true);
+              pushToDataLayer('chatbot_opened');
+            }}
             className="fixed sm:fixed bottom-6 right-6 p-3 bg-indigo-600 text-white rounded-full shadow-[0_0_20px_rgba(79,70,229,0.5)] hover:bg-indigo-500 hover:scale-105 z-60 chat-fab-mobile"
             style={{
               // On mobile: absolute positioning avoids fixed-context z-index bugs

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, HelpCircle, CheckCircle, XCircle, Share2, Send, ExternalLink, Sparkles, Loader2, ArrowRight } from 'lucide-react';
 import { QuizQuestion } from '../types/quiz';
+import { pushToDataLayer } from '../services/tagManager';
 
 interface QuizModalProps {
   year: number;
@@ -74,9 +75,18 @@ export const QuizModal: React.FC<QuizModalProps> = ({
   const handleAnswer = (answer: QuizQuestion['answer']) => {
     if (!currentQuestion) return;
     setUserAnswer(answer);
-    if (answer === currentQuestion.answer) {
+    
+    const isCorrect = answer === currentQuestion.answer;
+    if (isCorrect) {
       setScore(prev => prev + 1);
     }
+    
+    pushToDataLayer('quiz_question_answered', {
+      question_id: currentQuestion.id,
+      is_correct: isCorrect,
+      is_ai_generated: currentQuestion.is_ai_generated
+    });
+    
     setState('reveal');
   };
 
@@ -84,6 +94,10 @@ export const QuizModal: React.FC<QuizModalProps> = ({
     // Hard limit: stop at 5 questions
     if (currentIndex >= 4) {
       setState('summary');
+      pushToDataLayer('quiz_completed', {
+        final_score: score,
+        total_questions: 5
+      });
       return;
     }
 
@@ -115,6 +129,10 @@ export const QuizModal: React.FC<QuizModalProps> = ({
         if (onEndQuiz) onEndQuiz();
       } else {
         setState('summary');
+        pushToDataLayer('quiz_completed', {
+          final_score: score,
+          total_questions: questions.length
+        });
       }
     }
   };
