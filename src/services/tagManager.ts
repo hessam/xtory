@@ -25,6 +25,26 @@ export const pushToDataLayer = (event: string, payload?: Record<string, unknown>
   // Initialize dataLayer if it doesn't exist yet (safe guard)
   (window as any).dataLayer = (window as any).dataLayer || [];
   (window as any).dataLayer.push({ event, ...payload });
+
+  // --- Engagement Tracking Logic ---
+  // Count interactions in the current browser session
+  try {
+    const MILESTONE_TARGET = 10;
+    const currentCount = parseInt(sessionStorage.getItem('xtory_interactions') || '0', 10) + 1;
+    sessionStorage.setItem('xtory_interactions', currentCount.toString());
+
+    // If they hit the target and haven't fired the milestone yet this session
+    if (currentCount >= MILESTONE_TARGET && !sessionStorage.getItem('xtory_milestone_fired')) {
+      (window as any).dataLayer.push({ 
+        event: 'deep_exploration_milestone',
+        total_interactions: currentCount,
+        milestone_name: 'Engaged Explorer'
+      });
+      sessionStorage.setItem('xtory_milestone_fired', 'true');
+    }
+  } catch (e) {
+    // Silently fail if sessionStorage is blocked (private mode)
+  }
 };
 
 /**
