@@ -36,17 +36,8 @@ export const initGTM = () => {
       document.body.insertBefore(gtmNoScript, document.body.firstChild);
     };
 
-    const scheduleInitialization = () => {
-       // Slightly delayed to avoid impacting initial FCP scores
-       // GTM is usually more resource-heavy than a single GA script
-      setTimeout(init, 3500);
-    };
-
-    if (document.readyState === 'complete') {
-      scheduleInitialization();
-    } else {
-      window.addEventListener('load', scheduleInitialization, { once: true });
-    }
+    // Initialize immediately when called to ensure Tag Manager Preview can detect it
+    init();
   }
 };
 
