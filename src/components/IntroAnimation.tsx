@@ -163,18 +163,21 @@ export default function IntroAnimation({ onComplete, lang }: Props) {
     let t0: number | null = null;
     const BEAT1_DURATION = 1200;
 
+    const isMobile = W < 640;
+    const endOpacity = isMobile ? 0.4 : 0.08;
+
     function beat1(ts: number) {
       if (!t0) t0 = ts;
       const p = Math.min((ts - t0) / BEAT1_DURATION, 1);
       const ep = easeOutExpo(p);
 
-      // Overlay dissolves
-      overlay.style.opacity = String(1 - ep * 0.92);
+      // Overlay dissolves — on mobile we keep it much darker (40% vs 8%) to ensure text stays readable against map
+      overlay.style.opacity = String(1 - ep * (1 - endOpacity));
 
       if (p < 1) {
         rafRef.current = requestAnimationFrame(beat1);
       } else {
-        overlay.style.opacity = '0.08'; // keep faint darkness
+        overlay.style.opacity = String(endOpacity);
         audioRef.current?.fadeIn();
         requestAnimationFrame(particleLoop); // start dust
         beat2();
