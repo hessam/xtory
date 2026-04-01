@@ -179,7 +179,10 @@ export default function MapLeaflet(props: MapLeafletProps) {
       <div className="map-vignette pointer-events-none z-[401]" />
       <MapFilters />
       <MapContainer center={CENTER_LAT_LNG} zoom={DEFAULT_ZOOM} minZoom={MIN_ZOOM} maxZoom={MAX_ZOOM} className="w-full h-full z-0" zoomControl={false} attributionControl={true}>
-        <TileLayer url="https://tiles.stadiamaps.com/tiles/stamen_terrain_background/{z}/{x}/{y}{r}.png" attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://stamen.com/">Stamen Design</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors' />
+        <TileLayer 
+          url={`https://tiles.stadiamaps.com/tiles/stamen_terrain_background/{z}/{x}/{y}{r}.png${import.meta.env.VITE_STADIA_API_KEY ? `?api_key=${import.meta.env.VITE_STADIA_API_KEY}` : ''}`}
+          attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://stamen.com/">Stamen Design</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors' 
+        />
         
         {/* Cinematic Overlays - Sit exactly between the Base Map Tiles (zIndex: 200) and the Interactive Overlays (zIndex: 400+) */}
         <Pane name="cinematic-overlays" style={{ zIndex: 250 }}>
