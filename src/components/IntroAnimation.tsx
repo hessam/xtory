@@ -98,6 +98,7 @@ export default function IntroAnimation({ onComplete, lang }: Props) {
 
   const [phase, setPhase] = useState<'black' | 'draw' | 'morph' | 'title' | 'dissolve' | 'done'>('black');
   const [titleVisible, setTitleVisible] = useState(false);
+  const [dedicationVisible, setDedicationVisible] = useState(false);
   const [skipVisible, setSkipVisible] = useState(false);
 
   const complete = useCallback(() => {
@@ -364,8 +365,11 @@ export default function IntroAnimation({ onComplete, lang }: Props) {
       // Rise product title
       setTitleVisible(true);
 
-      // Dissolve after title settles
-      setTimeout(beat5, 1800);
+      // Show dedication 900ms after title appears
+      setTimeout(() => setDedicationVisible(true), 900);
+
+      // Dissolve after dedication has had time to breathe
+      setTimeout(beat5, 3200);
     }
 
     // ════════════════════════════════════════════════════════════════════════
@@ -590,6 +594,71 @@ export default function IntroAnimation({ onComplete, lang }: Props) {
             animation: 'introRuleExpand 800ms ease 400ms forwards',
             opacity: 0,
           }} />
+
+          {/* ── Dedication: Built with Love for Iran ───────────── */}
+          {dedicationVisible && (
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '6px',
+                marginTop: '16px',
+                animation: 'introLoveFade 1400ms cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                opacity: 0,
+              }}
+            >
+              <span style={{
+                fontFamily: lang === 'fa' ? "'Vazirmatn', serif" : "'Cinzel', serif",
+                fontSize: 'clamp(9px, 1.2vw, 12px)',
+                fontWeight: 300,
+                color: 'rgba(180,170,150,0.6)',
+                textTransform: lang === 'fa' ? 'none' : 'uppercase',
+                letterSpacing: lang === 'fa' ? 'normal' : '0.18em',
+              }}>
+                {lang === 'fa' ? 'ساخته شده با' : 'Built with'}
+              </span>
+
+              {/* Animated SVG heart — draws itself then pulses */}
+              <svg
+                viewBox="0 0 24 24"
+                width="14"
+                height="14"
+                style={{
+                  animation: 'heartPulse 2s ease-in-out 0.8s infinite',
+                  filter: 'drop-shadow(0 0 6px rgba(244,63,94,0.4))',
+                }}
+              >
+                <defs>
+                  <linearGradient id="heart-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#fb7185" />
+                    <stop offset="100%" stopColor="#e11d48" />
+                  </linearGradient>
+                </defs>
+                <path
+                  d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+                  fill="url(#heart-grad)"
+                />
+              </svg>
+
+              {/* "for Iran" with travelling shimmer */}
+              <span style={{
+                fontFamily: lang === 'fa' ? "'Vazirmatn', serif" : "'Cinzel', serif",
+                fontSize: 'clamp(9px, 1.2vw, 12px)',
+                fontWeight: 300,
+                textTransform: lang === 'fa' ? 'none' : 'uppercase',
+                letterSpacing: lang === 'fa' ? 'normal' : '0.18em',
+                background: 'linear-gradient(90deg, rgba(180,170,150,0.6) 0%, rgba(180,170,150,0.6) 40%, rgba(212,184,122,1) 50%, rgba(180,170,150,0.6) 60%, rgba(180,170,150,0.6) 100%)',
+                backgroundSize: '200% 100%',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                animation: 'loveShimmer 3s ease-in-out 1.5s infinite',
+              }}>
+                {lang === 'fa' ? 'برای ایران' : 'for Iran'}
+              </span>
+            </div>
+          )}
         </div>
       )}
 

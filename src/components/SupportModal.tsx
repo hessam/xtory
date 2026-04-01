@@ -200,9 +200,54 @@ export const SupportModal: React.FC<SupportModalProps> = ({ onClose, lang }) => 
               <p className="text-[12px] text-slate-500 font-bold mb-1">
                 {t.credits}
               </p>
-              <p className="text-[11px] text-slate-600 italic">
+              <p className="text-[11px] text-slate-600 italic mb-5">
                 {t.creditsSmall}
               </p>
+
+              {/* ── Built with Love for Iran ─────────────────── */}
+              <div className="flex items-center justify-center gap-1.5 pt-4 border-t border-white/5">
+                <span
+                  className="text-[10px] font-light tracking-[0.18em] uppercase"
+                  style={{ color: 'rgba(180,170,150,0.5)' }}
+                >
+                  {lang === 'fa' ? 'ساخته شده با' : 'Built with'}
+                </span>
+
+                <svg
+                  viewBox="0 0 24 24"
+                  width="12"
+                  height="12"
+                  style={{
+                    animation: 'heartPulse 2s ease-in-out infinite',
+                    filter: 'drop-shadow(0 0 4px rgba(244,63,94,0.35))',
+                  }}
+                >
+                  <defs>
+                    <linearGradient id="support-heart-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#fb7185" />
+                      <stop offset="100%" stopColor="#e11d48" />
+                    </linearGradient>
+                  </defs>
+                  <path
+                    d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+                    fill="url(#support-heart-grad)"
+                  />
+                </svg>
+
+                <span
+                  className="text-[10px] font-light tracking-[0.18em] uppercase"
+                  style={{
+                    background: 'linear-gradient(90deg, rgba(180,170,150,0.5) 0%, rgba(180,170,150,0.5) 40%, rgba(212,184,122,1) 50%, rgba(180,170,150,0.5) 60%, rgba(180,170,150,0.5) 100%)',
+                    backgroundSize: '200% 100%',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
+                    animation: 'loveShimmer 3s ease-in-out infinite',
+                  }}
+                >
+                  {lang === 'fa' ? 'برای ایران' : 'for Iran'}
+                </span>
+              </div>
             </div>
           </div>
         )}

@@ -485,3 +485,38 @@
     transform: translateY(0);
   }
 }
+
+/* ─── "Built with Love" Dedication ─────────────────────────────────────────── */
+
+/* Text materializes with expanding letter-spacing */
+@keyframes introLoveFade {
+  0% {
+    opacity: 0;
+    letter-spacing: 0.5em;
+    filter: blur(3px);
+  }
+  60% {
+    opacity: 1;
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    letter-spacing: 0.18em;
+    filter: blur(0);
+  }
+}
+
+/* Organic heartbeat — two quick pumps then rest */
+@keyframes heartPulse {
+  0%, 100% { transform: scale(1); }
+  8%  { transform: scale(1.25); }
+  12% { transform: scale(1.05); }
+  18% { transform: scale(1.2); }
+  24% { transform: scale(1); }
+}
+
+/* Travelling metallic shimmer across text */
+@keyframes loveShimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
