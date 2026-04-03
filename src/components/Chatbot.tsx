@@ -4,7 +4,7 @@ import { MessageSquare, X, Send, Loader2, Minimize2, Maximize2 } from 'lucide-re
 import { chatWithAssistant } from '../services/geminiService';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { pushToDataLayer } from '../services/tagManager';
+import { pushToDataLayer, markAIUsed } from '../services/tagManager';
 
 interface ChatbotProps {
   lang: 'en' | 'fa';
@@ -50,6 +50,7 @@ export const Chatbot: React.FC<ChatbotProps> = ({ lang }) => {
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
 
+    markAIUsed();
     const userMessage: Message = {
       id: Date.now().toString(),
       role: 'user',

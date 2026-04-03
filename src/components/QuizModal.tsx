@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, HelpCircle, CheckCircle, XCircle, Share2, Send, ExternalLink, Sparkles, Loader2, ArrowRight } from 'lucide-react';
 import { QuizQuestion } from '../types/quiz';
-import { pushToDataLayer } from '../services/tagManager';
+import { pushToDataLayer, markAIUsed } from '../services/tagManager';
 
 interface QuizModalProps {
   year: number;
@@ -53,6 +53,7 @@ export const QuizModal: React.FC<QuizModalProps> = ({
     let active = true;
     if (initialQuestions.length === 0 && hasApiKey && state === 'loading') {
       setIsLoadingNext(true);
+      markAIUsed();
       onRequestAiQuestion(year, []).then(nextAi => {
         if (!active) return;
         setIsLoadingNext(false);
@@ -109,6 +110,7 @@ export const QuizModal: React.FC<QuizModalProps> = ({
       if (hasApiKey && currentQuestion) {
         setIsLoadingNext(true);
         setState('loading');
+        markAIUsed();
         const askedMyths = questions.map(q => q.myth);
         const nextAi = await onRequestAiQuestion(year, askedMyths);
         setIsLoadingNext(false);

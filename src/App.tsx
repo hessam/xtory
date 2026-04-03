@@ -19,6 +19,7 @@ import { SearchBar } from './components/SearchBar';
 import { ContextStrip } from './components/ContextStrip';
 import { ByokGate } from './components/ByokGate';
 import { Vazir } from './data/vazirs';
+import { pushToDataLayer, markAIUsed } from './services/tagManager';
 
 // Heavy components — lazy loaded so they never block first paint
 const Map        = lazy(() => import('./components/MapLeaflet'));
@@ -97,6 +98,15 @@ export default function App() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
+
+  // Scrubbing vs Rendering Year decoupling for 60fps interaction
+  const [mapYear, setMapYear] = useState(year);
+  useEffect(() => {
+    const isMobile = window.innerWidth < 768;
+    const delay = isMobile ? 48 : 8; // More aggressive throttling on mobile
+    const t = setTimeout(() => setMapYear(year), delay);
+    return () => clearTimeout(t);
+  }, [year]);
 
   // Restart quiz if year changes
   useEffect(() => {
@@ -222,26 +232,25 @@ export default function App() {
   const allArtifacts        = useMemo(() => [...initialArtifacts,        ...dynamicData.artifacts],       [dynamicData.artifacts]);
 
   const clearSelection = () => {
-    startTransition(() => {
-      setSelectedEventId(null);
-      setSelectedRegionId(null);
-      setSelectedHistoricalEvent(null);
-      setSelectedFigure(null);
-      setSelectedArtifact(null);
-      setSelectedSearchResult(null);
-      setSelectedVazir(null);
-      setSelectedBanner(null);
-    });
+    setSelectedEventId(null);
+    setSelectedRegionId(null);
+    setSelectedHistoricalEvent(null);
+    setSelectedFigure(null);
+    setSelectedArtifact(null);
+    setSelectedSearchResult(null);
+    setSelectedVazir(null);
+    setSelectedBanner(null);
   };
 
-  const handleRegionClick          = (regionId: string)        => { startTransition(() => { clearSelection(); setSelectedRegionId(regionId); }); };
-  const handleEventClick           = (eventId: string)         => { startTransition(() => { clearSelection(); setSelectedEventId(eventId); }); };
-  const handleHistoricalEventClick = (event: HistoricalEvent) => { startTransition(() => { clearSelection(); setSelectedHistoricalEvent(event); }); };
-  const handleFigureClick          = (figure: HistoricalFigure)=> { startTransition(() => { clearSelection(); setSelectedFigure(figure); }); };
-  const handleArtifactClick        = (artifact: Artifact)      => { startTransition(() => { clearSelection(); setSelectedArtifact(artifact); }); };
-  const handleSearchResult         = (result: SearchResult)    => { startTransition(() => { clearSelection(); setYear(result.year); setSelectedSearchResult(result); }); };
+  const handleRegionClick          = (regionId: string)        => { clearSelection(); setSelectedRegionId(regionId); };
+  const handleEventClick           = (eventId: string)         => { clearSelection(); setSelectedEventId(eventId); };
+  const handleHistoricalEventClick = (event: HistoricalEvent) => { clearSelection(); setSelectedHistoricalEvent(event); };
+  const handleFigureClick          = (figure: HistoricalFigure)=> { clearSelection(); setSelectedFigure(figure); };
+  const handleArtifactClick        = (artifact: Artifact)      => { clearSelection(); setSelectedArtifact(artifact); };
+  const handleSearchResult         = (result: SearchResult)    => { setYear(result.year); clearSelection(); setSelectedSearchResult(result); };
 
   const handleYearContextClick = async (y: number) => {
+    markAIUsed();
     setIsLoadingAI(true);
     setAiError(null);
     try {
@@ -255,6 +264,7 @@ export default function App() {
   };
 
   const handleFetchAIEvents = async (y: number) => {
+    markAIUsed();
     setIsLoadingAIEvents(true);
     setAiError(null);
     try {
@@ -268,6 +278,7 @@ export default function App() {
   };
 
   const handleFetchAIFigures = async (y: number) => {
+    markAIUsed();
     setIsLoadingAIFigures(true);
     setAiError(null);
     try {
@@ -281,6 +292,7 @@ export default function App() {
   };
 
   const handleFetchAIArtifacts = async (y: number) => {
+    markAIUsed();
     setIsLoadingAIArtifacts(true);
     setAiError(null);
     try {
@@ -415,8 +427,8 @@ export default function App() {
           }} 
           className="relative overflow-hidden"
         >
-          <Map
-            year={year}
+            <Map
+              year={mapYear}
             lang={lang}
             onRegionClick={handleRegionClick}
             onGlobalContextClick={handleYearContextClick}
@@ -694,7 +706,7 @@ export default function App() {
             style={{ pointerEvents: runTour ? 'none' : 'auto' }}
           >
             <Map
-              year={year}
+              year={mapYear}
               lang={lang}
               onRegionClick={handleRegionClick}
               onGlobalContextClick={handleYearContextClick}

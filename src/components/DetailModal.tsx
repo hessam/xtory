@@ -8,11 +8,10 @@ import { regions } from '../data/regions';
 import { HistoricalEvent } from '../data/historicalEvents';
 import { HistoricalFigure } from '../data/figures';
 import { Artifact } from '../data/artifacts';
-import { generateBiography, generateAlternateHistory, chatWithAssistant, generateHistoricalEventWhatIf, generateLineage, LineageData } from '../services/geminiService';
+import { generateBiography, generateAlternateHistory, chatWithAssistant, generateHistoricalEventWhatIf, generateLineage, LineageData, SearchResult } from '../services/geminiService';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-
-import { SearchResult } from '../services/geminiService';
+import { markAIUsed } from '../services/tagManager';
 
 const LineageDisplay = ({ data, lang }: { data: LineageData, lang: 'en' | 'fa' }) => {
   const renderSection = (titleEn: string, titleFa: string, items: any[]) => {
@@ -123,6 +122,7 @@ export const DetailModal: React.FC<DetailModalProps> = ({ eventId, regionId, his
   if (!eventId && !regionId && !historicalEvent && !figure && !artifact && !searchResult) return null;
 
   const handleGenerateLineage = async (personName: string, context: string) => {
+    markAIUsed();
     setIsGenerating(true);
     setActiveTab('lineage');
     const data = await generateLineage(personName, context, lang);
@@ -131,6 +131,7 @@ export const DetailModal: React.FC<DetailModalProps> = ({ eventId, regionId, his
   };
 
   const handleGenerateBiography = async (name: string, title: string, dynasty: string, startYear?: number) => {
+    markAIUsed();
     setIsGenerating(true);
     setActiveTab('biography');
     const content = await generateBiography(name, title, dynasty, lang, startYear || year);
@@ -139,6 +140,7 @@ export const DetailModal: React.FC<DetailModalProps> = ({ eventId, regionId, his
   };
 
   const handleGenerateWhatIf = async (eventDesc: string, rulerName: string, regionName: string, year: number, customPrompt?: string) => {
+    markAIUsed();
     setIsGenerating(true);
     setActiveTab('whatif');
     const content = await generateAlternateHistory(eventDesc, rulerName, regionName, year, lang, customPrompt);
@@ -147,6 +149,7 @@ export const DetailModal: React.FC<DetailModalProps> = ({ eventId, regionId, his
   };
 
   const handleGenerateHistoricalEventWhatIfAction = async (eventTitle: string, eventDesc: string, year: number, customPrompt?: string) => {
+    markAIUsed();
     setIsGenerating(true);
     setActiveTab('whatif');
     const content = await generateHistoricalEventWhatIf(eventTitle, eventDesc, year, lang, customPrompt);
@@ -155,6 +158,7 @@ export const DetailModal: React.FC<DetailModalProps> = ({ eventId, regionId, his
   };
 
   const handleGenerateRegionContext = async (regionName: string, year: number) => {
+    markAIUsed();
     setIsGenerating(true);
     setActiveTab('context');
     const prompt = lang === 'en'
@@ -167,6 +171,7 @@ export const DetailModal: React.FC<DetailModalProps> = ({ eventId, regionId, his
   };
 
   const handleGenerateEventContext = async (eventTitle: string, eventDesc: string, year: number) => {
+    markAIUsed();
     setIsGenerating(true);
     setActiveTab('context');
     const prompt = lang === 'en'
@@ -179,6 +184,7 @@ export const DetailModal: React.FC<DetailModalProps> = ({ eventId, regionId, his
   };
 
   const handleGenerateArtifactContext = async (artifactName: string, artifactDesc: string, year: number) => {
+    markAIUsed();
     setIsGenerating(true);
     setActiveTab('context');
     const prompt = lang === 'en'

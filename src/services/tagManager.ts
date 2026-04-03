@@ -24,7 +24,14 @@ export const pushToDataLayer = (event: string, payload?: Record<string, unknown>
   if (typeof window === 'undefined') return;
   // Initialize dataLayer if it doesn't exist yet (safe guard)
   (window as any).dataLayer = (window as any).dataLayer || [];
-  (window as any).dataLayer.push({ event, ...payload });
+
+  // Inject AI status into every event
+  const aiStatus = {
+    ai_ever_used: localStorage.getItem('xtory_ai_ever_used') === 'true',
+    ai_this_session: sessionStorage.getItem('xtory_ai_this_session') === 'true'
+  };
+
+  (window as any).dataLayer.push({ event, ...aiStatus, ...payload });
 
   // --- Engagement Tracking Logic ---
   // Count interactions in the current browser session
@@ -37,6 +44,7 @@ export const pushToDataLayer = (event: string, payload?: Record<string, unknown>
     if (currentCount >= MILESTONE_TARGET && !sessionStorage.getItem('xtory_milestone_fired')) {
       (window as any).dataLayer.push({ 
         event: 'deep_exploration_milestone',
+        ...aiStatus,
         total_interactions: currentCount,
         milestone_name: 'Engaged Explorer'
       });
@@ -45,6 +53,27 @@ export const pushToDataLayer = (event: string, payload?: Record<string, unknown>
   } catch (e) {
     // Silently fail if sessionStorage is blocked (private mode)
   }
+};
+
+/**
+ * Marks the user as an AI user both for this session and forever (localStorage).
+ * Immediately pushes an event to GTM.
+ */
+export const markAIUsed = () => {
+  if (typeof window === 'undefined') return;
+  try {
+    const alreadyUsedThisSession = sessionStorage.getItem('xtory_ai_this_session') === 'true';
+    
+    // Set indicators
+    localStorage.setItem('xtory_ai_ever_used', 'true');
+    sessionStorage.setItem('xtory_ai_this_session', 'true');
+
+    if (!alreadyUsedThisSession) {
+      pushToDataLayer('ai_feature_activated', {
+        first_use_in_session: true
+      });
+    }
+  } catch (e) {}
 };
 
 /**
