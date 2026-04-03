@@ -417,17 +417,25 @@
    ───────────────────────────────────────────────────────────────────────────── */
 .breathing-border {
   animation: border-breathe 4s ease-in-out infinite;
+  /* Lock stroke width so it doesn't cause forced reflows */
+  stroke-width: 1.5; 
+}
+
+/* Disable continuous breathing on mobile to preserve Main Thread and INP */
+@media (max-width: 768px) {
+  .breathing-border {
+    animation: none;
+    stroke-opacity: 0.5;
+  }
 }
 
 @keyframes border-breathe {
   0%, 100% { 
     stroke-opacity: 0.3; 
-    stroke-width: 1;
     filter: drop-shadow(0 0 4px rgba(0,0,0,0.3));
   }
   50% { 
     stroke-opacity: 0.7; 
-    stroke-width: 2;
     filter: drop-shadow(0 0 12px rgba(255,255,255,0.2));
   }
 }
