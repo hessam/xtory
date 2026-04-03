@@ -75,7 +75,7 @@ export default function App() {
   const [selectedBanner, setSelectedBanner] = useState<{ url: string, title: string } | null>(null);
   const [legendMode, setLegendMode] = useState<'simple' | 'detailed'>('simple');
   const [aiError, setAiError] = useState<string | null>(null);
-  const [introComplete, setIntroComplete] = useState(false);
+  const [introComplete, setIntroComplete] = useState(() => typeof window !== 'undefined' ? !!localStorage.getItem('atlas_intro_seen') : false);
   const [showExtentTooltip, setShowExtentTooltip] = useState(false);
 
   // Auto-dismiss AI error after 6 seconds
