@@ -1,9 +1,12 @@
 import React, { useState, useRef, useCallback, useEffect, useLayoutEffect, startTransition, useMemo } from 'react';
-import { Sparkles, Loader2, Swords, Skull, Landmark, Globe2, User, Book, Lightbulb, Palette, Building2, MapPin, ChevronUp, AlertCircle } from 'lucide-react';
+import { Sparkles, Loader2, Swords, Skull, Landmark, Globe2, User, Book, Lightbulb, Palette, Building2, MapPin, ChevronUp, AlertCircle, Crown, Shield } from 'lucide-react';
 import { Virtuoso } from 'react-virtuoso';
 import { HistoricalEvent } from '../data/historicalEvents';
 import { HistoricalFigure } from '../data/figures';
 import { Artifact } from '../data/artifacts';
+import { ReignEvent } from '../data/events';
+import { Ruler } from '../data/rulers';
+import { Dynasty } from '../data/dynasties';
 import { useApiKey } from '../context/ApiKeyContext';
 import { MythCard } from './MythCard';
 import { getQuestionsForYear } from '../data/quizQuestions';
@@ -11,6 +14,7 @@ import { QuizQuestion } from '../types/quiz';
 import { HistorianCardSection } from './HistorianCardSection';
 import { ByokGate } from './ByokGate';
 import { getHistorianCard } from '../utils/getHistorianCard';
+import { mapPolygons } from '../data/mapPolygons';
 
 // ── Snap definitions ────────────────────────────────────────────────────────
 // COLLAPSED  = handle bar only. Height = 60px + safe-bottom
@@ -98,6 +102,12 @@ interface BottomSheetProps {
   onVazirClick?: (v: any) => void;
   onBannerClick?: (url: string, title: string) => void;
   onSnapChange?: (snap: 'collapsed' | 'half' | 'full') => void;
+  reignEvents?: ReignEvent[];
+  rulers?: Record<string, Ruler>;
+  dynasties?: Record<string, Dynasty>;
+  onReignEventClick?: (eventId: string) => void;
+  onYearContextClick?: (year: number) => void;
+  isLoadingRulers?: boolean;
 }
 
 // ── Component ────────────────────────────────────────────────────────────────
@@ -113,7 +123,13 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
   onVazirClose,
   onVazirClick,
   onBannerClick,
-  onSnapChange
+  onSnapChange,
+  reignEvents = [],
+  rulers = {},
+  dynasties = {},
+  onReignEventClick,
+  onYearContextClick,
+  isLoadingRulers = false
 }) => {
   const [snap, setSnap] = useState<SnapPoint>('collapsed');
   const [activeTab, setActiveTab] = useState<'events' | 'figures' | 'artifacts'>('events');
@@ -123,6 +139,28 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
   const [isScrolled, setIsScrolled] = useState(false);
 
   const historianResult = useMemo(() => getHistorianCard(year), [year]);
+
+  // Build a fast regionId -> name lookup from mapPolygons (memoized once)
+  const regionNameMap = useMemo(() => {
+    const map: Record<string, { en: string; fa: string }> = {};
+    mapPolygons.filter(p => !p.isWater && !p.isNeighbor).forEach(p => {
+      map[p.id] = p.name;
+    });
+    return map;
+  }, []);
+
+  // One card per active reign event = one card per region
+  const activeRulerCards = useMemo(() => {
+    return reignEvents
+      .filter(e => year >= e.startDate && year <= e.endDate)
+      .map(e => {
+        const ruler = rulers[e.rulerId];
+        const dynasty = dynasties[ruler?.dynastyId];
+        const regionName = regionNameMap[e.regionId];
+        return { eventId: e.id, ruler, dynasty, startDate: e.startDate, endDate: e.endDate, regionId: e.regionId, regionName };
+      })
+      .filter(x => x.ruler && x.dynasty && x.regionName);
+  }, [reignEvents, year, rulers, dynasties, regionNameMap]);
 
   // Drag tracking
   const [isDragging, setIsDragging] = useState(false);
@@ -653,8 +691,69 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
                   {Math.abs(historianResult.card.yearRange.end)}{historianResult.card.yearRange.end < 0 ? ' BC' : ' AD'}
                 </span>
               </div>
+
+              {/* Ruler Cards Horizontal Scroll — always rendered in full state */}
+              <div className="flex items-center justify-between px-4 pt-1 pb-1">
+                <span className="text-[9px] font-bold uppercase tracking-widest text-slate-500">
+                  {lang === 'en' ? 'Rulers by Region' : 'حاکمان هر منطقه'}
+                </span>
+                {onYearContextClick && (
+                  <button
+                    onClick={() => onYearContextClick(year)}
+                    disabled={isLoadingRulers || !apiKey}
+                    className="flex items-center gap-1.5 px-2.5 py-1 liquid-glass text-amber-400 border border-white/10 hover:bg-white/10 disabled:opacity-40 disabled:cursor-not-allowed rounded-xl text-[10px] font-medium calm-transition whitespace-nowrap active:scale-[0.97]"
+                  >
+                    {isLoadingRulers ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
+                    {lang === 'en' ? 'Who Ruled Here?' : 'حکومتهای این دوره'}
+                  </button>
+                )}
+              </div>
+              {activeRulerCards.length > 0 && (
+                <div className="overflow-x-auto custom-scrollbar flex gap-3 px-4 pb-3 pt-1 snap-x">
+                  {activeRulerCards.map(({ eventId, ruler, dynasty, startDate, endDate, regionName }) => {
+                    let bgColor = 'bg-slate-500/30';
+                    let borderColor = 'border-slate-400/30';
+                    let icon = <Crown className="w-3.5 h-3.5 text-white/80 shrink-0" />;
+
+                    if (dynasty.colorFamily === 'persian') { 
+                      bgColor = 'bg-purple-500/30'; borderColor = 'border-purple-300/40'; icon = <Crown className="w-3.5 h-3.5 text-purple-100 shrink-0" />;
+                    } else if (dynasty.colorFamily === 'arab') { 
+                      bgColor = 'bg-emerald-500/30'; borderColor = 'border-emerald-300/40'; icon = <Crown className="w-3.5 h-3.5 text-emerald-100 shrink-0" />;
+                    } else if (dynasty.colorFamily === 'turkic') { 
+                      bgColor = 'bg-orange-600/30'; borderColor = 'border-orange-400/40'; icon = <Crown className="w-3.5 h-3.5 text-orange-100 shrink-0" />;
+                    } else if (dynasty.colorFamily === 'greek') { 
+                      bgColor = 'bg-sky-500/30'; borderColor = 'border-sky-300/40'; icon = <Landmark className="w-3.5 h-3.5 text-sky-100 shrink-0" />;
+                    } else if (dynasty.colorFamily === 'nomadic') { 
+                      bgColor = 'bg-amber-700/30'; borderColor = 'border-amber-500/40'; icon = <Shield className="w-3.5 h-3.5 text-amber-100 shrink-0" />;
+                    } else if (dynasty.colorFamily === 'foreign') { 
+                      bgColor = 'bg-rose-600/30'; borderColor = 'border-rose-400/40'; icon = <Shield className="w-3.5 h-3.5 text-rose-100 shrink-0" />;
+                    } else if (dynasty.colorFamily === 'semitic') { 
+                      bgColor = 'bg-amber-900/30'; borderColor = 'border-amber-700/40'; icon = <Crown className="w-3.5 h-3.5 text-amber-100 shrink-0" />;
+                    }
+
+                    return (
+                        <div
+                            key={eventId}
+                            onClick={() => onReignEventClick?.(eventId)}
+                            className={`flex flex-col justify-center snap-center shrink-0 w-[55%] sm:w-[220px] max-w-[260px] h-[76px] px-3 py-2 rounded-[18px] border cursor-pointer hover:brightness-125 active:scale-[0.98] transition-all duration-200 ${bgColor} ${borderColor} shadow-sm backdrop-blur-md`}
+                        >
+                            <div className="flex items-center gap-1.5 mb-0.5">
+                                {icon}
+                                <span className="text-[12px] font-bold text-white truncate drop-shadow-md leading-tight">{ruler.name[lang]}</span>
+                            </div>
+                            <span className="text-[10px] text-white/60 font-medium truncate ml-[18px] rtl:ml-0 rtl:mr-[18px] mb-0.5">
+                                {regionName[lang]}
+                            </span>
+                            <span className="text-[9px] text-white/50 font-mono ml-[18px] rtl:ml-0 rtl:mr-[18px]">
+                                {Math.abs(startDate)}{startDate < 0 ? ' BC' : ' AD'} – {Math.abs(endDate)}{endDate < 0 ? ' BC' : ' AD'}
+                            </span>
+                        </div>
+                    );
+                  })}
+                </div>
+              )}
               {/* Tab switcher */}
-              <div className="px-3 pb-2">
+              <div className="px-3 pb-2 pt-1 border-t border-white/5 mx-3 mt-1">
                 <div className="flex bg-black/20 rounded-xl p-1 border border-white/5">
                   {(['events', 'figures', 'artifacts'] as const).map(tab => (
                     <button

@@ -351,6 +351,15 @@ export default function MapLeaflet(props: MapLeafletProps) {
                 <div className="w-6 h-2 rounded-sm border border-white/10 bg-indigo-500/30"></div>
                 {lang === 'en' ? 'Influence/Vassal' : 'نفوذ/دست‌نشانده'}
               </div>
+              <div className="w-full h-px bg-white/5 my-0.5"></div>
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-[1px] border-t border-dashed border-[#f59e0b] opacity-60"></div>
+                {lang === 'en' ? 'Achaemenid Max Extent' : 'حداکثر قلمرو هخامنشی'}
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-[1px] border-t border-dashed border-[#818cf8] opacity-60"></div>
+                {lang === 'en' ? 'Sassanid Max Extent' : 'حداکثر قلمرو ساسانی'}
+              </div>
             </motion.div>
           )}
         </AnimatePresence>

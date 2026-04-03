@@ -470,7 +470,16 @@ export default function App() {
              }}>
           <div className="absolute bottom-0 left-0 right-0 pointer-events-none">
             <Suspense fallback={<div style={{ height: 60, width: '100%' }} />}>
-              <BottomSheet {...panelProps} setShowSettings={setShowSettings} />
+              <BottomSheet 
+                {...panelProps} 
+                setShowSettings={setShowSettings} 
+                reignEvents={allEvents}
+                rulers={allRulers}
+                dynasties={allDynasties}
+                onReignEventClick={handleEventClick}
+                onYearContextClick={handleYearContextClick}
+                isLoadingRulers={isLoadingAI}
+              />
             </Suspense>
           </div>
         </div>
@@ -606,6 +615,9 @@ export default function App() {
                       <LegendItem colors={['nomadic']} label={{ en: 'Nomadic/Steppe', fa: 'عشایر/استپ' }} lang={lang} />
                       <LegendItem colors={['foreign']} label={{ en: 'Foreign Imperial', fa: 'امپراتوری خارجی' }} lang={lang} />
                       <LegendItem colors={['semitic']} label={{ en: 'Babylonian/Semitic', fa: 'بابلی/سامی' }} lang={lang} />
+                      <div className="w-full h-px bg-white/5 my-1" />
+                      <LegendDashItem color="#f59e0b" label={{ en: 'Achaemenid Max Extent', fa: 'حداکثر قلمرو هخامنشی' }} lang={lang} />
+                      <LegendDashItem color="#818cf8" label={{ en: 'Sassanid Max Extent', fa: 'حداکثر قلمرو ساسانی' }} lang={lang} />
                     </>
                   )}
                 </div>
@@ -987,6 +999,17 @@ const LegendItem = ({ colors, label, lang }: { colors: string[], label: { en: st
           />
         ))}
       </div>
+      <span className="text-[11px] text-slate-300 font-medium whitespace-normal leading-tight">
+        {label[lang]}
+      </span>
+    </div>
+  );
+};
+
+const LegendDashItem = ({ color, label, lang }: { color: string, label: { en: string, fa: string }, lang: 'en' | 'fa' }) => {
+  return (
+    <div className="flex items-center gap-2 group">
+      <div className="w-5 h-px border-t border-dashed" style={{ borderColor: color, opacity: 0.8 }} />
       <span className="text-[11px] text-slate-300 font-medium whitespace-normal leading-tight">
         {label[lang]}
       </span>
