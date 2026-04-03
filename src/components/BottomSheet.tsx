@@ -844,21 +844,16 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
                           onOpenSettings={() => setShowSettings && setShowSettings(true)}
                         />
                         <button
-                          onClick={(e) => { e.stopPropagation(); onFetchAIEvents(year); }}
-                          disabled={isLoading || !apiKey}
-                          className={`w-full flex items-center justify-center gap-2 py-3 px-4 liquid-glass border border-white/10 rounded-2xl text-xs font-semibold calm-transition ${isLoading ? 'text-indigo-400 bg-white/5 opacity-90' : (!apiKey ? 'text-indigo-300 opacity-40 cursor-not-allowed' : 'text-indigo-300 hover:bg-white/10 active:scale-[0.98]')}`}
+                          onClick={(e) => { e.stopPropagation(); if (!isLoading && apiKey) onFetchAIEvents(year); }}
+                          disabled={!apiKey}
+                          className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-2xl text-xs font-semibold calm-transition border ${
+                            isLoading 
+                              ? 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30 pointer-events-none' 
+                              : (!apiKey ? 'liquid-glass border-white/10 text-indigo-300 opacity-40 cursor-not-allowed' : 'liquid-glass border-white/10 text-indigo-300 hover:bg-white/10 active:scale-[0.98]')
+                          }`}
                         >
-                          {isLoading ? (
-                            <>
-                              <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                              <span className="animate-pulse tracking-wide">{lang === 'en' ? 'Discovering Events...' : 'در حال کشف رویدادها...'}</span>
-                            </>
-                          ) : (
-                            <>
-                              <Sparkles className="w-3.5 h-3.5" />
-                              <span>{lang === 'en' ? 'Discover More Events with AI' : 'کشف رویدادهای بیشتر'}</span>
-                            </>
-                          )}
+                          {isLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
+                          <span>{lang === 'en' ? 'Discover More Events with AI' : 'کشف رویدادهای بیشتر'}</span>
                         </button>
                       </div>
                     )
@@ -943,21 +938,16 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
                     Footer: () => (
                       <div className="px-4 pt-4 pb-6">
                         <button
-                          onClick={(e) => { e.stopPropagation(); onFetchAIFigures(year); }}
-                          disabled={isLoadingAIFigures || !apiKey}
-                          className={`w-full flex items-center justify-center gap-2 py-3 px-4 liquid-glass border border-white/10 rounded-2xl text-xs font-semibold calm-transition ${isLoadingAIFigures ? 'text-indigo-400 bg-white/5 opacity-90' : (!apiKey ? 'text-indigo-300 opacity-40 cursor-not-allowed' : 'text-indigo-300 hover:bg-white/10 active:scale-[0.98]')}`}
+                          onClick={(e) => { e.stopPropagation(); if (!isLoadingAIFigures && apiKey) onFetchAIFigures(year); }}
+                          disabled={!apiKey}
+                          className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-2xl text-xs font-semibold calm-transition border ${
+                            isLoadingAIFigures 
+                              ? 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30 pointer-events-none' 
+                              : (!apiKey ? 'liquid-glass border-white/10 text-indigo-300 opacity-40 cursor-not-allowed' : 'liquid-glass border-white/10 text-indigo-300 hover:bg-white/10 active:scale-[0.98]')
+                          }`}
                         >
-                          {isLoadingAIFigures ? (
-                            <>
-                              <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                              <span className="animate-pulse tracking-wide">{lang === 'en' ? 'Finding Figures...' : 'در حال یافتن شخصیت‌ها...'}</span>
-                            </>
-                          ) : (
-                            <>
-                              <Sparkles className="w-3.5 h-3.5" />
-                              <span>{lang === 'en' ? 'Find More Figures with AI' : 'یافتن شخصیت‌های بیشتر'}</span>
-                            </>
-                          )}
+                          {isLoadingAIFigures ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
+                          <span>{lang === 'en' ? 'Find More Figures with AI' : 'یافتن شخصیت‌های بیشتر'}</span>
                         </button>
                       </div>
                     )
@@ -1044,21 +1034,16 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
                     Footer: () => (
                       <div className="px-4 pt-4 pb-6">
                         <button
-                          onClick={(e) => { e.stopPropagation(); onFetchAIArtifacts(year); }}
-                          disabled={isLoadingAIArtifacts || !apiKey}
-                          className={`w-full flex items-center justify-center gap-2 py-3 px-4 liquid-glass border border-white/10 rounded-2xl text-xs font-semibold calm-transition ${isLoadingAIArtifacts ? 'text-indigo-400 bg-white/5 opacity-90' : (!apiKey ? 'text-indigo-300 opacity-40 cursor-not-allowed' : 'text-indigo-300 hover:bg-white/10 active:scale-[0.98]')}`}
+                          onClick={(e) => { e.stopPropagation(); if (!isLoadingAIArtifacts && apiKey) onFetchAIArtifacts(year); }}
+                          disabled={!apiKey}
+                          className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-2xl text-xs font-semibold calm-transition border ${
+                            isLoadingAIArtifacts 
+                              ? 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30 pointer-events-none' 
+                              : (!apiKey ? 'liquid-glass border-white/10 text-indigo-300 opacity-40 cursor-not-allowed' : 'liquid-glass border-white/10 text-indigo-300 hover:bg-white/10 active:scale-[0.98]')
+                          }`}
                         >
-                          {isLoadingAIArtifacts ? (
-                            <>
-                              <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                              <span className="animate-pulse tracking-wide">{lang === 'en' ? 'Unearthing Heritage...' : 'در حال کاوش میراث...'}</span>
-                            </>
-                          ) : (
-                            <>
-                              <Sparkles className="w-3.5 h-3.5" />
-                              <span>{lang === 'en' ? 'Find More Heritage with AI' : 'مشاهده میراث بیشتر'}</span>
-                            </>
-                          )}
+                          {isLoadingAIArtifacts ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
+                          <span>{lang === 'en' ? 'Find More Heritage with AI' : 'مشاهده میراث بیشتر'}</span>
                         </button>
                       </div>
                     )
