@@ -5,7 +5,6 @@ import L from 'leaflet';
 import * as turf from '@turf/turf';
 import 'leaflet/dist/leaflet.css';
 import regionsGeoJSON from '../data/regions.json';
-import neighboursGeoJSON from '../data/neighbours.json';
 import iranModernGeoJSON from '../data/iran_modern.json';
 import achaemenidMaxGeoJSON from '../data/achaemenid_max.json';
 import sasanianMaxGeoJSON from '../data/sasanian_max.json';
@@ -136,6 +135,15 @@ export default function MapLeaflet(props: MapLeafletProps) {
         return { ...v, latLng: centerLatLng };
       });
   }, [vazirs, year]);
+
+  const [neighboursGeoJSON, setNeighboursGeoJSON] = useState<any>(null);
+  useEffect(() => {
+    // Load neighbour boundaries after a short delay to prioritize critical map visual loading
+    const t = setTimeout(() => {
+      import('../data/neighbours.json').then(m => setNeighboursGeoJSON(m.default));
+    }, 2000);
+    return () => clearTimeout(t);
+  }, []);
 
   const allCities = useMemo(() => {
     return regions.flatMap(r => (r.anchorCities || []).map((c, i) => ({
@@ -365,7 +373,7 @@ export default function MapLeaflet(props: MapLeafletProps) {
         </AnimatePresence>
         
         {/* Static Background Neighbours (Hidden below zoom 4) */}
-        {currentZoom <= 4 && (
+        {currentZoom <= 4 && neighboursGeoJSON && (
           <GeoJSON 
             key={`neighbours-${year}`} 
             data={neighboursGeoJSON as GeoJsonObject} 
@@ -376,7 +384,7 @@ export default function MapLeaflet(props: MapLeafletProps) {
             weight: 1.5, 
             dashArray: '10, 15', 
             lineCap: 'butt', 
-            lineJoin: 'miter',
+            lineJoin: 'miter', 
             className: 'pointer-events-none'
           }} 
           interactive={false} 
@@ -531,7 +539,7 @@ export default function MapLeaflet(props: MapLeafletProps) {
         {/* 8. Marker Layers: Labels, Cities, Events, Artifacts (Highest Index) */}
         <Pane name="markers-pane" style={{ zIndex: 600 }}>
           {/* Static Contiguous Neighbour Labels */}
-          {(neighboursGeoJSON as any).features.map((feat: any) => {
+          {neighboursGeoJSON && (neighboursGeoJSON as any).features.map((feat: any) => {
             if (currentZoom > 7) return null; // Hide background labels when zooming in tight
             const centroid = turf.centerOfMass(feat).geometry.coordinates;
             const title = lang === 'fa' && feat.properties.nameFa ? feat.properties.nameFa : feat.properties.name;

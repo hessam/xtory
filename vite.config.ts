@@ -45,6 +45,22 @@ export default defineConfig(({ mode }) => {
           entryFileNames: 'assets/[name]-[hash].js',
           chunkFileNames: 'assets/[name]-[hash].js',
           assetFileNames: 'assets/[name]-[hash].[ext]',
+          manualChunks: {
+            // Core React runtime
+            'vendor-react': ['react', 'react-dom'],
+            // Map engine and GIS tools
+            'vendor-map': ['leaflet', 'react-leaflet', '@turf/turf'],
+            // Animation engine
+            'vendor-motion': ['motion'],
+            // Heavy intro morphing libs (now dynamically loaded)
+            'vendor-intro': ['flubber', 'd3'],
+            // AI description and markdown rendering
+            'vendor-ai-content': ['react-markdown', 'remark-gfm'],
+            // Onboarding tour
+            'vendor-tour': ['react-joyride'],
+            // Large utility/UI components
+            'vendor-ui': ['react-virtuoso', 'react-zoom-pan-pinch'],
+          },
         },
       },
     },

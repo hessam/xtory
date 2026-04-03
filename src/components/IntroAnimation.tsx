@@ -2,9 +2,6 @@
 // Cinematic entrance — Arkham-tier atmospheric intro with GPU-accelerated rendering
 
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { interpolate as flubberInterpolate } from 'flubber';
-import { geoPath, geoMercator } from 'd3';
-import { INTRO_KEYFRAMES } from '../data/introKeyframes';
 import { createIntroAudio } from '../services/introAudio';
 
 interface Props {
@@ -70,17 +67,6 @@ function tickParticles(particles: Particle[], ctx: CanvasRenderingContext2D, W: 
   }
 }
 
-// ─── GeoJSON → SVG Path ─────────────────────────────────────────────────────
-
-function geojsonToPath(geojson: any, width: number, height: number): string {
-  const projection = geoMercator()
-    .center([53, 32])
-    .scale(width * 0.9)
-    .translate([width / 2, height / 2]);
-  const pathGen = geoPath().projection(projection);
-  return pathGen(geojson.geometry) ?? '';
-}
-
 // ─── Component ───────────────────────────────────────────────────────────────
 
 export default function IntroAnimation({ onComplete, lang }: Props) {
@@ -123,297 +109,327 @@ export default function IntroAnimation({ onComplete, lang }: Props) {
     const container = containerRef.current;
     if (!svg || !pathEl || !glowEl || !overlay || !label || !subLabel || !canvas || !container) return;
 
-    const W = window.innerWidth;
-    const H = window.innerHeight;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2); // Cap at 2x for perf
-    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    // Load heavy dependencies ONLY if intro is actually going to play
+    let isMounted = true;
+    Promise.all([
+      import('flubber'),
+      import('d3'),
+      import('../data/introKeyframes')
+    ]).then(([
+      { interpolate: flubberInterpolate },
+      { geoPath, geoMercator },
+      { INTRO_KEYFRAMES }
+    ]) => {
+      if (!isMounted) return;
 
-    // Canvas setup at device pixel ratio
-    canvas.width = W * dpr;
-    canvas.height = H * dpr;
-    canvas.style.width = W + 'px';
-    canvas.style.height = H + 'px';
-    const ctx2d = canvas.getContext('2d')!;
-    ctx2d.scale(dpr, dpr);
+      const W = window.innerWidth;
+      const H = window.innerHeight;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2); // Cap at 2x for perf
+      svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
 
-    // Pre-compute SVG paths
-    const paths = INTRO_KEYFRAMES.map(kf => geojsonToPath(kf.geojson, W, H));
+      // ─── GeoJSON → SVG Path ─────────────────────────────────────────────────────
+      const geojsonToPath = (geojson: any, width: number, height: number): string => {
+        const projection = geoMercator()
+          .center([53, 32])
+          .scale(width * 0.9)
+          .translate([width / 2, height / 2]);
+        const pathGen = geoPath().projection(projection);
+        return pathGen(geojson.geometry) ?? '';
+      };
 
-    // Init particles (dust motes)
-    particlesRef.current = initParticles(80, W, H);
+      // Canvas setup at device pixel ratio
+      canvas.width = W * dpr;
+      canvas.height = H * dpr;
+      canvas.style.width = W + 'px';
+      canvas.style.height = H + 'px';
+      const ctx2d = canvas.getContext('2d')!;
+      ctx2d.scale(dpr, dpr);
 
-    // Init audio
-    audioRef.current = createIntroAudio();
+      // Pre-compute SVG paths
+      const paths = INTRO_KEYFRAMES.map(kf => geojsonToPath(kf.geojson, W, H));
 
-    // Skip button after 800ms
-    const skipTimer = setTimeout(() => setSkipVisible(true), 800);
+      // Init particles (dust motes)
+      particlesRef.current = initParticles(80, W, H);
 
-    // Particle animation loop (runs throughout entire intro)
-    let particleRunning = true;
-    function particleLoop() {
-      if (!particleRunning) return;
-      tickParticles(particlesRef.current, ctx2d, W, H);
-      requestAnimationFrame(particleLoop);
-    }
+      // Init audio
+      audioRef.current = createIntroAudio();
 
-    // ════════════════════════════════════════════════════════════════════════
-    //  BEAT 1 — THE VOID (0.0–1.2s)
-    //  Black screen slowly reveals terrain. Vignette intensifies.
-    // ════════════════════════════════════════════════════════════════════════
+      // Skip button after 800ms
+      const skipTimer = setTimeout(() => setSkipVisible(true), 800);
 
-    let t0: number | null = null;
-    const BEAT1_DURATION = 1200;
-
-    const isMobile = W < 640;
-    const endOpacity = isMobile ? 0.4 : 0.08;
-
-    function beat1(ts: number) {
-      if (!t0) t0 = ts;
-      const p = Math.min((ts - t0) / BEAT1_DURATION, 1);
-      const ep = easeOutExpo(p);
-
-      // Overlay dissolves — on mobile we keep it much darker (40% vs 8%) to ensure text stays readable against map
-      overlay.style.opacity = String(1 - ep * (1 - endOpacity));
-
-      if (p < 1) {
-        rafRef.current = requestAnimationFrame(beat1);
-      } else {
-        overlay.style.opacity = String(endOpacity);
-        audioRef.current?.fadeIn();
-        requestAnimationFrame(particleLoop); // start dust
-        beat2();
+      // Particle animation loop (runs throughout entire intro)
+      let particleRunning = true;
+      function particleLoop() {
+        if (!particleRunning || !isMounted) return;
+        tickParticles(particlesRef.current, ctx2d, W, H);
+        requestAnimationFrame(particleLoop);
       }
-    }
 
-    // ════════════════════════════════════════════════════════════════════════
-    //  BEAT 2 — THE REVEAL (1.2–2.8s)
-    //  Achaemenid border draws with a glowing pen. Label fades up.
-    // ════════════════════════════════════════════════════════════════════════
+      // ════════════════════════════════════════════════════════════════════════
+      //  BEAT 1 — THE VOID (0.0–1.2s)
+      //  Black screen slowly reveals terrain. Vignette intensifies.
+      // ════════════════════════════════════════════════════════════════════════
 
-    function beat2() {
-      setPhase('draw');
+      let t0: number | null = null;
+      const BEAT1_DURATION = 1200;
 
-      pathEl.setAttribute('d', paths[0]);
-      pathEl.style.fill = 'none';
-      pathEl.style.stroke = 'rgba(201,169,110,0.85)';
-      pathEl.style.strokeWidth = '1.5';
-      pathEl.style.opacity = '1';
+      const isMobile = W < 640;
+      const endOpacity = isMobile ? 0.4 : 0.08;
 
-      // Ghost glow path (wider, blurred, follows the same shape)
-      glowEl.setAttribute('d', paths[0]);
-      glowEl.style.fill = 'none';
-      glowEl.style.stroke = 'rgba(201,169,110,0.25)';
-      glowEl.style.strokeWidth = '8';
-      glowEl.style.opacity = '1';
+      function beat1(ts: number) {
+        if (!t0) t0 = ts;
+        const p = Math.min((ts - t0) / BEAT1_DURATION, 1);
+        const ep = easeOutExpo(p);
 
-      const totalLen = pathEl.getTotalLength();
-      pathEl.style.strokeDasharray = String(totalLen);
-      pathEl.style.strokeDashoffset = String(totalLen);
-      glowEl.style.strokeDasharray = String(totalLen);
-      glowEl.style.strokeDashoffset = String(totalLen);
-
-      // Label reveal with vertical slide
-      label.textContent = INTRO_KEYFRAMES[0].label[lang];
-      label.style.opacity = '0';
-      label.style.transform = 'translateX(-50%) translateY(8px)';
-      setTimeout(() => {
-        label.style.transition = 'opacity 800ms ease, transform 800ms ease';
-        label.style.opacity = '1';
-        label.style.transform = 'translateX(-50%) translateY(0)';
-      }, 400);
-
-      let drawT0: number | null = null;
-      const DRAW_DURATION = 1600; // Slower, more deliberate
-
-      function drawStroke(ts: number) {
-        if (!drawT0) drawT0 = ts;
-        const p = Math.min((ts - drawT0) / DRAW_DURATION, 1);
-        const ep = easeInOutQuart(p);
-        const offset = totalLen * (1 - ep);
-        pathEl.style.strokeDashoffset = String(offset);
-        glowEl.style.strokeDashoffset = String(offset);
+        // Overlay dissolves — on mobile we keep it much darker (40% vs 8%) to ensure text stays readable against map
+        overlay.style.opacity = String(1 - ep * (1 - endOpacity));
 
         if (p < 1) {
-          rafRef.current = requestAnimationFrame(drawStroke);
+          rafRef.current = requestAnimationFrame(beat1);
         } else {
-          pathEl.style.strokeDashoffset = '0';
-          glowEl.style.strokeDashoffset = '0';
-          setTimeout(beat3, 300);
+          overlay.style.opacity = String(endOpacity);
+          audioRef.current?.fadeIn();
+          requestAnimationFrame(particleLoop); // start dust
+          beat2();
         }
       }
 
-      rafRef.current = requestAnimationFrame(drawStroke);
-    }
+      // ════════════════════════════════════════════════════════════════════════
+      //  BEAT 2 — THE REVEAL (1.2–2.8s)
+      //  Achaemenid border draws with a glowing pen. Label fades up.
+      // ════════════════════════════════════════════════════════════════════════
 
-    // ════════════════════════════════════════════════════════════════════════
-    //  BEAT 3 — THE CONTRACTION (2.8–5.0s)
-    //  Fill fades in. Shape morphs through empires with breathe pauses.
-    // ════════════════════════════════════════════════════════════════════════
+      function beat2() {
+        setPhase('draw');
 
-    function beat3() {
-      setPhase('morph');
+        pathEl.setAttribute('d', paths[0]);
+        pathEl.style.fill = 'none';
+        pathEl.style.stroke = 'rgba(201,169,110,0.85)';
+        pathEl.style.strokeWidth = '1.5';
+        pathEl.style.opacity = '1';
 
-      // Cinematic fill — not instant, grows from 0
-      pathEl.style.transition = 'fill 600ms ease';
-      pathEl.style.fill = 'rgba(201,120,40,0.18)';
-      glowEl.style.transition = 'fill 600ms ease';
-      glowEl.style.fill = 'rgba(201,120,40,0.06)';
+        // Ghost glow path (wider, blurred, follows the same shape)
+        glowEl.setAttribute('d', paths[0]);
+        glowEl.style.fill = 'none';
+        glowEl.style.stroke = 'rgba(201,169,110,0.25)';
+        glowEl.style.strokeWidth = '8';
+        glowEl.style.opacity = '1';
 
-      let idx = 0;
+        const totalLen = pathEl.getTotalLength();
+        pathEl.style.strokeDasharray = String(totalLen);
+        pathEl.style.strokeDashoffset = String(totalLen);
+        glowEl.style.strokeDasharray = String(totalLen);
+        glowEl.style.strokeDashoffset = String(totalLen);
 
-      function morphNext() {
-        idx++;
-        if (idx >= INTRO_KEYFRAMES.length) {
-          // Final shape reached — breathe, then title
-          setTimeout(beat4, 200);
-          return;
-        }
-
-        const kf = INTRO_KEYFRAMES[idx];
-        const from = paths[idx - 1];
-        const to = paths[idx];
-
-        // Audio heartbeat
-        audioRef.current?.pulse();
-
-        // Label crossfade with direction
-        label.style.transition = 'opacity 200ms ease, transform 200ms ease';
+        // Label reveal with vertical slide
+        label.textContent = INTRO_KEYFRAMES[0].label[lang];
         label.style.opacity = '0';
-        label.style.transform = 'translateX(-50%) translateY(-6px)';
-
+        label.style.transform = 'translateX(-50%) translateY(8px)';
         setTimeout(() => {
-          label.textContent = kf.label[lang];
-          label.style.transform = 'translateX(-50%) translateY(6px)';
-          requestAnimationFrame(() => {
-            label.style.transition = 'opacity 400ms ease, transform 400ms ease';
-            label.style.opacity = '1';
-            label.style.transform = 'translateX(-50%) translateY(0)';
-          });
-        }, 250);
+          label.style.transition = 'opacity 800ms ease, transform 800ms ease';
+          label.style.opacity = '1';
+          label.style.transform = 'translateX(-50%) translateY(0)';
+        }, 400);
 
-        // Morph with flubber
-        const morphDuration = kf.morphMs > 0 ? kf.morphMs + 200 : 400; // pad for cinematic feel
-        const interp = flubberInterpolate(from, to, { maxSegmentLength: 6 });
-        let mT0: number | null = null;
+        let drawT0: number | null = null;
+        const DRAW_DURATION = 1600; // Slower, more deliberate
 
-        function doMorph(ts: number) {
-          if (!mT0) mT0 = ts;
-          const p = Math.min((ts - mT0) / morphDuration, 1);
-          const d = interp(easeInOutQuart(p));
-          pathEl.setAttribute('d', d);
-          glowEl.setAttribute('d', d);
+        function drawStroke(ts: number) {
+          if (!drawT0) drawT0 = ts;
+          const p = Math.min((ts - drawT0) / DRAW_DURATION, 1);
+          const ep = easeInOutQuart(p);
+          const offset = totalLen * (1 - ep);
+          pathEl.style.strokeDashoffset = String(offset);
+          glowEl.style.strokeDashoffset = String(offset);
 
           if (p < 1) {
-            rafRef.current = requestAnimationFrame(doMorph);
+            rafRef.current = requestAnimationFrame(drawStroke);
           } else {
-            setTimeout(morphNext, kf.holdMs + 100);
+            pathEl.style.strokeDashoffset = '0';
+            glowEl.style.strokeDashoffset = '0';
+            setTimeout(beat3, 300);
           }
         }
 
-        rafRef.current = requestAnimationFrame(doMorph);
+        rafRef.current = requestAnimationFrame(drawStroke);
       }
 
-      // Hold on Achaemenid before morphing
-      setTimeout(morphNext, INTRO_KEYFRAMES[0].holdMs + 200);
-    }
+      // ════════════════════════════════════════════════════════════════════════
+      //  BEAT 3 — THE CONTRACTION (2.8–5.0s)
+      //  Fill fades in. Shape morphs through empires with breathe pauses.
+      // ════════════════════════════════════════════════════════════════════════
 
-    // ════════════════════════════════════════════════════════════════════════
-    //  BEAT 4 — THE RESOLVE (5.0–6.5s)
-    //  Modern Iran settles. Sonar ring. Product title rises from depth.
-    // ════════════════════════════════════════════════════════════════════════
+      function beat3() {
+        setPhase('morph');
 
-    function beat4() {
-      setPhase('title');
-      audioRef.current?.resolve();
+        // Cinematic fill — not instant, grows from 0
+        pathEl.style.transition = 'fill 600ms ease';
+        pathEl.style.fill = 'rgba(201,120,40,0.18)';
+        glowEl.style.transition = 'fill 600ms ease';
+        glowEl.style.fill = 'rgba(201,120,40,0.06)';
 
-      // ── Sonar ring (SVG clone, GPU-animated via CSS)
-      const sonarEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-      sonarEl.setAttribute('d', pathEl.getAttribute('d') ?? '');
-      sonarEl.style.cssText = `
-        fill: none;
-        stroke: rgba(201,169,110,0.5);
-        stroke-width: 2;
-        transform-origin: center;
-        opacity: 0.5;
-        will-change: transform, opacity;
-      `;
-      svg.appendChild(sonarEl);
+        let idx = 0;
 
-      let sT0: number | null = null;
-      const SONAR_DURATION = 1000;
+        function morphNext() {
+          idx++;
+          if (idx >= INTRO_KEYFRAMES.length) {
+            // Final shape reached — breathe, then title
+            setTimeout(beat4, 200);
+            return;
+          }
 
-      function doSonar(ts: number) {
-        if (!sT0) sT0 = ts;
-        const p = Math.min((ts - sT0) / SONAR_DURATION, 1);
-        const ep = easeOutQuint(p);
-        sonarEl.style.transform = `scale(${1 + ep * 0.06})`;
-        sonarEl.style.opacity = String(0.5 * (1 - ep));
+          const kf = INTRO_KEYFRAMES[idx];
+          const from = paths[idx - 1];
+          const to = paths[idx];
 
-        if (p < 1) {
-          rafRef.current = requestAnimationFrame(doSonar);
-        } else {
-          svg.removeChild(sonarEl);
+          // Audio heartbeat
+          audioRef.current?.pulse();
+
+          // Label crossfade with direction
+          label.style.transition = 'opacity 200ms ease, transform 200ms ease';
+          label.style.opacity = '0';
+          label.style.transform = 'translateX(-50%) translateY(-6px)';
+
+          setTimeout(() => {
+            label.textContent = kf.label[lang];
+            label.style.transform = 'translateX(-50%) translateY(6px)';
+            requestAnimationFrame(() => {
+              label.style.transition = 'opacity 400ms ease, transform 400ms ease';
+              label.style.opacity = '1';
+              label.style.transform = 'translateX(-50%) translateY(0)';
+            });
+          }, 250);
+
+          // Morph with flubber
+          const morphDuration = kf.morphMs > 0 ? kf.morphMs + 200 : 400; // pad for cinematic feel
+          const interp = flubberInterpolate(from, to, { maxSegmentLength: 6 });
+          let mT0: number | null = null;
+
+          function doMorph(ts: number) {
+            if (!mT0) mT0 = ts;
+            const p = Math.min((ts - mT0) / morphDuration, 1);
+            const d = interp(easeInOutQuart(p));
+            pathEl.setAttribute('d', d);
+            glowEl.setAttribute('d', d);
+
+            if (p < 1) {
+              rafRef.current = requestAnimationFrame(doMorph);
+            } else {
+              setTimeout(morphNext, kf.holdMs + 100);
+            }
+          }
+
+          rafRef.current = requestAnimationFrame(doMorph);
         }
+
+        // Hold on Achaemenid before morphing
+        setTimeout(morphNext, INTRO_KEYFRAMES[0].holdMs + 200);
       }
 
-      rafRef.current = requestAnimationFrame(doSonar);
+      // ════════════════════════════════════════════════════════════════════════
+      //  BEAT 4 — THE RESOLVE (5.0–6.5s)
+      //  Modern Iran settles. Sonar ring. Product title rises from depth.
+      // ════════════════════════════════════════════════════════════════════════
 
-      // Fade out era label
-      label.style.transition = 'opacity 500ms ease';
-      label.style.opacity = '0';
+      function beat4() {
+        setPhase('title');
+        audioRef.current?.resolve();
 
-      // Rise product title
-      setTitleVisible(true);
+        // ── Sonar ring (SVG clone, GPU-animated via CSS)
+        const sonarEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        sonarEl.setAttribute('d', pathEl.getAttribute('d') ?? '');
+        sonarEl.style.cssText = `
+          fill: none;
+          stroke: rgba(201,169,110,0.5);
+          stroke-width: 2;
+          transform-origin: center;
+          opacity: 0.5;
+          will-change: transform, opacity;
+        `;
+        svg.appendChild(sonarEl);
 
-      // Show dedication 900ms after title appears
-      setTimeout(() => setDedicationVisible(true), 900);
+        let sT0: number | null = null;
+        const SONAR_DURATION = 1000;
 
-      // Dissolve after dedication has had time to breathe
-      setTimeout(beat5, 3200);
-    }
+        function doSonar(ts: number) {
+          if (!sT0) sT0 = ts;
+          const p = Math.min((ts - sT0) / SONAR_DURATION, 1);
+          const ep = easeOutQuint(p);
+          sonarEl.style.transform = `scale(${1 + ep * 0.06})`;
+          sonarEl.style.opacity = String(0.5 * (1 - ep));
 
-    // ════════════════════════════════════════════════════════════════════════
-    //  BEAT 5 — THE HANDOFF (6.5–8.0s)
-    //  Everything dissolves to atlas. Polygon fades. Particles drift away.
-    // ════════════════════════════════════════════════════════════════════════
+          if (p < 1) {
+            rafRef.current = requestAnimationFrame(doSonar);
+          } else {
+            svg.removeChild(sonarEl);
+          }
+        }
 
-    function beat5() {
-      setPhase('dissolve');
+        rafRef.current = requestAnimationFrame(doSonar);
 
-      // Slow, cinematic fade of the SVG layer
-      if (svgRef.current) {
-        svgRef.current.style.transition = 'opacity 1200ms cubic-bezier(0.4, 0, 0.2, 1)';
-        svgRef.current.style.opacity = '0';
+        // Fade out era label
+        label.style.transition = 'opacity 500ms ease';
+        label.style.opacity = '0';
+
+        // Rise product title
+        setTitleVisible(true);
+
+        // Show dedication 900ms after title appears
+        setTimeout(() => setDedicationVisible(true), 900);
+
+        // Dissolve after dedication has had time to breathe
+        setTimeout(beat5, 3200);
       }
 
-      // Fade canvas particles
-      if (canvasRef.current) {
-        canvasRef.current.style.transition = 'opacity 1200ms cubic-bezier(0.4, 0, 0.2, 1)';
-        canvasRef.current.style.opacity = '0';
+      // ════════════════════════════════════════════════════════════════════════
+      //  BEAT 5 — THE HANDOFF (6.5–8.0s)
+      //  Everything dissolves to atlas. Polygon fades. Particles drift away.
+      // ════════════════════════════════════════════════════════════════════════
+
+      function beat5() {
+        setPhase('dissolve');
+
+        // Slow, cinematic fade of the SVG layer
+        if (svgRef.current) {
+          svgRef.current.style.transition = 'opacity 1200ms cubic-bezier(0.4, 0, 0.2, 1)';
+          svgRef.current.style.opacity = '0';
+        }
+
+        // Fade canvas particles
+        if (canvasRef.current) {
+          canvasRef.current.style.transition = 'opacity 1200ms cubic-bezier(0.4, 0, 0.2, 1)';
+          canvasRef.current.style.opacity = '0';
+        }
+
+        // Kill particles
+        setTimeout(() => { particleRunning = false; }, 1300);
+
+        // Full container dissolve
+        if (containerRef.current) {
+          containerRef.current.style.transition = 'opacity 1000ms cubic-bezier(0.4, 0, 0.2, 1)';
+          setTimeout(() => {
+            if (containerRef.current) containerRef.current.style.opacity = '0';
+          }, 400);
+        }
+
+        setTimeout(complete, 1500);
       }
 
-      // Kill particles
-      setTimeout(() => { particleRunning = false; }, 1300);
+      // ── Start ────────────────────────────────────────────────────────────────
+      rafRef.current = requestAnimationFrame(beat1);
 
-      // Full container dissolve
-      if (containerRef.current) {
-        containerRef.current.style.transition = 'opacity 1000ms cubic-bezier(0.4, 0, 0.2, 1)';
-        setTimeout(() => {
-          if (containerRef.current) containerRef.current.style.opacity = '0';
-        }, 400);
-      }
-
-      setTimeout(complete, 1500);
-    }
-
-    // ── Start ────────────────────────────────────────────────────────────────
-    rafRef.current = requestAnimationFrame(beat1);
+      return () => {
+        clearTimeout(skipTimer);
+        cancelAnimationFrame(rafRef.current);
+        audioRef.current?.stop();
+        particleRunning = false;
+      };
+    });
 
     return () => {
-      clearTimeout(skipTimer);
+      isMounted = false;
       cancelAnimationFrame(rafRef.current);
       audioRef.current?.stop();
-      particleRunning = false;
     };
   }, [lang, complete, onComplete]);
 
