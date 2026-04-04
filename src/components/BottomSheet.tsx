@@ -762,7 +762,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
                         >
                             <div className="flex items-center gap-1.5 mb-0.5">
                                 {icon}
-<span className="text-[12px] font-bold text-white truncate drop-shadow-md leading-tight">{ruler.name[lang]}</span>
+                                <span className="text-[12px] font-bold text-white truncate drop-shadow-md leading-tight">{ruler.name[lang]}</span>
                             </div>
                             <span className="text-[10px] text-white/50 font-medium truncate ml-[18px] rtl:ml-0 rtl:mr-[18px] mb-0.5">
                                 {dynasty.name[lang]}
@@ -811,19 +811,23 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
                   components={{
                     Header: () => (
                       <div className="flex flex-col">
-                        <div className="border-b border-white/10">
-                          <HistorianCardSection
-                            result={historianResult}
-                            lang={lang}
-                            onNavigate={onJumpToYear ?? (() => {})}
-                            isEnriching={isLoadingAI}
-                            selectedVazir={selectedVazir}
-                            onVazirClose={onVazirClose}
-                            onVazirSelect={onVazirClick}
-                            onBannerClick={onBannerClick}
-                          />
-                        </div>
+                        {/* 1. Context Card — only in half snap, part of the scroll */}
+                        {snap !== 'full' && (
+                          <div className="border-b border-white/10">
+                            <HistorianCardSection
+                              result={historianResult}
+                              lang={lang}
+                              onNavigate={onJumpToYear ?? (() => {})}
+                              isEnriching={isLoadingAI}
+                              selectedVazir={selectedVazir}
+                              onVazirClose={onVazirClose}
+                              onVazirSelect={onVazirClick}
+                              onBannerClick={onBannerClick}
+                            />
+                          </div>
+                        )}
 
+                        {/* 2. Sticky Tab Switcher for HALF state */}
                         {snap !== 'full' && (
                           <div className="sticky top-0 px-4 pb-3 pt-3 border-b border-white/5 bg-slate-950/80 backdrop-blur-md z-10 shrink-0">
                             <div className="flex bg-black/20 rounded-xl p-1 border border-white/5 shadow-inner">
@@ -831,7 +835,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
                                 <button
                                   key={tab}
                                   onClick={() => startTransition(() => { setActiveTab(tab); })}
-                                  className={`flex-1 py-1.5 text-xs font-medium rounded-lg transition-all ${activeTab === tab ? 'bg-white/10 text-white shadow-sm font-bold' : 'text-slate-500 hover:text-slate-200'}`}
+                                  className={`flex-1 py-2 text-xs font-medium rounded-lg transition-all ${activeTab === tab ? 'bg-white/10 text-white shadow-sm font-bold' : 'text-slate-500 hover:text-slate-200'}`}
                                 >
                                   {lang === 'en'
                                     ? tab === 'events' ? 'Events' : tab === 'figures' ? 'Figures' : 'Heritage'
@@ -842,6 +846,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
                           </div>
                         )}
 
+                        {/* 3. Empty State Message */}
                         {activeEvents.length === 0 && !mythsForEra.length && (
                           <div className="px-6 py-12 flex flex-col items-center justify-center text-center">
                             <div className="p-4 bg-indigo-500/10 rounded-2xl mb-5 border border-indigo-500/20 shadow-inner">
@@ -915,19 +920,22 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
                   components={{
                     Header: () => (
                       <div className="flex flex-col">
-                        <div className="border-b border-white/10">
-                          <HistorianCardSection
-                            result={historianResult}
-                            lang={lang}
-                            onNavigate={onJumpToYear ?? (() => {})}
-                            isEnriching={isLoadingAI}
-                            selectedVazir={selectedVazir}
-                            onVazirClose={onVazirClose}
-                            onVazirSelect={onVazirClick}
-                            onBannerClick={onBannerClick}
-                          />
-                        </div>
+                        {/* 1. Context Card — only in half snap, part of the scroll */}
+                        {snap !== 'full' && (
+                          <div className="border-b border-white/10">
+                            <HistorianCardSection
+                              result={historianResult}
+                              lang={lang}
+                              onNavigate={onJumpToYear ?? (() => {})}
+                              isEnriching={isLoadingAI}
+                              selectedVazir={selectedVazir}
+                              onVazirClose={onVazirClose}
+                              onVazirSelect={onVazirClick}
+                            />
+                          </div>
+                        )}
 
+                        {/* 2. Sticky Tab Switcher for HALF state */}
                         {snap !== 'full' && (
                           <div className="sticky top-0 px-4 pb-3 pt-3 border-b border-white/5 bg-slate-950/80 backdrop-blur-md z-10 shrink-0">
                             <div className="flex bg-black/20 rounded-xl p-1 border border-white/5 shadow-inner">
@@ -935,7 +943,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
                                 <button
                                   key={tab}
                                   onClick={() => startTransition(() => { setActiveTab(tab); })}
-                                  className={`flex-1 py-1.5 text-xs font-medium rounded-lg transition-all ${activeTab === tab ? 'bg-white/10 text-white shadow-sm font-bold' : 'text-slate-500 hover:text-slate-200'}`}
+                                  className={`flex-1 py-2 text-xs font-medium rounded-lg transition-all ${activeTab === tab ? 'bg-white/10 text-white shadow-sm font-bold' : 'text-slate-500 hover:text-slate-200'}`}
                                 >
                                   {lang === 'en'
                                     ? tab === 'events' ? 'Events' : tab === 'figures' ? 'Figures' : 'Heritage'
@@ -946,6 +954,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
                           </div>
                         )}
 
+                        {/* 3. Empty State Message */}
                         {activeFigures.length === 0 && (
                           <div className="px-6 py-12 flex flex-col items-center justify-center text-center">
                             <div className="p-4 bg-indigo-500/10 rounded-2xl mb-5 border border-indigo-500/20 shadow-inner">
@@ -1013,19 +1022,22 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
                   components={{
                     Header: () => (
                       <div className="flex flex-col">
-                        <div className="border-b border-white/10">
-                          <HistorianCardSection
-                            result={historianResult}
-                            lang={lang}
-                            onNavigate={onJumpToYear ?? (() => {})}
-                            isEnriching={isLoadingAI}
-                            selectedVazir={selectedVazir}
-                            onVazirClose={onVazirClose}
-                            onVazirSelect={onVazirClick}
-                            onBannerClick={onBannerClick}
-                          />
-                        </div>
+                        {/* 1. Context Card — only in half snap, part of the scroll */}
+                        {snap !== 'full' && (
+                          <div className="border-b border-white/10">
+                            <HistorianCardSection
+                              result={historianResult}
+                              lang={lang}
+                              onNavigate={onJumpToYear ?? (() => {})}
+                              isEnriching={isLoadingAI}
+                              selectedVazir={selectedVazir}
+                              onVazirClose={onVazirClose}
+                              onVazirSelect={onVazirClick}
+                            />
+                          </div>
+                        )}
 
+                        {/* 2. Sticky Tab Switcher for HALF state */}
                         {snap !== 'full' && (
                           <div className="sticky top-0 px-4 pb-3 pt-3 border-b border-white/5 bg-slate-950/80 backdrop-blur-md z-10 shrink-0">
                             <div className="flex bg-black/20 rounded-xl p-1 border border-white/5 shadow-inner">
@@ -1033,7 +1045,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
                                 <button
                                   key={tab}
                                   onClick={() => startTransition(() => { setActiveTab(tab); })}
-                                  className={`flex-1 py-1.5 text-xs font-medium rounded-lg transition-all ${activeTab === tab ? 'bg-white/10 text-white shadow-sm font-bold' : 'text-slate-500 hover:text-slate-200'}`}
+                                  className={`flex-1 py-2 text-xs font-medium rounded-lg transition-all ${activeTab === tab ? 'bg-white/10 text-white shadow-sm font-bold' : 'text-slate-500 hover:text-slate-200'}`}
                                 >
                                   {lang === 'en'
                                     ? tab === 'events' ? 'Events' : tab === 'figures' ? 'Figures' : 'Heritage'
@@ -1044,6 +1056,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
                           </div>
                         )}
 
+                        {/* 3. Empty State Message */}
                         {activeArtifacts.length === 0 && (
                           <div className="px-6 py-12 flex flex-col items-center justify-center text-center">
                             <div className="p-4 bg-indigo-500/10 rounded-2xl mb-5 border border-indigo-500/20 shadow-inner">
