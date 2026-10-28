@@ -21,7 +21,6 @@ import { ByokGate } from './components/ByokGate';
 import { Vazir } from './data/vazirs';
 import { pushToDataLayer, markAIUsed } from './services/tagManager';
 import { isFlagOn } from './lib/flags';
-import { ActiveDynastyList } from './components/fragmentation/ActiveDynastyList';
 
 // Heavy components — lazy loaded so they never block first paint
 const Map        = lazy(() => import('./components/MapLeaflet'));
@@ -36,6 +35,8 @@ const SupportModal  = lazy(() => import('./components/SupportModal').then(m => (
 const SearchModal   = lazy(() => import('./components/SearchModal').then(m => ({ default: m.SearchModal })));
 const QuizModal     = lazy(() => import('./components/QuizModal').then(m => ({ default: m.QuizModal })));
 const IntroAnimation = lazy(() => import('./components/IntroAnimation'));
+// Pulls in the dynasty registry data — keep it out of the first-load bundle
+const ActiveDynastyList = lazy(() => import('./components/fragmentation/ActiveDynastyList').then(m => ({ default: m.ActiveDynastyList })));
 
 export default function App() {
   const [year, setYear] = useState<number>(-500);
@@ -676,7 +677,7 @@ export default function App() {
                 <div className="flex flex-col gap-2.5">
                   {/* Simple/Detailed Toggle Content */}
                   {fragOn ? (
-                    <ActiveDynastyList year={mapYear} lang={lang} compact />
+                    <Suspense fallback={null}><ActiveDynastyList year={mapYear} lang={lang} compact /></Suspense>
                   ) : legendMode === 'simple' ? (
                     <>
                       <LegendItem colors={['persian']} label={{ en: 'Persian/Iranian', fa: 'ایرانی/پارسی' }} lang={lang} />
