@@ -356,6 +356,21 @@ three.js "hero" moment can be proposed later as a lazy, capable-device-only extr
 - [ ] Cache hit rate visible in logs; repeated request returns < 300 ms.
 - [ ] BYOK path still works for users who prefer it.
 
+**S5 status (2026-10-28): implemented and tested offline; OFF in production until you set env vars**
+- [x] `POST /api/ai/ask` with **typed tasks only** (`year_dynasties`, `ruler_detail`, `events`, `figures`, `artifacts`, `quiz`, `dig_deeper`): strict param validation, server-built prompts, schema validation + one repair retry, mechanical guards, no free-form prompt possible. `GET /api/ai/status`, owner-only `GET /api/ai/usage`.
+- [x] OpenRouter client (`deepseek/deepseek-v4.1-flash-1017`, per-task override via env), JSON mode, timeout, token ceilings per task.
+- [x] Upstash Redis (REST, no dependency) for limits, cache and usage; memory store for dev/tests; production **refuses** to serve without a durable store.
+- [x] Shared answer cache (first user pays) with in-flight de-duplication; cache hits ≈ 5 ms in the HTTP check.
+- [x] Limits: per-device/min and /day, per-IP/min (paid calls only), loose per-IP ceiling for hits, global daily token breaker, kill switch (`AI_ENABLED`, default off). All env-tunable.
+- [x] **Measure first:** per-task requests/hits/errors/tokens, hourly curve, and a per-device daily-token histogram (1k…250k) so you can pick per-user / per-minute limits from real data. Privacy: IP and device are salted-hashed with the UTC day; never stored or logged raw (tested).
+- [x] Client: `aiTransport` + routing inside `geminiService` (personal key always wins); AI buttons enable via `canUseAi` when the server is ready; friendly en/fa errors that point to the BYOK option.
+- [x] Bug fixed: AI events/artifacts used an invented 0–1000 coordinate grid but the map plots `[lat, lng]`; prompts fixed, out-of-atlas values dropped (BYOK path too).
+- [x] Tests: 40 server/unit (kill switch, origin, validation, cache, concurrency, every limit and window reset, budget, repair/422, provider errors, guards, privacy, usage report, Upstash protocol, OpenRouter client) + 10 e2e (desktop + mobile).
+- [x] Deployable bundles `api/ai/{ask,status,usage}.js` (esbuild, committed; CI `api:check`). Checked end-to-end over real HTTP against a fake provider.
+- [ ] **Owner to do:** create the Upstash database and set the env vars (docs/AI_SERVER.md); then try `?ff=server_ai` on a preview. **Not verified against real OpenRouter / Upstash / Vercel** (no network or keys in the sandbox).
+- [ ] **Open:** provider terms for serving users in Iran (docs/adr/002-ai-provider.md) — not resolved by research; needs the owner's reading of the current terms.
+- Not in this slice: biography / alternate-history / what-if / lineage / chat / search still BYOK-only; BYOK prompts still duplicate the server prompts (consolidation planned with S6); per-user token *caps* are measured but not enforced.
+
 ---
 
 ## Slice 6 — Fact engine: computed facts, AI facts, fact-checking
@@ -400,6 +415,17 @@ fact_reviews(fact_id, reviewer, verdict, notes, at)   fact_reports(fact_id, prof
 - [ ] The Yazdgerd III example is produced as a *computed* fact from dates, not from AI.
 - [ ] Deterministic checker rejects a planted wrong age in a test.
 - [ ] Review queue works end-to-end; export produces valid JSON; verified facts load with no backend.
+
+**S6 status (2026-10-28): engine built and tested offline; 3 owner actions open**
+- [x] **249 computed facts** (no AI; 210 verified, 39 held `unverified` until their source dates are confirmed): reign lengths/extremes, concurrency counts/peak/trough/jumps, per-region fragmentation peaks, dynasty reach, dynasty overlaps, ages and contemporaries. Bilingual, each with `derivedFrom` + sources; 20th century excluded (sensitive-era rule). `data/facts/SPOT_CHECK.md` = 20 sampled facts with raw inputs; a unit test re-derives the same families with independent code.
+- [x] **Yazdgerd III is a computed fact** ("lived about 27 years", "took power at about 8") from dates, not AI — held back as `unverified` until the dates in `data/facts/lives.json` are confirmed (owner or Wikidata).
+- [x] **Deterministic checker** rejects a planted wrong age (also wrong reign length / birth / death year / English-vs-Persian number mismatch); proven in unit tests and over real HTTP.
+- [x] **AI facts pipeline** `POST /api/facts/dig`: writer (bilingual, sources required) → arithmetic → judge from a *different vendor* → number-aware dedupe → store; stored facts served first, writer at most once per entity per day. Fails closed (no checker ⇒ nothing AI-written is shown).
+- [x] **Guardrails enforced in code:** rejected/unsupported never shown; ai_checked shown with badge; no source ⇒ cannot be verified; sensitive era ⇒ human first.
+- [x] **Review queue** `#/admin/review` (ordered by times found, checks and verdict visible, approve / edit / reject / dispute / reopen, reported list, validated Export → `data/facts/verified/ai.json`); `npm run facts:export`. **User reports** pull a fact back to review at a threshold; rejecting a verified fact writes `points_revoked` for Slice 8.
+- [x] Static facts load with **no backend** (`staticFacts()`); tests: 56 new unit (facts model/check/computed/loader + 18 server flow tests) + 5 e2e for the review page. CI: `facts:check`, `api:check`.
+- [ ] **Owner:** confirm the dates in `data/facts/lives.json` (Yazdgerd III first) or unblock Wikidata + add QIDs; **set `AI_CHECKER_MODEL`** (non-DeepSeek) or no AI fact will ever show; native review of Persian wording.
+- [ ] Not verified against real OpenRouter/Upstash. Facts are not yet displayed in the app (Slice 7). Deviations: Redis not Postgres (git export is the durable record). See `docs/adr/003-fact-engine.md`.
 
 ---
 

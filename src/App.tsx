@@ -9,7 +9,7 @@ import { dynasties as initialDynasties, Dynasty, Classification } from './data/d
 import { historicalEvents as initialHistoricalEvents, HistoricalEvent } from './data/historicalEvents';
 import { historicalFigures, HistoricalFigure } from './data/figures';
 import { artifacts as initialArtifacts, Artifact } from './data/artifacts';
-import { DynamicRulerData, RulerDetailResult, fetchHistoricalDataForYear, fetchRulerDetail, fetchHistoricalEventsForYear, fetchHistoricalFiguresForYear, fetchArtifactsForYear, SearchResult } from './services/geminiService';
+import { setServerAiActive, DynamicRulerData, RulerDetailResult, fetchHistoricalDataForYear, fetchRulerDetail, fetchHistoricalEventsForYear, fetchHistoricalFiguresForYear, fetchArtifactsForYear, SearchResult } from './services/geminiService';
 import { useApiKey } from './context/ApiKeyContext';
 import { generateQuizQuestion } from './services/geminiService';
 import { getQuestionsForYear } from './data/quizQuestions';
@@ -140,7 +140,8 @@ export default function App() {
   const closeSupport = () => {
     window.location.hash = '';
   };
-  const { apiKey, isReady } = useApiKey();
+  const { apiKey, isReady, serverAi, canUseAi } = useApiKey();
+  useEffect(() => { setServerAiActive(serverAi); }, [serverAi]);
 
   React.useEffect(() => {
     import('./services/geminiService').then(m => m.setApiKey(apiKey)).catch(console.error);
@@ -1027,7 +1028,7 @@ export default function App() {
           year={year}
           isOpen={isQuizModalOpen}
           questions={activeQuizQuestions}
-          hasApiKey={!!apiKey}
+          hasApiKey={canUseAi}
           lang={lang}
           onClose={() => setIsQuizModalOpen(false)}
           onEndQuiz={() => setActiveQuizQuestions(null)}

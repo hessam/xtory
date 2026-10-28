@@ -134,7 +134,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
 }) => {
   const [snap, setSnap] = useState<SnapPoint>('collapsed');
   const [activeTab, setActiveTab] = useState<'events' | 'figures' | 'artifacts'>('events');
-  const { apiKey } = useApiKey();
+  const { canUseAi } = useApiKey();
   const sheetRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -718,7 +718,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
                 {onYearContextClick && (
                   <button
                     onClick={() => onYearContextClick(year)}
-                    disabled={isLoadingRulers || !apiKey}
+                    disabled={isLoadingRulers || !canUseAi}
                     className="flex items-center gap-1.5 px-2.5 py-1 liquid-glass text-amber-400 border border-white/10 hover:bg-white/10 disabled:opacity-40 disabled:cursor-not-allowed rounded-xl text-[10px] font-medium calm-transition whitespace-nowrap active:scale-[0.97]"
                   >
                     {isLoadingRulers ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
@@ -868,17 +868,17 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
                           question={mythsForEra.length > 0 ? mythsForEra[0] : undefined} 
                           lang={lang} 
                           year={year}
-                          hasApiKey={!!apiKey}
+                          hasApiKey={!!canUseAi}
                           onOpenQuiz={() => onOpenQuiz(mythsForEra)}
                           onOpenSettings={() => setShowSettings && setShowSettings(true)}
                         />
                         <button
-                          onClick={(e) => { e.stopPropagation(); if (!isLoading && apiKey) onFetchAIEvents(year); }}
-                          disabled={!apiKey}
+                          onClick={(e) => { e.stopPropagation(); if (!isLoading && canUseAi) onFetchAIEvents(year); }}
+                          disabled={!canUseAi}
                           className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-2xl text-xs font-semibold calm-transition border ${
                             isLoading 
                               ? 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30 pointer-events-none' 
-                              : (!apiKey ? 'liquid-glass border-white/10 text-indigo-300 opacity-40 cursor-not-allowed' : 'liquid-glass border-white/10 text-indigo-300 hover:bg-white/10 active:scale-[0.98]')
+                              : (!canUseAi ? 'liquid-glass border-white/10 text-indigo-300 opacity-40 cursor-not-allowed' : 'liquid-glass border-white/10 text-indigo-300 hover:bg-white/10 active:scale-[0.98]')
                           }`}
                         >
                           {isLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
@@ -973,12 +973,12 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
                     Footer: () => (
                       <div className="px-4 pt-4 pb-6">
                         <button
-                          onClick={(e) => { e.stopPropagation(); if (!isLoadingAIFigures && apiKey) onFetchAIFigures(year); }}
-                          disabled={!apiKey}
+                          onClick={(e) => { e.stopPropagation(); if (!isLoadingAIFigures && canUseAi) onFetchAIFigures(year); }}
+                          disabled={!canUseAi}
                           className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-2xl text-xs font-semibold calm-transition border ${
                             isLoadingAIFigures 
                               ? 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30 pointer-events-none' 
-                              : (!apiKey ? 'liquid-glass border-white/10 text-indigo-300 opacity-40 cursor-not-allowed' : 'liquid-glass border-white/10 text-indigo-300 hover:bg-white/10 active:scale-[0.98]')
+                              : (!canUseAi ? 'liquid-glass border-white/10 text-indigo-300 opacity-40 cursor-not-allowed' : 'liquid-glass border-white/10 text-indigo-300 hover:bg-white/10 active:scale-[0.98]')
                           }`}
                         >
                           {isLoadingAIFigures ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
@@ -1075,12 +1075,12 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
                     Footer: () => (
                       <div className="px-4 pt-4 pb-6">
                         <button
-                          onClick={(e) => { e.stopPropagation(); if (!isLoadingAIArtifacts && apiKey) onFetchAIArtifacts(year); }}
-                          disabled={!apiKey}
+                          onClick={(e) => { e.stopPropagation(); if (!isLoadingAIArtifacts && canUseAi) onFetchAIArtifacts(year); }}
+                          disabled={!canUseAi}
                           className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-2xl text-xs font-semibold calm-transition border ${
                             isLoadingAIArtifacts 
                               ? 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30 pointer-events-none' 
-                              : (!apiKey ? 'liquid-glass border-white/10 text-indigo-300 opacity-40 cursor-not-allowed' : 'liquid-glass border-white/10 text-indigo-300 hover:bg-white/10 active:scale-[0.98]')
+                              : (!canUseAi ? 'liquid-glass border-white/10 text-indigo-300 opacity-40 cursor-not-allowed' : 'liquid-glass border-white/10 text-indigo-300 hover:bg-white/10 active:scale-[0.98]')
                           }`}
                         >
                           {isLoadingAIArtifacts ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
@@ -1121,7 +1121,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
                This section needs more time to make the narrative flow complete. 
                We will reintegrate this 'Historian Insight' whisper later.
             */}
-            {/* {!apiKey && (
+            {/* {!canUseAi && (
               <div
                 className="px-4 border-t border-[rgba(201,169,110,0.1)] shrink-0 pb-1"
                 style={{ paddingBottom: 'calc(4px + var(--safe-bottom))' }}
