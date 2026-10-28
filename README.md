@@ -49,7 +49,7 @@ npm run dev
 
 ## Contributing
 
-The data is the heart of it. If you find an event that's wrong, missing, or misrepresented — open a PR. The JSON structure is straightforward and documented in `/data/README.md`.
+The data is the heart of it. If you find an event that's wrong, missing, or misrepresented — open a PR. The curated dynasty-to-region data lives in `docs/historical_data/` (one JSON file per period, entries shaped like `{ region_id, dynasty_name, approximate_years_active, confidence }`), and the typed rulers, events, figures and regions are in `src/data/`.
 
 All perspectives are welcome. The project has one rule: claims need a source.
 

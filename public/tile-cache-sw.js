@@ -15,21 +15,26 @@ self.addEventListener('fetch', (event) => {
   const url = event.request.url;
 
   // Only intercept Thunderforest tile requests
-  if (!url.includes('api.thunderforest.com')) return;
+  if (!url.includes('tile.thunderforest.com')) return;
 
   event.respondWith(
     caches.open(TILE_CACHE).then(cache =>
       cache.match(event.request).then(cached => {
         if (cached) return cached; // Cache HIT — no network request
 
-        return fetch(event.request).then(response => {
+        // <img> tile requests are no-cors, which yield opaque responses that can't be
+        // inspected and count heavily against storage quota. Re-request in CORS mode so
+        // only real 200s are cached; if the server rejects CORS, fall back to a plain,
+        // uncached fetch so tiles still render.
+        const corsRequest = new Request(event.request.url, { mode: 'cors', credentials: 'omit' });
+        return fetch(corsRequest).then(response => {
           if (response.ok) {
             cache.put(event.request, response.clone());
             // Evict oldest entries if cache grows too large
             trimCache(cache, MAX_CACHE_ENTRIES);
           }
           return response;
-        });
+        }).catch(() => fetch(event.request));
       })
     )
   );
