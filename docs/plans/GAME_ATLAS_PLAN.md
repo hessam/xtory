@@ -232,6 +232,16 @@ all read.
 - [ ] `fa` mode: labels, counter, captions fully Persian; RTL correct.
 - [ ] Playwright guardrail suite green; manual phone test on a mid-range Android.
 
+**S2 status (2026-10-28): implemented behind `?ff=fragmentation`, pending owner items**
+- [x] Per-dynasty colours on the Leaflet map (registry-driven; falls back to the old logic for regions with no registry data). `MapLeaflet` `Props` unchanged.
+- [x] Concurrent realms: second realm tinted under the first; one chip per dynasty in every region ruled by ≥2 (names on desktop / zoom ≥ 6, dots-only on small zoom); tap a chip → reach lens.
+- [x] HUD counter ("18 dynasties ruling · 1040 AD", Persian digits in `fa`) with a tap-through list; counter is tested equal to the realms drawn for 6 sampled years.
+- [x] Reach lens: dims everything the dynasty didn't hold; caption "X held N of 12 regions in Y — alongside A, B +k" (en/fa). Triggered from chips, the counter list, or the desktop legend.
+- [x] Legend is contextual (only dynasties ruling now) in fragmentation mode; the old family legend is hidden on mobile in this mode.
+- [x] 8 new unit tests + 5 e2e tests (desktop + mobile); full suite 51 unit / 28 e2e green on a fresh build.
+- Still to do before turning the flag on by default (owner): manual phone check on a mid-range Android; native review of Persian strings; decide whether chips at ~1750 (41 dynasties) need a cap/clustering — chips already cap at 3–4 per region with "+N".
+- Known limits: lens is triggered from dynasties only (not yet from ruler cards); the lens is not cleared automatically when the year changes (caption then says "not active in <year>"); hover recolour on desktop is the pre-existing 1.5× opacity rule.
+
 ---
 
 ## Slice 3 — Board renderer spike & art direction (decision slice)

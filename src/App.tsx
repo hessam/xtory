@@ -20,6 +20,8 @@ import { ContextStrip } from './components/ContextStrip';
 import { ByokGate } from './components/ByokGate';
 import { Vazir } from './data/vazirs';
 import { pushToDataLayer, markAIUsed } from './services/tagManager';
+import { isFlagOn } from './lib/flags';
+import { ActiveDynastyList } from './components/fragmentation/ActiveDynastyList';
 
 // Heavy components — lazy loaded so they never block first paint
 const Map        = lazy(() => import('./components/MapLeaflet'));
@@ -78,6 +80,7 @@ export default function App() {
   const [aiError, setAiError] = useState<string | null>(null);
   const [introComplete, setIntroComplete] = useState(() => typeof window !== 'undefined' ? !!localStorage.getItem('atlas_intro_seen') : false);
   const [showExtentTooltip, setShowExtentTooltip] = useState(false);
+  const fragOn = useMemo(() => isFlagOn('fragmentation'), []);
 
   // Auto-dismiss AI error after 6 seconds
   useEffect(() => {
@@ -672,7 +675,9 @@ export default function App() {
 
                 <div className="flex flex-col gap-2.5">
                   {/* Simple/Detailed Toggle Content */}
-                  {legendMode === 'simple' ? (
+                  {fragOn ? (
+                    <ActiveDynastyList year={mapYear} lang={lang} compact />
+                  ) : legendMode === 'simple' ? (
                     <>
                       <LegendItem colors={['persian']} label={{ en: 'Persian/Iranian', fa: 'ایرانی/پارسی' }} lang={lang} />
                       <LegendItem colors={['arab', 'greek', 'foreign', 'semitic']} label={{ en: 'Caliphate/Foreign', fa: 'خلافت/خارجی' }} lang={lang} />
@@ -695,14 +700,14 @@ export default function App() {
                 </div>
 
                 {/* Toggle Button */}
-                <button
+                {!fragOn && <button
                   onClick={() => setLegendMode(m => m === 'simple' ? 'detailed' : 'simple')}
                   className="text-[10px] text-indigo-400 hover:text-indigo-300 calm-transition text-left underline"
                 >
                   {legendMode === 'simple'
                     ? (lang === 'en' ? 'Detailed View ↓' : 'نمای دقیق ↓')
                     : (lang === 'en' ? 'Simplified View ↑' : 'نمای ساده ↑')}
-                </button>
+                </button>}
 
                 {/* MAP DOTS Key */}
                 <div className="mt-4 flex flex-col gap-2">

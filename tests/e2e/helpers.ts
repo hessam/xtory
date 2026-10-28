@@ -16,6 +16,7 @@ export const langToggle = (page: Page) => page.locator(isMobile(page) ? '#tour-l
 
 /** Concatenated fill/opacity of every region polygon on the visible map — a colour fingerprint. */
 export async function mapFingerprint(page: Page) {
+  await mapRoot(page).locator('path.region-polygon').first().waitFor();
   return mapRoot(page).locator('path.region-polygon').evaluateAll(els =>
     els.map(e => `${e.getAttribute('fill')}/${e.getAttribute('fill-opacity')}`).join('|')
   );

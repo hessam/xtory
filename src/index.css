@@ -533,3 +533,17 @@
   0%   { background-position: -200% center; }
   100% { background-position: 200% center; }
 }
+
+/* ── Fragmentation: stacked realm chips on the map (ff_fragmentation) ── */
+.realm-chips-container { background: transparent; border: 0; pointer-events: none; }
+.realm-chips { display: flex; flex-direction: column; align-items: center; gap: 2px; pointer-events: none; }
+.realm-chip {
+  pointer-events: auto; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;
+  max-width: 120px; padding: 1px 6px; border-radius: 999px; font-size: 10px; line-height: 14px; color: #e2e8f0;
+  background: rgba(2, 6, 23, 0.78); border: 1px solid rgba(255,255,255,0.18); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  backdrop-filter: blur(4px);
+}
+.realm-chip i { width: 8px; height: 8px; border-radius: 50%; flex: none; border: 1px solid rgba(0,0,0,0.35); }
+.realm-chip.dots-only { padding: 2px; gap: 0; }
+.realm-chip.more { color: #94a3b8; }
+.realm-chip.active { border-color: #fff; background: rgba(255,255,255,0.18); }

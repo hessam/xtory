@@ -21,6 +21,10 @@ import { MapFilters } from './MapFilters';
 import { Sparkles, Swords, Skull, Landmark, Globe2, Building2, Book, ZoomIn, ZoomOut, Maximize, X, Crown } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { mapPolygons, ZOOM_ANCHOR_CITIES, ZOOM_ALL_CITIES } from '../data/mapPolygons';
+import { isFlagOn } from '../lib/flags';
+import { useLens, toggleLens } from '../lib/lensStore';
+import { getDynasty, getRealmsByRegion, RELATION_EXTENT } from '../data/registry';
+import { FragmentationHud } from './fragmentation/FragmentationHud';
 
 interface MapLeafletProps {
   year: number;
@@ -112,6 +116,10 @@ export default function MapLeaflet(props: MapLeafletProps) {
   const [currentZoom, setCurrentZoom] = useState(DEFAULT_ZOOM);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [showLegend, setShowLegend] = useState(false);
+  // ff_fragmentation: per-dynasty colours, concurrent-realm chips, counter and reach lens (Slice 2)
+  const fragOn = useMemo(() => isFlagOn('fragmentation'), []);
+  const lens = useLens();
+  const realmsByRegion = useMemo(() => (fragOn ? getRealmsByRegion(year) : null), [fragOn, year]);
 
   useEffect(() => {
     const handler = () => setIsMobile(window.innerWidth < 768);
@@ -226,6 +234,31 @@ export default function MapLeaflet(props: MapLeafletProps) {
 
   const styleRegion = React.useCallback((feature: any) => {
     const regionId = feature.properties.id as RegionId;
+
+    // ── Fragmentation mode: the curated registry decides colour (one per dynasty) ──
+    const fragRealms = realmsByRegion?.get(regionId);
+    if (fragRealms && fragRealms.length > 0) {
+      if (lens) {
+        const held = fragRealms.find(r => r.dynastyId === lens);
+        if (!held) {
+          return { fillColor: '#64748b', color: '#64748b', weight: 0.5, fillOpacity: 0.04, opacity: 0.2, className: 'region-polygon transition-all duration-700' };
+        }
+        const c = getDynasty(lens)?.color ?? '#ffffff';
+        return { fillColor: c, color: c, weight: isMobile ? 1.5 : 2.5, fillOpacity: 0.3 + RELATION_EXTENT[held.relation] * 0.35, opacity: 0.95, className: 'region-polygon transition-all duration-700' };
+      }
+      const top = fragRealms[0];
+      const c = getDynasty(top.dynastyId)?.color ?? '#ffffff';
+      const ext = RELATION_EXTENT[top.relation] * (top.confidence === 'low' ? 0.8 : 1);
+      const base = isMobile ? (currentZoom <= 5 ? 0.8 : 1.25) : 2.0;
+      return {
+        fillColor: c, color: c,
+        weight: ext < 0.3 ? Math.min(1, base * 0.5) : ext * base,
+        fillOpacity: 0.08 + ext * 0.52,
+        opacity: ext * 0.9,
+        className: `region-polygon transition-all duration-1000 ${ext < 0.3 ? 'breathing-border' : ''}`,
+      };
+    }
+
     const regionEvents = getRegionEvents(regionId);
     
     // ── FALLBACK: Use static eraPresence if no ruler data exists ──
@@ -283,7 +316,7 @@ export default function MapLeaflet(props: MapLeafletProps) {
       opacity: extent * 0.9, 
       className: `region-polygon transition-all duration-1000 ${isWeak ? 'breathing-border' : ''}`
     };
-  }, [currentEra.id, activeEvents, rulers, dynasties, lang]);
+  }, [currentEra.id, activeEvents, rulers, dynasties, lang, realmsByRegion, lens, isMobile, currentZoom]);
 
   const onEachRegion = React.useCallback((feature: any, layer: any) => {
     const regionId = feature.properties.id;
@@ -356,8 +389,8 @@ export default function MapLeaflet(props: MapLeafletProps) {
 
         <MapEventsHandler onRegionClick={(id) => onRegionClick(id as any)} onZoomChange={setCurrentZoom} />
         
-        {/* Mobile Legend Toggle */}
-        <div 
+        {/* Mobile Legend Toggle (hidden in fragmentation mode: the counter list is the legend) */}
+        {!fragOn && <div 
           className="sm:hidden absolute left-4 z-[1000] pointer-events-auto"
           style={{ top: 'calc(var(--safe-top, 0px) + 72px)' }}
         >
@@ -368,11 +401,11 @@ export default function MapLeaflet(props: MapLeafletProps) {
             <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" />
             {lang === 'en' ? 'MAP LEGEND' : 'راهنمای نقشه'}
           </button>
-        </div>
+        </div>}
 
         {/* Legend Overlay */}
         <AnimatePresence>
-          {showLegend && (
+          {!fragOn && showLegend && (
             <motion.div 
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -453,6 +486,12 @@ export default function MapLeaflet(props: MapLeafletProps) {
           interactive={false}
           style={(feature) => {
             const regionId = feature?.properties?.id;
+            if (realmsByRegion) {
+              const second = realmsByRegion.get(regionId)?.[1];
+              const sc = second && getDynasty(second.dynastyId)?.color;
+              if (!sc || lens) return { fillOpacity: 0, weight: 0, stroke: false };
+              return { fillColor: sc, fillOpacity: 0.07 + RELATION_EXTENT[second.relation] * 0.2, weight: 0, className: 'pointer-events-none mix-blend-screen' };
+            }
             const events = getRegionEvents(regionId);
             if (events.length <= 1) return { fillOpacity: 0, weight: 0, stroke: false };
             
@@ -569,6 +608,42 @@ export default function MapLeaflet(props: MapLeafletProps) {
                 position={[r.centroid.lat, r.centroid.lng] as [number, number]} 
                 icon={icon} 
                 interactive={false} 
+              />
+            );
+          })}
+
+          {/* Concurrent realms: one chip per dynasty in regions ruled by several at once */}
+          {realmsByRegion && regions.filter(r => activeRegionIds.has(r.id)).map(r => {
+            const list = realmsByRegion.get(r.id) ?? [];
+            if (list.length < 2) return null;
+            const MAX = isMobile ? 3 : 4;
+            const showNames = currentZoom >= 6 || !isMobile;
+            const esc = (t: string) => t.replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]!));
+            const chips = list.slice(0, MAX).map(rl => {
+              const d = getDynasty(rl.dynastyId)!;
+              return `<span class="realm-chip ${showNames ? '' : 'dots-only'} ${lens === d.id ? 'active' : ''}" data-dyn="${d.id}"><i style="background:${d.color}"></i>${showNames ? esc(d.name[lang]) : ''}</span>`;
+            }).join('');
+            const more = list.length > MAX ? `<span class="realm-chip more">+${lang === 'fa' ? (list.length - MAX).toLocaleString('fa-IR') : list.length - MAX}</span>` : '';
+            const icon = L.divIcon({
+              className: 'realm-chips-container',
+              html: `<div class="realm-chips" data-testid="realm-chips-${r.id}">${chips}${more}</div>`,
+              iconSize: [130, 20 * Math.min(list.length, MAX + 1)],
+              iconAnchor: [65, -8],
+            });
+            return (
+              <Marker
+                key={`chips-${r.id}-${lang}-${list.map(x => x.dynastyId).join(',')}-${lens ?? ''}-${showNames}`}
+                position={[r.centroid.lat, r.centroid.lng] as [number, number]}
+                icon={icon}
+                bubblingMouseEvents={false}
+                keyboard={false}
+                eventHandlers={{
+                  click: (e) => {
+                    L.DomEvent.stopPropagation(e);
+                    const id = ((e.originalEvent.target as HTMLElement).closest('[data-dyn]') as HTMLElement | null)?.dataset.dyn;
+                    if (id) toggleLens(id); else onRegionClick(r.id);
+                  },
+                }}
               />
             );
           })}
@@ -700,6 +775,7 @@ export default function MapLeaflet(props: MapLeafletProps) {
 
         <ZoomControls />
       </MapContainer>
+      {fragOn && <FragmentationHud year={year} lang={lang} />}
     </div>
   );
 }
