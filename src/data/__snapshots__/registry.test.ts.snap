@@ -1,0 +1,11 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`dynasty identity > keeps colours stable (snapshot of five dynasties) 1`] = `
+{
+  "abbasid": "#35dd66",
+  "achaemenid": "#e413b2",
+  "great_seljuq": "#d53c23",
+  "safavid": "#db3ca2",
+  "sasanian": "#b33cee",
+}
+`;

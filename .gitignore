@@ -6,3 +6,6 @@ coverage/
 *.log
 .env*
 !.env.example
+.git-old/
+test-results/
+playwright-report/

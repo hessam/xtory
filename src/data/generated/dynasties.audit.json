@@ -1,0 +1,2634 @@
+{
+ "abbasid": {
+  "aliases": [
+   "Abbasid Caliphate",
+   "Abbasid Caliphate (Direct)",
+   "Abbasid Caliphate (Emirate of Arminiya)",
+   "Abbasid Caliphate (Governors)",
+   "Abbasid Caliphate (Revival)"
+  ],
+  "regions": [
+   "azerbaijan",
+   "caspian_coast",
+   "caucasus",
+   "fars",
+   "jibal",
+   "khorasan",
+   "khuzestan",
+   "makran",
+   "mesopotamia",
+   "sistan",
+   "transoxiana"
+  ],
+  "entries": 45
+ },
+ "achaemenid": {
+  "aliases": [
+   "Achaemenid (Early Persian)",
+   "Achaemenid Dynasty",
+   "Achaemenid Dynasty (Bessus/Artaxerxes V)",
+   "Achaemenid Dynasty (Eber-Nari)",
+   "Achaemenid Dynasty (Hindush)",
+   "Achaemenid Dynasty (Hyrcania Satrapy)",
+   "Achaemenid Dynasty (Kush)",
+   "Achaemenid Dynasty (Orontids)",
+   "Achaemenid Dynasty (Put)",
+   "Achaemenid Dynasty (Skudra)",
+   "Achaemenid Dynasty (Vassalage)"
+  ],
+  "regions": [
+   "arabia",
+   "arachosia",
+   "aria",
+   "azerbaijan",
+   "bactria",
+   "cappadocia",
+   "caria",
+   "caspian_coast",
+   "caucasus",
+   "chorasmia",
+   "cilicia",
+   "dahae",
+   "egypt",
+   "fars",
+   "gandhara",
+   "india",
+   "ionia",
+   "jibal",
+   "khorasan",
+   "khuzestan",
+   "levant_and_cyprus",
+   "libya",
+   "lydia",
+   "makran",
+   "mesopotamia",
+   "nubia",
+   "phrygia",
+   "sattagydia",
+   "scythia",
+   "sistan",
+   "thrace",
+   "transoxiana"
+  ],
+  "entries": 37
+ },
+ "afghanistan": {
+  "aliases": [
+   "Kingdom of Afghanistan"
+  ],
+  "regions": [
+   "khorasan",
+   "sistan"
+  ],
+  "entries": 2
+ },
+ "afrasiyabid": {
+  "aliases": [
+   "Afrasiyab Dynasty",
+   "Afrasiyabid Dynasty",
+   "Afrasiyabids"
+  ],
+  "regions": [
+   "caspian_coast"
+  ],
+  "entries": 3
+ },
+ "afrighid": {
+  "aliases": [
+   "Afrighid Dynasty"
+  ],
+  "regions": [
+   "chorasmia"
+  ],
+  "entries": 7
+ },
+ "afsharid": {
+  "aliases": [
+   "Afsharid Dynasty",
+   "Afsharid Dynasty (Shahrokh Shah)",
+   "Afsharid Dynasty / Safavid Restoration",
+   "Afsharid Empire",
+   "Afsharid Rump State (Shahrokh Shah)",
+   "Afsharid Suzerainty"
+  ],
+  "regions": [
+   "azerbaijan",
+   "caspian_coast",
+   "caucasus",
+   "chorasmia",
+   "fars",
+   "jibal",
+   "khorasan",
+   "khuzestan",
+   "makran",
+   "sistan"
+  ],
+  "entries": 26
+ },
+ "ahmadili": {
+  "aliases": [
+   "Ahmadilis (Atabegs of Maragha)"
+  ],
+  "regions": [
+   "azerbaijan"
+  ],
+  "entries": 3
+ },
+ "al_muntafiq": {
+  "aliases": [
+   "Al-Muntafiq Emirate (Al Sadun)"
+  ],
+  "regions": [
+   "mesopotamia"
+  ],
+  "entries": 1
+ },
+ "alam_family": {
+  "aliases": [
+   "Alam Family"
+  ],
+  "regions": [
+   "sistan"
+  ],
+  "entries": 1
+ },
+ "alid_zaydi": {
+  "aliases": [
+   "Alid Zaydi Dynasty"
+  ],
+  "regions": [
+   "caspian_coast"
+  ],
+  "entries": 4
+ },
+ "amardian": {
+  "aliases": [
+   "Amardian (Mardi) Tribes",
+   "Amardian Tribes",
+   "Amardian/Mardi Tribal Leadership"
+  ],
+  "regions": [
+   "caspian_coast"
+  ],
+  "entries": 3
+ },
+ "amirabad_culture": {
+  "aliases": [
+   "Amirabad Culture"
+  ],
+  "regions": [
+   "chorasmia"
+  ],
+  "entries": 1
+ },
+ "andragora": {
+  "aliases": [
+   "Andragoras (Independent Satrap)"
+  ],
+  "regions": [
+   "khorasan"
+  ],
+  "entries": 1
+ },
+ "antigonid": {
+  "aliases": [
+   "Antigonid Dynasty (Antigonus I)"
+  ],
+  "regions": [
+   "fars",
+   "jibal",
+   "khuzestan",
+   "mesopotamia"
+  ],
+  "entries": 4
+ },
+ "aq_qoyunlu": {
+  "aliases": [
+   "Aq Qoyunlu"
+  ],
+  "regions": [
+   "azerbaijan",
+   "fars",
+   "jibal",
+   "mesopotamia"
+  ],
+  "entries": 8
+ },
+ "arabshahid": {
+  "aliases": [
+   "Arabshahid Dynasty",
+   "Arabshahid Dynasty (Khanate of Khiva)",
+   "Arabshahid Dynasty (Residual)"
+  ],
+  "regions": [
+   "chorasmia"
+  ],
+  "entries": 3
+ },
+ "ardabil": {
+  "aliases": [
+   "Ardabil Khanate"
+  ],
+  "regions": [
+   "azerbaijan"
+  ],
+  "entries": 1
+ },
+ "ardalan": {
+  "aliases": [
+   "Ardalan (Walis of Kurdistan)",
+   "Ardalan Principality (Walis of Kurdistan)"
+  ],
+  "regions": [
+   "jibal"
+  ],
+  "entries": 2
+ },
+ "argead_macedonian": {
+  "aliases": [
+   "Argead/Macedonian Empire (Alexander III)",
+   "Argead/Macedonian Empire (Antigenes)",
+   "Argead/Macedonian Empire (Archon/Seleucus)",
+   "Argead/Macedonian Empire (Mithrenes/Neoptolemus)",
+   "Argead/Macedonian Empire (Peithon)",
+   "Argead/Macedonian Empire (Peucestas)",
+   "Argead/Macedonian Empire (Philip/Stasanor)",
+   "Argead/Macedonian Empire (Phrataphernes/Philip)",
+   "Argead/Macedonian Empire (Sibyrtius)",
+   "Argead/Macedonian Empire (Stasanor/Stasander)",
+   "Argead/Macedonian Empire (Various Satraps)"
+  ],
+  "regions": [
+   "azerbaijan",
+   "caspian_coast",
+   "caucasus",
+   "fars",
+   "jibal",
+   "khorasan",
+   "khuzestan",
+   "makran",
+   "mesopotamia",
+   "sistan",
+   "transoxiana"
+  ],
+  "entries": 20
+ },
+ "ariaspae": {
+  "aliases": [
+   "Ariaspae Tribe (Local Authority)"
+  ],
+  "regions": [
+   "sistan"
+  ],
+  "entries": 1
+ },
+ "armenia": {
+  "aliases": [
+   "Kingdom of Armenia (Occupation)"
+  ],
+  "regions": [
+   "azerbaijan"
+  ],
+  "entries": 1
+ },
+ "arsacid_albania": {
+  "aliases": [
+   "Arsacid Dynasty of Albania"
+  ],
+  "regions": [
+   "caucasus"
+  ],
+  "entries": 1
+ },
+ "arsacid_armenia": {
+  "aliases": [
+   "Arsacid Dynasty of Armenia"
+  ],
+  "regions": [
+   "caucasus"
+  ],
+  "entries": 1
+ },
+ "arsacid_atropatene": {
+  "aliases": [
+   "Arsacid Dynasty of Atropatene"
+  ],
+  "regions": [
+   "azerbaijan"
+  ],
+  "entries": 1
+ },
+ "arsacid_elymai": {
+  "aliases": [
+   "Arsacid Dynasty of Elymais"
+  ],
+  "regions": [
+   "khuzestan"
+  ],
+  "entries": 1
+ },
+ "atropatid": {
+  "aliases": [
+   "Atropatid Dynasty (Independent)",
+   "Atropatid House (Atropates)",
+   "House of Atropates (Kingdom of Atropatene)"
+  ],
+  "regions": [
+   "azerbaijan",
+   "jibal"
+  ],
+  "entries": 4
+ },
+ "azad_khan_afghan": {
+  "aliases": [
+   "Azad Khan Afghan"
+  ],
+  "regions": [
+   "azerbaijan"
+  ],
+  "entries": 2
+ },
+ "babylonian_x": {
+  "aliases": [
+   "Babylonian Dynasty X (Chaldean)"
+  ],
+  "regions": [
+   "mesopotamia"
+  ],
+  "entries": 1
+ },
+ "baduspanid": {
+  "aliases": [
+   "Baduspanid Dynasty",
+   "Baduspanids"
+  ],
+  "regions": [
+   "caspian_coast"
+  ],
+  "entries": 3
+ },
+ "bagratid_armenia": {
+  "aliases": [
+   "Bagratid Armenia"
+  ],
+  "regions": [
+   "caucasus"
+  ],
+  "entries": 3
+ },
+ "bagrationi": {
+  "aliases": [
+   "Bagrationi Dynasty (Georgian Vassals)"
+  ],
+  "regions": [
+   "caucasus"
+  ],
+  "entries": 1
+ },
+ "bakhtiari_khan": {
+  "aliases": [
+   "Bakhtiari Khans"
+  ],
+  "regions": [
+   "jibal"
+  ],
+  "entries": 1
+ },
+ "baku": {
+  "aliases": [
+   "Baku Khanate"
+  ],
+  "regions": [
+   "caucasus"
+  ],
+  "entries": 1
+ },
+ "bampur_chiefdom": {
+  "aliases": [
+   "Bampur Chiefdoms"
+  ],
+  "regions": [
+   "makran"
+  ],
+  "entries": 1
+ },
+ "banu_ka_b": {
+  "aliases": [
+   "Banu Ka'b",
+   "Banu Ka'b (Al Bu Nasir House)",
+   "Banu Ka'b (Local Power)",
+   "Banu Ka'b (Sheikhdom)",
+   "Banu Ka'b Sheikhdom"
+  ],
+  "regions": [
+   "khuzestan"
+  ],
+  "entries": 5
+ },
+ "baridi": {
+  "aliases": [
+   "Baridi Dynasty"
+  ],
+  "regions": [
+   "khuzestan"
+  ],
+  "entries": 3
+ },
+ "bavandid": {
+  "aliases": [
+   "Bavand Dynasty",
+   "Bavandid Dynasty",
+   "Bavandid Dynasty (Highlands)",
+   "Bavandids"
+  ],
+  "regions": [
+   "caspian_coast"
+  ],
+  "entries": 14
+ },
+ "bazarangid": {
+  "aliases": [
+   "Bazarangid Dynasty (Local Power)",
+   "Bazrangid Dynasty"
+  ],
+  "regions": [
+   "fars"
+  ],
+  "entries": 2
+ },
+ "bestam_vistahm": {
+  "aliases": [
+   "Bestam / Vistahm (Rebel Regime)"
+  ],
+  "regions": [
+   "jibal"
+  ],
+  "entries": 1
+ },
+ "brahman": {
+  "aliases": [
+   "Brahman Dynasty"
+  ],
+  "regions": [
+   "makran"
+  ],
+  "entries": 3
+ },
+ "british_mandate_iraq": {
+  "aliases": [
+   "British Mandate of Iraq"
+  ],
+  "regions": [
+   "mesopotamia"
+  ],
+  "entries": 1
+ },
+ "bukhara": {
+  "aliases": [
+   "Emirate of Bukhara"
+  ],
+  "regions": [
+   "transoxiana"
+  ],
+  "entries": 1
+ },
+ "buledi": {
+  "aliases": [
+   "Buledi Tribe"
+  ],
+  "regions": [
+   "makran"
+  ],
+  "entries": 2
+ },
+ "buyid": {
+  "aliases": [
+   "Buyid Dynasty",
+   "Buyid Dynasty (Northern Branch)"
+  ],
+  "regions": [
+   "fars",
+   "jibal",
+   "khuzestan",
+   "mesopotamia"
+  ],
+  "entries": 15
+ },
+ "cadusian": {
+  "aliases": [
+   "Cadusian (Cadusii) Tribes",
+   "Cadusian Tribal Chiefs",
+   "Cadusian Tribal Leadership"
+  ],
+  "regions": [
+   "caspian_coast"
+  ],
+  "entries": 3
+ },
+ "cadusii_amardi_gelae": {
+  "aliases": [
+   "Cadusii/Amardi/Gelae (Tribal Powers)"
+  ],
+  "regions": [
+   "caspian_coast"
+  ],
+  "entries": 1
+ },
+ "caucasian_albania": {
+  "aliases": [
+   "Kingdom of Caucasian Albania (Local Kings)"
+  ],
+  "regions": [
+   "caucasus"
+  ],
+  "entries": 1
+ },
+ "caucasian_khanate": {
+  "aliases": [
+   "Caucasian Khanates (Karabakh, Guba, Shaki, Shirvan, Ganja, Baku, Erivan, Nakhchivan, Talysh)"
+  ],
+  "regions": [
+   "caucasus"
+  ],
+  "entries": 1
+ },
+ "chagatai": {
+  "aliases": [
+   "Chagatai Khanate"
+  ],
+  "regions": [
+   "chorasmia",
+   "transoxiana"
+  ],
+  "entries": 4
+ },
+ "characene": {
+  "aliases": [
+   "Kingdom of Characene (Local Power)"
+  ],
+  "regions": [
+   "mesopotamia"
+  ],
+  "entries": 1
+ },
+ "chobanid": {
+  "aliases": [
+   "Chobanid Dynasty",
+   "Chupanid Dynasty"
+  ],
+  "regions": [
+   "azerbaijan",
+   "caucasus",
+   "jibal",
+   "mesopotamia"
+  ],
+  "entries": 6
+ },
+ "chorasmian": {
+  "aliases": [
+   "Chorasmian Kingdom",
+   "Chorasmian Local Kings (Independent)",
+   "Greater Chorasmian Kingdom",
+   "Independent Chorasmian Kings",
+   "Local Chorasmian Shahs (Native Dynasty)"
+  ],
+  "regions": [
+   "chorasmia"
+  ],
+  "entries": 5
+ },
+ "cimmerian_scythian_band": {
+  "aliases": [
+   "Cimmerian/Scythian Bands"
+  ],
+  "regions": [
+   "caucasus"
+  ],
+  "entries": 1
+ },
+ "colchi": {
+  "aliases": [
+   "Kingdom of Colchis"
+  ],
+  "regions": [
+   "caucasus"
+  ],
+  "entries": 1
+ },
+ "dabuyid": {
+  "aliases": [
+   "Dabuyid Dynasty"
+  ],
+  "regions": [
+   "caspian_coast"
+  ],
+  "entries": 5
+ },
+ "darayanid": {
+  "aliases": [
+   "Darayanid Dynasty (Kings of Persis)"
+  ],
+  "regions": [
+   "fars"
+  ],
+  "entries": 1
+ },
+ "democratic_republic_afghanistan": {
+  "aliases": [
+   "Democratic Republic of Afghanistan"
+  ],
+  "regions": [
+   "khorasan",
+   "sistan"
+  ],
+  "entries": 2
+ },
+ "diodotid": {
+  "aliases": [
+   "Diodotid Dynasty (Graeco-Bactrian)"
+  ],
+  "regions": [
+   "transoxiana"
+  ],
+  "entries": 1
+ },
+ "drangian_tribal_leadership": {
+  "aliases": [
+   "Drangian Tribal Leadership"
+  ],
+  "regions": [
+   "sistan"
+  ],
+  "entries": 1
+ },
+ "durrani": {
+  "aliases": [
+   "Durrani Empire (Herat Enclave)",
+   "Durrani Empire (Suzerainty)",
+   "Durrani Empire (Suzerainty/Vassalage)"
+  ],
+  "regions": [
+   "khorasan",
+   "makran",
+   "sistan"
+  ],
+  "entries": 7
+ },
+ "early_persian_tribal_chief": {
+  "aliases": [
+   "Early Persian Tribal Chiefs"
+  ],
+  "regions": [
+   "fars"
+  ],
+  "entries": 1
+ },
+ "elamite_governor": {
+  "aliases": [
+   "Elamite (Anshanite) Governors"
+  ],
+  "regions": [
+   "fars"
+  ],
+  "entries": 1
+ },
+ "eldiguzid": {
+  "aliases": [
+   "Eldiguzids",
+   "Eldiguzids (Atabegs of Azerbaijan)",
+   "Eldiguzids (Influence/Vassalage)",
+   "Eldiguzids (Vassalage & Influence)"
+  ],
+  "regions": [
+   "azerbaijan",
+   "caucasus",
+   "jibal"
+  ],
+  "entries": 10
+ },
+ "erivan": {
+  "aliases": [
+   "Erivan Khanate",
+   "Erivan Khanate (Qajar branch)"
+  ],
+  "regions": [
+   "caucasus"
+  ],
+  "entries": 2
+ },
+ "frataraka": {
+  "aliases": [
+   "Frataraka (Local Autonomy)",
+   "Frataraka (Local Governors)"
+  ],
+  "regions": [
+   "fars"
+  ],
+  "entries": 2
+ },
+ "ganja": {
+  "aliases": [
+   "Ganja Khanate",
+   "Ganja Khanate (Ziyadoglu Qajar)"
+  ],
+  "regions": [
+   "caucasus"
+  ],
+  "entries": 2
+ },
+ "garadagh": {
+  "aliases": [
+   "Garadagh Khanate"
+  ],
+  "regions": [
+   "azerbaijan"
+  ],
+  "entries": 2
+ },
+ "gelae_anariacae": {
+  "aliases": [
+   "Gelae/Anariacae"
+  ],
+  "regions": [
+   "caspian_coast"
+  ],
+  "entries": 1
+ },
+ "georgia": {
+  "aliases": [
+   "Kingdom of Georgia",
+   "Kingdom of Georgia (Kartli-Kakheti)",
+   "Kingdom of Georgia (Suzerainty)"
+  ],
+  "regions": [
+   "caucasus"
+  ],
+  "entries": 10
+ },
+ "georgian_mamluk_iraq": {
+  "aliases": [
+   "Georgian Mamluk Dynasty of Iraq",
+   "Georgian Mamluk Dynasty of Iraq (Restored)"
+  ],
+  "regions": [
+   "mesopotamia"
+  ],
+  "entries": 2
+ },
+ "ghaznavid": {
+  "aliases": [
+   "Ghaznavid Empire",
+   "Ghaznavid Empire (Suzerainty)",
+   "Ghaznavid Empire (Vassalage)"
+  ],
+  "regions": [
+   "chorasmia",
+   "khorasan",
+   "makran",
+   "sistan"
+  ],
+  "entries": 15
+ },
+ "ghurid": {
+  "aliases": [
+   "Ghurid Dynasty",
+   "Ghurid Dynasty (Suzerainty)",
+   "Ghurid Empire"
+  ],
+  "regions": [
+   "khorasan",
+   "makran",
+   "sistan"
+  ],
+  "entries": 9
+ },
+ "gichki": {
+  "aliases": [
+   "Gichki Chiefs / Local Tribes",
+   "Gichki Nawabs (Kech/Panjgur)",
+   "Gichki Tribe"
+  ],
+  "regions": [
+   "makran"
+  ],
+  "entries": 3
+ },
+ "gilan": {
+  "aliases": [
+   "Gilan Khanate (Hedayat-Allah Khan)"
+  ],
+  "regions": [
+   "caspian_coast"
+  ],
+  "entries": 2
+ },
+ "gokturks_western_turk": {
+  "aliases": [
+   "Göktürks / Western Turks"
+  ],
+  "regions": [
+   "transoxiana"
+  ],
+  "entries": 1
+ },
+ "golden_horde": {
+  "aliases": [
+   "Golden Horde"
+  ],
+  "regions": [
+   "chorasmia"
+  ],
+  "entries": 1
+ },
+ "golden_horde_chagatai": {
+  "aliases": [
+   "Golden Horde/Chagatai"
+  ],
+  "regions": [
+   "chorasmia"
+  ],
+  "entries": 1
+ },
+ "great_seljuq": {
+  "aliases": [
+   "Great Seljuq Empire",
+   "Great Seljuq Empire (Governors)",
+   "Great Seljuq Empire (Suzerainty)",
+   "Seljuk Empire",
+   "Seljuk Empire (Governors)"
+  ],
+  "regions": [
+   "azerbaijan",
+   "caucasus",
+   "chorasmia",
+   "fars",
+   "jibal",
+   "khorasan",
+   "khuzestan",
+   "makran",
+   "mesopotamia",
+   "sistan",
+   "transoxiana"
+  ],
+  "entries": 36
+ },
+ "greco_bactrian": {
+  "aliases": [
+   "Greco-Bactrian Kingdom"
+  ],
+  "regions": [
+   "transoxiana"
+  ],
+  "entries": 1
+ },
+ "guba": {
+  "aliases": [
+   "Guba Khanate (Fatali Khan)"
+  ],
+  "regions": [
+   "caucasus"
+  ],
+  "entries": 1
+ },
+ "gushnaspid": {
+  "aliases": [
+   "Gushnaspid Dynasty"
+  ],
+  "regions": [
+   "caspian_coast"
+  ],
+  "entries": 1
+ },
+ "hasanwayhid": {
+  "aliases": [
+   "Hasanwayhid Dynasty"
+  ],
+  "regions": [
+   "azerbaijan"
+  ],
+  "entries": 2
+ },
+ "hashemites_iraq": {
+  "aliases": [
+   "Hashemites of Iraq"
+  ],
+  "regions": [
+   "mesopotamia"
+  ],
+  "entries": 1
+ },
+ "hatra": {
+  "aliases": [
+   "Kingdom of Hatra (Local Power)"
+  ],
+  "regions": [
+   "mesopotamia"
+  ],
+  "entries": 1
+ },
+ "hazaraspid": {
+  "aliases": [
+   "Hazaraspids",
+   "Hazaraspids and Khorshidis (Luristan)"
+  ],
+  "regions": [
+   "jibal",
+   "khuzestan"
+  ],
+  "entries": 5
+ },
+ "hephthalite": {
+  "aliases": [
+   "Hephthalite Empire",
+   "Hephthalite Overlordship"
+  ],
+  "regions": [
+   "chorasmia",
+   "khorasan",
+   "transoxiana"
+  ],
+  "entries": 3
+ },
+ "hotak": {
+  "aliases": [
+   "Hotak Dynasty"
+  ],
+  "regions": [
+   "fars",
+   "jibal",
+   "sistan"
+  ],
+  "entries": 5
+ },
+ "hubanid": {
+  "aliases": [
+   "Hubanid Dynasty"
+  ],
+  "regions": [
+   "khuzestan"
+  ],
+  "entries": 1
+ },
+ "iberia": {
+  "aliases": [
+   "Kingdom of Iberia (Local Kings)"
+  ],
+  "regions": [
+   "caucasus"
+  ],
+  "entries": 1
+ },
+ "ichthyophagoi": {
+  "aliases": [
+   "Ichthyophagoi Tribes"
+  ],
+  "regions": [
+   "makran"
+  ],
+  "entries": 1
+ },
+ "imereti": {
+  "aliases": [
+   "Kingdom of Imereti"
+  ],
+  "regions": [
+   "caucasus"
+  ],
+  "entries": 1
+ },
+ "independent_mountain": {
+  "aliases": [
+   "Independent Mountain Tribes (Cadusians/Amardians)"
+  ],
+  "regions": [
+   "caspian_coast"
+  ],
+  "entries": 1
+ },
+ "independent_tribal_city_lord": {
+  "aliases": [
+   "Independent Tribal City-Lords"
+  ],
+  "regions": [
+   "jibal"
+  ],
+  "entries": 1
+ },
+ "indo_parthian": {
+  "aliases": [
+   "Indo-Parthian Kingdom"
+  ],
+  "regions": [
+   "makran",
+   "sistan"
+  ],
+  "entries": 3
+ },
+ "injuid": {
+  "aliases": [
+   "Injuid Dynasty",
+   "Injuids"
+  ],
+  "regions": [
+   "fars",
+   "jibal"
+  ],
+  "entries": 5
+ },
+ "ishaqid": {
+  "aliases": [
+   "Ishaqid Dynasty (Gilan)"
+  ],
+  "regions": [
+   "caspian_coast"
+  ],
+  "entries": 1
+ },
+ "jalayirid": {
+  "aliases": [
+   "Jalayirid Sultanate"
+  ],
+  "regions": [
+   "azerbaijan",
+   "caucasus",
+   "jibal",
+   "khuzestan",
+   "mesopotamia"
+  ],
+  "entries": 10
+ },
+ "janid": {
+  "aliases": [
+   "Janid (Ashtarkhanid) Dynasty",
+   "Janid Dynasty (Puppet Khans)"
+  ],
+  "regions": [
+   "transoxiana"
+  ],
+  "entries": 4
+ },
+ "jauni_qurbani": {
+  "aliases": [
+   "Jauni-Qurbani Dynasty"
+  ],
+  "regions": [
+   "khorasan"
+  ],
+  "entries": 1
+ },
+ "justanid": {
+  "aliases": [
+   "Justanid Dynasty",
+   "Justanids"
+  ],
+  "regions": [
+   "caspian_coast"
+  ],
+  "entries": 3
+ },
+ "kakheti": {
+  "aliases": [
+   "Kingdom of Kakheti"
+  ],
+  "regions": [
+   "caucasus"
+  ],
+  "entries": 1
+ },
+ "kakuyid": {
+  "aliases": [
+   "Kakuyid Dynasty"
+  ],
+  "regions": [
+   "jibal"
+  ],
+  "entries": 3
+ },
+ "kalat": {
+  "aliases": [
+   "Khanate of Kalat (Nasir Khan I)",
+   "Khanate of Kalat (Suzerain)"
+  ],
+  "regions": [
+   "makran"
+  ],
+  "entries": 3
+ },
+ "kamnaskirid": {
+  "aliases": [
+   "Kamnaskirid Dynasty (Elymais)"
+  ],
+  "regions": [
+   "khuzestan"
+  ],
+  "entries": 1
+ },
+ "kangju": {
+  "aliases": [
+   "Kingdom of Kangju (Local Power)"
+  ],
+  "regions": [
+   "transoxiana"
+  ],
+  "entries": 1
+ },
+ "kar_kiya": {
+  "aliases": [
+   "Kar-Kiya Dynasty",
+   "Kia Dynasty (Gilan)"
+  ],
+  "regions": [
+   "caspian_coast"
+  ],
+  "entries": 2
+ },
+ "karabakh": {
+  "aliases": [
+   "Karabakh Khanate",
+   "Karabakh Khanate (Javanshir tribe)"
+  ],
+  "regions": [
+   "caucasus"
+  ],
+  "entries": 2
+ },
+ "karen": {
+  "aliases": [
+   "House of Karen (Local Power)",
+   "House of Karen (Nihavand Branch)"
+  ],
+  "regions": [
+   "jibal"
+  ],
+  "entries": 3
+ },
+ "kartid": {
+  "aliases": [
+   "Kart dynasty",
+   "Kartid Dynasty"
+  ],
+  "regions": [
+   "khorasan"
+  ],
+  "entries": 5
+ },
+ "kartli_kakheti": {
+  "aliases": [
+   "Kingdom of Kartli-Kakheti (Georgia)"
+  ],
+  "regions": [
+   "caucasus"
+  ],
+  "entries": 1
+ },
+ "kawu": {
+  "aliases": [
+   "Kawus (Sasanian Appointee)"
+  ],
+  "regions": [
+   "caspian_coast"
+  ],
+  "entries": 1
+ },
+ "kayanian": {
+  "aliases": [
+   "Kayanian Dynasty",
+   "Kayanian Dynasty (Vishtaspa)"
+  ],
+  "regions": [
+   "chorasmia",
+   "khorasan"
+  ],
+  "entries": 2
+ },
+ "khamseh": {
+  "aliases": [
+   "Khamseh Confederation"
+  ],
+  "regions": [
+   "fars"
+  ],
+  "entries": 1
+ },
+ "khazar": {
+  "aliases": [
+   "Khazar Khaganate",
+   "Khazar Khaganate (Incursions / Control)",
+   "Khazar Khanate (Incursions)"
+  ],
+  "regions": [
+   "caucasus"
+  ],
+  "entries": 4
+ },
+ "khiva": {
+  "aliases": [
+   "Khanate of Khiva"
+  ],
+  "regions": [
+   "chorasmia"
+  ],
+  "entries": 1
+ },
+ "khorezm_people_s_soviet_republic": {
+  "aliases": [
+   "Khorezm People's Soviet Republic"
+  ],
+  "regions": [
+   "chorasmia"
+  ],
+  "entries": 1
+ },
+ "khorshidi": {
+  "aliases": [
+   "Khorshidi Dynasty (Little Lorestan)"
+  ],
+  "regions": [
+   "jibal"
+  ],
+  "entries": 1
+ },
+ "khoy": {
+  "aliases": [
+   "Khoy Khanate",
+   "Khoy Khanate (Donboli tribe)",
+   "Khoy Khanate / Donboli Dynasty"
+  ],
+  "regions": [
+   "azerbaijan"
+  ],
+  "entries": 3
+ },
+ "khwarazmian": {
+  "aliases": [
+   "Khwarazmian Empire",
+   "Khwarazmian Empire (Anushtegin Dynasty)",
+   "Khwarazmian Empire (Jalal al-Din Mingburnu)",
+   "Khwarazmian Empire (Jalal al-Din)"
+  ],
+  "regions": [
+   "azerbaijan",
+   "caucasus",
+   "chorasmia",
+   "fars",
+   "jibal",
+   "khorasan",
+   "khuzestan",
+   "sistan",
+   "transoxiana"
+  ],
+  "entries": 32
+ },
+ "kiani_malik": {
+  "aliases": [
+   "Kayani Dynasty (Malik Mahmud)",
+   "Kayani Maleks (Local rulers)",
+   "Kayani Maliks",
+   "Kiani Maliks (Safavid Vassals)"
+  ],
+  "regions": [
+   "sistan"
+  ],
+  "entries": 4
+ },
+ "kidarite_hun": {
+  "aliases": [
+   "Kidarite Huns"
+  ],
+  "regions": [
+   "khorasan"
+  ],
+  "entries": 1
+ },
+ "koban_culture": {
+  "aliases": [
+   "Koban Culture"
+  ],
+  "regions": [
+   "caucasus"
+  ],
+  "entries": 1
+ },
+ "kushan": {
+  "aliases": [
+   "Kushan Empire",
+   "Kushan Vassals"
+  ],
+  "regions": [
+   "makran",
+   "transoxiana"
+  ],
+  "entries": 3
+ },
+ "kushano_sasanian": {
+  "aliases": [
+   "Kushano-Sasanian (Kushanshahs)"
+  ],
+  "regions": [
+   "khorasan"
+  ],
+  "entries": 1
+ },
+ "local_elamite_persian_successor": {
+  "aliases": [
+   "Local Elamite/Persian Successors"
+  ],
+  "regions": [
+   "khuzestan"
+  ],
+  "entries": 1
+ },
+ "local_hakim_tribal_leadership": {
+  "aliases": [
+   "Local Hakim/Tribal Leadership"
+  ],
+  "regions": [
+   "makran"
+  ],
+  "entries": 2
+ },
+ "local_kings_makuran": {
+  "aliases": [
+   "Local Kings of Makuran (Sasanian Vassals)"
+  ],
+  "regions": [
+   "makran"
+  ],
+  "entries": 1
+ },
+ "local_malik": {
+  "aliases": [
+   "Local Maliks"
+  ],
+  "regions": [
+   "makran"
+  ],
+  "entries": 1
+ },
+ "local_parthian_arian_chiefdom": {
+  "aliases": [
+   "Local Parthian/Arian Chiefdoms"
+  ],
+  "regions": [
+   "khorasan"
+  ],
+  "entries": 1
+ },
+ "local_sardars_tribal_chief": {
+  "aliases": [
+   "Local Sardars / Tribal Chiefs"
+  ],
+  "regions": [
+   "makran"
+  ],
+  "entries": 1
+ },
+ "local_tribal_contender": {
+  "aliases": [
+   "Local Tribal Contenders (Zand, Bakhtiari, Qajar)"
+  ],
+  "regions": [
+   "fars"
+  ],
+  "entries": 2
+ },
+ "local_tribes_colchians_albanians": {
+  "aliases": [
+   "Local Tribes (Colchians/Albanians)"
+  ],
+  "regions": [
+   "caucasus"
+  ],
+  "entries": 2
+ },
+ "local_tribes_gichki_etc": {
+  "aliases": [
+   "Local Tribes (Gichki, etc.)"
+  ],
+  "regions": [
+   "makran"
+  ],
+  "entries": 1
+ },
+ "ma_danid": {
+  "aliases": [
+   "Ma'danid Dynasty"
+  ],
+  "regions": [
+   "makran"
+  ],
+  "entries": 7
+ },
+ "ma_munid": {
+  "aliases": [
+   "Ma'munid Dynasty"
+  ],
+  "regions": [
+   "chorasmia"
+  ],
+  "entries": 3
+ },
+ "makran_pakistan": {
+  "aliases": [
+   "State of Makran / Pakistan"
+  ],
+  "regions": [
+   "makran"
+  ],
+  "entries": 1
+ },
+ "maku": {
+  "aliases": [
+   "Maku Khanate"
+  ],
+  "regions": [
+   "azerbaijan"
+  ],
+  "entries": 1
+ },
+ "malek_mahmud_sistani": {
+  "aliases": [
+   "Malek Mahmud Sistani (Independent)",
+   "Sistani Kingdom (Malek Mahmud)"
+  ],
+  "regions": [
+   "khorasan"
+  ],
+  "entries": 2
+ },
+ "malik": {
+  "aliases": [
+   "Malik Dynasty (Kech)"
+  ],
+  "regions": [
+   "makran"
+  ],
+  "entries": 1
+ },
+ "maliks_kech_makran": {
+  "aliases": [
+   "Maliks of Kech / Makran"
+  ],
+  "regions": [
+   "makran"
+  ],
+  "entries": 1
+ },
+ "maliks_makran": {
+  "aliases": [
+   "Maliks of Makran"
+  ],
+  "regions": [
+   "makran"
+  ],
+  "entries": 2
+ },
+ "mamluk_iraq": {
+  "aliases": [
+   "Mamluk Dynasty of Iraq",
+   "Mamluk Dynasty of Iraq (Autonomous Pashas)",
+   "Mamluk Dynasty of Iraq (Restored)"
+  ],
+  "regions": [
+   "mesopotamia"
+  ],
+  "entries": 3
+ },
+ "manghit": {
+  "aliases": [
+   "Manghit Ataliqs",
+   "Manghit Dynasty (Daniyal Bi)",
+   "Manghit Dynasty (Emirate of Bukhara)",
+   "Manghit Dynasty (Muhammad Rahim Bi)",
+   "Manghit Dynasty (Shah Murad)"
+  ],
+  "regions": [
+   "transoxiana"
+  ],
+  "entries": 5
+ },
+ "mannaean": {
+  "aliases": [
+   "Kingdom of Mannai",
+   "Mannaean Kingdom"
+  ],
+  "regions": [
+   "azerbaijan"
+  ],
+  "entries": 2
+ },
+ "mar_ashi": {
+  "aliases": [
+   "Mar'ashi Dynasty",
+   "Mar'ashi Dynasty (Mazandaran)",
+   "Mar'ashis"
+  ],
+  "regions": [
+   "caspian_coast"
+  ],
+  "entries": 4
+ },
+ "maragha": {
+  "aliases": [
+   "Maragha Khanate",
+   "Maragha Khanate (Muqaddam tribe)"
+  ],
+  "regions": [
+   "azerbaijan"
+  ],
+  "entries": 2
+ },
+ "masmughans_damavand": {
+  "aliases": [
+   "Masmughans of Damavand"
+  ],
+  "regions": [
+   "caspian_coast"
+  ],
+  "entries": 3
+ },
+ "maurya": {
+  "aliases": [
+   "Maurya Empire"
+  ],
+  "regions": [
+   "makran"
+  ],
+  "entries": 1
+ },
+ "median": {
+  "aliases": [
+   "Median Dynasty (Cyaxares/Astyages)",
+   "Median Dynasty (Phraortes)",
+   "Median Empire",
+   "Median Empire (Conquest)",
+   "Median Empire (Hyrcania Satrapy)",
+   "Median Empire (Little Media)",
+   "Median Empire (Suzerainty)",
+   "Median Kingdom (Deioces)"
+  ],
+  "regions": [
+   "azerbaijan",
+   "caspian_coast",
+   "caucasus",
+   "fars",
+   "jibal",
+   "khorasan",
+   "sistan"
+  ],
+  "entries": 11
+ },
+ "mihrabanid": {
+  "aliases": [
+   "Mihrabanid Dynasty",
+   "Mihrabanid Dynasty (Third)",
+   "Mihrabanid dynasty"
+  ],
+  "regions": [
+   "sistan"
+  ],
+  "entries": 7
+ },
+ "mihran": {
+  "aliases": [
+   "House of Mihran (Local Power)",
+   "House of Mihran (Rayy Branch)"
+  ],
+  "regions": [
+   "jibal"
+  ],
+  "entries": 3
+ },
+ "mihranid": {
+  "aliases": [
+   "Mihranid Dynasty"
+  ],
+  "regions": [
+   "caucasus"
+  ],
+  "entries": 3
+ },
+ "mitradate": {
+  "aliases": [
+   "Mitradates (Rebel State in Zaris)"
+  ],
+  "regions": [
+   "sistan"
+  ],
+  "entries": 1
+ },
+ "mongol": {
+  "aliases": [
+   "Mongol Empire",
+   "Mongol Empire / Chagatai Khanate",
+   "Mongol Empire / Golden Horde / Chagatai Khanate"
+  ],
+  "regions": [
+   "chorasmia",
+   "jibal",
+   "khorasan",
+   "makran",
+   "sistan",
+   "transoxiana"
+  ],
+  "entries": 10
+ },
+ "mongol_ilkhanate": {
+  "aliases": [
+   "Mongol Empire / Ilkhanate",
+   "Mongol Empire / Ilkhanate / Golden Horde"
+  ],
+  "regions": [
+   "azerbaijan",
+   "caspian_coast",
+   "caucasus",
+   "fars",
+   "jibal",
+   "khorasan",
+   "khuzestan",
+   "makran",
+   "mesopotamia",
+   "sistan"
+  ],
+  "entries": 20
+ },
+ "mundigak_v_vi_elite": {
+  "aliases": [
+   "Mundigak V-VI Elite"
+  ],
+  "regions": [
+   "sistan"
+  ],
+  "entries": 1
+ },
+ "muscat_and_oman": {
+  "aliases": [
+   "Sultanate of Muscat and Oman (Gwadar)"
+  ],
+  "regions": [
+   "makran"
+  ],
+  "entries": 1
+ },
+ "musha_sha": {
+  "aliases": [
+   "Musha'sha' Dynasty",
+   "Musha'sha' Dynasty (Local Power)",
+   "Musha'sha'iya Dynasty (Governors of Hoveizeh)",
+   "Mushasha Dynasty"
+  ],
+  "regions": [
+   "khuzestan"
+  ],
+  "entries": 5
+ },
+ "muzaffarid": {
+  "aliases": [
+   "Muzaffarid Dynasty"
+  ],
+  "regions": [
+   "fars",
+   "jibal",
+   "khuzestan"
+  ],
+  "entries": 9
+ },
+ "nakhchivan": {
+  "aliases": [
+   "Nakhchivan Khanate"
+  ],
+  "regions": [
+   "caucasus"
+  ],
+  "entries": 1
+ },
+ "nasrid": {
+  "aliases": [
+   "Nasrid Dynasty",
+   "Nasrid Dynasty (Second Saffarids)",
+   "Nasrid Dynasty (Second)",
+   "Nasrid dynasty"
+  ],
+  "regions": [
+   "sistan"
+  ],
+  "entries": 7
+ },
+ "neo_assyrian": {
+  "aliases": [
+   "Neo-Assyrian Dynasty (Sargonids)",
+   "Neo-Assyrian Empire",
+   "Neo-Assyrian Empire (Occupation)",
+   "Neo-Assyrian Empire (Suzerainty)"
+  ],
+  "regions": [
+   "jibal",
+   "khuzestan",
+   "mesopotamia"
+  ],
+  "entries": 4
+ },
+ "neo_babylonian": {
+  "aliases": [
+   "Neo-Babylonian Dynasty",
+   "Neo-Babylonian Dynasty (Chaldeans)"
+  ],
+  "regions": [
+   "mesopotamia"
+  ],
+  "entries": 2
+ },
+ "neo_elamite": {
+  "aliases": [
+   "Neo-Elamite Dynasty (Humban-haltash III)",
+   "Neo-Elamite I (Local Powers)",
+   "Neo-Elamite III Rulers"
+  ],
+  "regions": [
+   "khuzestan"
+  ],
+  "entries": 3
+ },
+ "nizari_ismaili": {
+  "aliases": [
+   "Nizari Ismaili State",
+   "Nizari Ismaili state"
+  ],
+  "regions": [
+   "caspian_coast",
+   "jibal"
+  ],
+  "entries": 6
+ },
+ "oghuz_tribal_confederation": {
+  "aliases": [
+   "Oghuz Tribal Confederations"
+  ],
+  "regions": [
+   "khorasan"
+  ],
+  "entries": 1
+ },
+ "oreitan": {
+  "aliases": [
+   "Oreitans"
+  ],
+  "regions": [
+   "makran"
+  ],
+  "entries": 1
+ },
+ "orontid": {
+  "aliases": [
+   "Orontid Dynasty",
+   "Orontid Dynasty (Kingdom of Armenia)"
+  ],
+  "regions": [
+   "caucasus"
+  ],
+  "entries": 2
+ },
+ "ottoman": {
+  "aliases": [
+   "Ottoman Empire",
+   "Ottoman Empire (Nominal suzerainty)",
+   "Ottoman Empire (Western / Partition)",
+   "Ottoman Empire (Western Parts)"
+  ],
+  "regions": [
+   "azerbaijan",
+   "caucasus",
+   "jibal",
+   "mesopotamia"
+  ],
+  "entries": 13
+ },
+ "paduspanid": {
+  "aliases": [
+   "Paduspanid (Baduspanid) Dynasty",
+   "Paduspanid Dynasty",
+   "Paduspanids",
+   "Paduspanids (Mazandaran)"
+  ],
+  "regions": [
+   "caspian_coast"
+  ],
+  "entries": 12
+ },
+ "pahlavi": {
+  "aliases": [
+   "Pahlavi Dynasty",
+   "Pahlavi Dynasty (Iranian Azerbaijan)",
+   "Pahlavi Dynasty (Iranian Khorasan)",
+   "Pahlavi Dynasty (Iranian Makran)",
+   "Pahlavi Dynasty (Iranian Sistan)"
+  ],
+  "regions": [
+   "azerbaijan",
+   "caspian_coast",
+   "fars",
+   "jibal",
+   "khorasan",
+   "khuzestan",
+   "makran",
+   "sistan"
+  ],
+  "entries": 8
+ },
+ "parataraja": {
+  "aliases": [
+   "Paratarajas (Kings of Parata)"
+  ],
+  "regions": [
+   "makran"
+  ],
+  "entries": 1
+ },
+ "parthian": {
+  "aliases": [
+   "Arsacid Dynasty (Arsaces I)",
+   "Parthian (Arsacid) Empire",
+   "Parthian (Arsacid) Empire (Overlords)"
+  ],
+  "regions": [
+   "caspian_coast",
+   "chorasmia",
+   "fars",
+   "jibal",
+   "khorasan",
+   "khuzestan",
+   "mesopotamia"
+  ],
+  "entries": 8
+ },
+ "pharnavazid": {
+  "aliases": [
+   "Pharnavazid Dynasty (Kingdom of Iberia)"
+  ],
+  "regions": [
+   "caucasus"
+  ],
+  "entries": 1
+ },
+ "qajar": {
+  "aliases": [
+   "Qajar Dynasty",
+   "Qajar Dynasty (Conquest)",
+   "Qajar Dynasty (Mazandaran)",
+   "Qajar Dynasty (Mazandaran/Astarabad)",
+   "Qajar Dynasty (Nominal Suzerain)",
+   "Qajar Dynasty (Nominal suzerainty)",
+   "Qajar Dynasty (Nominal)",
+   "Qajar Dynasty (Suzerain)",
+   "Qajar Dynasty (Unification)",
+   "Qajar Dynasty (nominal)"
+  ],
+  "regions": [
+   "azerbaijan",
+   "caspian_coast",
+   "caucasus",
+   "fars",
+   "jibal",
+   "khorasan",
+   "khuzestan",
+   "makran",
+   "sistan"
+  ],
+  "entries": 23
+ },
+ "qara_bayat": {
+  "aliases": [
+   "Qara Bayat (Amirdom of Nishapur)"
+  ],
+  "regions": [
+   "khorasan"
+  ],
+  "entries": 2
+ },
+ "qara_khitai": {
+  "aliases": [
+   "Qara Khitai",
+   "Qara Khitai (Western Liao)"
+  ],
+  "regions": [
+   "chorasmia",
+   "transoxiana"
+  ],
+  "entries": 5
+ },
+ "qara_qoyunlu": {
+  "aliases": [
+   "Qara Qoyunlu"
+  ],
+  "regions": [
+   "azerbaijan",
+   "caucasus",
+   "fars",
+   "jibal",
+   "mesopotamia"
+  ],
+  "entries": 5
+ },
+ "qarakhanid": {
+  "aliases": [
+   "Qarakhanid Khanate",
+   "Qarakhanids"
+  ],
+  "regions": [
+   "transoxiana"
+  ],
+  "entries": 6
+ },
+ "qashqai": {
+  "aliases": [
+   "Qashqai Confederation"
+  ],
+  "regions": [
+   "fars"
+  ],
+  "entries": 1
+ },
+ "qungrat": {
+  "aliases": [
+   "Qongrat Inaqs",
+   "Qungrat Dynasty (Khanate of Khiva)",
+   "Qungrat Inaks (Hereditary rulers)",
+   "Qungrat Inaqs"
+  ],
+  "regions": [
+   "chorasmia"
+  ],
+  "entries": 4
+ },
+ "raee": {
+  "aliases": [
+   "Raees Dynasty"
+  ],
+  "regions": [
+   "makran"
+  ],
+  "entries": 2
+ },
+ "rashidun": {
+  "aliases": [
+   "Rashidun Caliphate",
+   "Rashidun Caliphate (Islamic Conquest / Arran)"
+  ],
+  "regions": [
+   "azerbaijan",
+   "caucasus",
+   "fars",
+   "jibal",
+   "khorasan",
+   "khuzestan",
+   "makran",
+   "mesopotamia",
+   "sistan"
+  ],
+  "entries": 10
+ },
+ "rawwadid": {
+  "aliases": [
+   "Rawwadid Dynasty"
+  ],
+  "regions": [
+   "azerbaijan"
+  ],
+  "entries": 4
+ },
+ "republic_afghanistan": {
+  "aliases": [
+   "Republic of Afghanistan"
+  ],
+  "regions": [
+   "khorasan",
+   "sistan"
+  ],
+  "entries": 2
+ },
+ "republic_iraq": {
+  "aliases": [
+   "Republic of Iraq (Post-Hashemite State)"
+  ],
+  "regions": [
+   "mesopotamia"
+  ],
+  "entries": 1
+ },
+ "rind_lashari_tribal_power": {
+  "aliases": [
+   "Rind-Lashari Tribal Power"
+  ],
+  "regions": [
+   "makran"
+  ],
+  "entries": 1
+ },
+ "roman": {
+  "aliases": [
+   "Byzantine Empire (Brief Occupation)",
+   "Roman Empire (Temporary Occupations)",
+   "Roman Empire (Vassalage/Client Status)",
+   "Roman/Byzantine Empire (Occupations/Incursions)"
+  ],
+  "regions": [
+   "azerbaijan",
+   "caucasus",
+   "mesopotamia"
+  ],
+  "entries": 4
+ },
+ "russian": {
+  "aliases": [
+   "Russian Empire",
+   "Russian Empire (Eastern / Baku)",
+   "Russian Empire (Northern Annexation)",
+   "Russian Empire (Protectorate)"
+  ],
+  "regions": [
+   "caspian_coast",
+   "caucasus",
+   "chorasmia",
+   "khorasan",
+   "transoxiana"
+  ],
+  "entries": 9
+ },
+ "safavid": {
+  "aliases": [
+   "Safavid Dynasty",
+   "Safavid Dynasty (Restoration)",
+   "Safavid Dynasty (nominal)"
+  ],
+  "regions": [
+   "azerbaijan",
+   "caspian_coast",
+   "caucasus",
+   "fars",
+   "jibal",
+   "khorasan",
+   "khuzestan",
+   "mesopotamia",
+   "sistan"
+  ],
+  "entries": 22
+ },
+ "saffarid": {
+  "aliases": [
+   "Saffarid Dynasty",
+   "Saffarid Dynasty (First)"
+  ],
+  "regions": [
+   "fars",
+   "khorasan",
+   "sistan"
+  ],
+  "entries": 11
+ },
+ "sajid": {
+  "aliases": [
+   "Sajid Dynasty"
+  ],
+  "regions": [
+   "azerbaijan",
+   "caucasus"
+  ],
+  "entries": 6
+ },
+ "saka": {
+  "aliases": [
+   "Saka (Chorasmii)",
+   "Saka / Massagetae Tribal Confederations",
+   "Sakas (Indo-Scythian Tribes)"
+  ],
+  "regions": [
+   "chorasmia",
+   "sistan",
+   "transoxiana"
+  ],
+  "entries": 3
+ },
+ "salghurid": {
+  "aliases": [
+   "Salghurids",
+   "Salghurids (Atabegs of Fars)"
+  ],
+  "regions": [
+   "fars"
+  ],
+  "entries": 6
+ },
+ "sallarid": {
+  "aliases": [
+   "Sallarid Dynasty"
+  ],
+  "regions": [
+   "azerbaijan",
+   "caucasus"
+  ],
+  "entries": 5
+ },
+ "samanid": {
+  "aliases": [
+   "Samanid Empire"
+  ],
+  "regions": [
+   "khorasan",
+   "transoxiana"
+  ],
+  "entries": 8
+ },
+ "samtskhe": {
+  "aliases": [
+   "Principality of Samtskhe"
+  ],
+  "regions": [
+   "caucasus"
+  ],
+  "entries": 1
+ },
+ "sarab": {
+  "aliases": [
+   "Sarab Khanate",
+   "Sarab Khanate (Shaqaqi tribe)"
+  ],
+  "regions": [
+   "azerbaijan"
+  ],
+  "entries": 2
+ },
+ "sarbadar": {
+  "aliases": [
+   "Sarbadar Dynasty",
+   "Sarbadars"
+  ],
+  "regions": [
+   "khorasan"
+  ],
+  "entries": 4
+ },
+ "sasanian": {
+  "aliases": [
+   "House of Sasan (Direct Rule)",
+   "House of Sasan (Direct Rule/Marzbans)",
+   "House of Sasan (Direct/Marzban Rule)",
+   "House of Sasan (Restored Rule)",
+   "House of Sasan (Sakanshahs)",
+   "Sasanian Empire",
+   "Sasanian Empire (Direct Rule/Influence)",
+   "Sasanian Empire (Influence)",
+   "Sasanian Empire (Paradan & Makran)",
+   "Sasanian Marzbans (Direct Rule)",
+   "Sasanian Marzbans (Satrapy of Albania)",
+   "Sasanian Overlordship (Nominal)"
+  ],
+  "regions": [
+   "adiabene",
+   "anatolia",
+   "arbayistan",
+   "armenia",
+   "azerbaijan",
+   "balasagan",
+   "caspian_coast",
+   "caucasus",
+   "chorasmia",
+   "egypt",
+   "fars",
+   "hind",
+   "iberia",
+   "jibal",
+   "khorasan",
+   "khuzestan",
+   "kirman",
+   "levant",
+   "machelonia",
+   "makran",
+   "mazun",
+   "mesopotamia",
+   "paradan",
+   "sistan",
+   "transoxiana",
+   "turan",
+   "yemen"
+  ],
+  "entries": 38
+ },
+ "scythian": {
+  "aliases": [
+   "Scythian Interregnum (Madyes)",
+   "Scythian Kingdom (Ishkuza)"
+  ],
+  "regions": [
+   "azerbaijan",
+   "jibal"
+  ],
+  "entries": 2
+ },
+ "seleucid": {
+  "aliases": [
+   "Seleucid Empire",
+   "Seleucid Empire (Vassalage)"
+  ],
+  "regions": [
+   "azerbaijan",
+   "caspian_coast",
+   "fars",
+   "jibal",
+   "khorasan",
+   "khuzestan",
+   "mesopotamia",
+   "sistan",
+   "transoxiana"
+  ],
+  "entries": 16
+ },
+ "sewa": {
+  "aliases": [
+   "Sewa Dynasty"
+  ],
+  "regions": [
+   "makran"
+  ],
+  "entries": 1
+ },
+ "shabankara": {
+  "aliases": [
+   "Shabankara"
+  ],
+  "regions": [
+   "fars"
+  ],
+  "entries": 1
+ },
+ "shaddadid": {
+  "aliases": [
+   "Shaddadid Dynasty",
+   "Shaddadids"
+  ],
+  "regions": [
+   "caucasus"
+  ],
+  "entries": 6
+ },
+ "shaki": {
+  "aliases": [
+   "Shaki Khanate"
+  ],
+  "regions": [
+   "caucasus"
+  ],
+  "entries": 2
+ },
+ "shaybanid": {
+  "aliases": [
+   "Shaybanid Dynasty",
+   "Shaybanid Uzbeks"
+  ],
+  "regions": [
+   "chorasmia",
+   "khorasan",
+   "transoxiana"
+  ],
+  "entries": 4
+ },
+ "sheikhdom_mohammerah": {
+  "aliases": [
+   "Sheikhdom of Mohammerah (Al Bu Kasib)"
+  ],
+  "regions": [
+   "khuzestan"
+  ],
+  "entries": 1
+ },
+ "shirvan": {
+  "aliases": [
+   "Shirvan Khanate"
+  ],
+  "regions": [
+   "caucasus"
+  ],
+  "entries": 2
+ },
+ "shirvanshah": {
+  "aliases": [
+   "Shirvanshah Dynasty",
+   "Shirvanshahs",
+   "Shirvanshahs (Darbandid line)",
+   "Shirvanshahs (Yazidid/Kasranid line)"
+  ],
+  "regions": [
+   "caucasus"
+  ],
+  "entries": 14
+ },
+ "sogdian_city": {
+  "aliases": [
+   "Sogdian City-States",
+   "Sogdian City-States (Ikhshids of Sogdia)",
+   "Sogdian Principalities",
+   "Sogdian Principality Rulers"
+  ],
+  "regions": [
+   "transoxiana"
+  ],
+  "entries": 6
+ },
+ "soviet_socialist_republic_gilan": {
+  "aliases": [
+   "Soviet Socialist Republic of Gilan"
+  ],
+  "regions": [
+   "caspian_coast"
+  ],
+  "entries": 1
+ },
+ "soviet_union": {
+  "aliases": [
+   "Soviet Union",
+   "Soviet Union (Soviet Central Asia)"
+  ],
+  "regions": [
+   "azerbaijan",
+   "caucasus",
+   "chorasmia",
+   "khorasan",
+   "transoxiana"
+  ],
+  "entries": 5
+ },
+ "sufid": {
+  "aliases": [
+   "Sufi (Qunghrat) Dynasty",
+   "Sufid Dynasty"
+  ],
+  "regions": [
+   "chorasmia"
+  ],
+  "entries": 2
+ },
+ "suren": {
+  "aliases": [
+   "House of Suren (Local Warlords/Vassals)"
+  ],
+  "regions": [
+   "sistan"
+  ],
+  "entries": 1
+ },
+ "tabriz": {
+  "aliases": [
+   "Tabriz Khanate",
+   "Tabriz Khanate (Donboli/Local)"
+  ],
+  "regions": [
+   "azerbaijan"
+  ],
+  "entries": 3
+ },
+ "tahirid": {
+  "aliases": [
+   "Tahirid Dynasty"
+  ],
+  "regions": [
+   "khorasan"
+  ],
+  "entries": 3
+ },
+ "talysh": {
+  "aliases": [
+   "Talysh Khanate"
+  ],
+  "regions": [
+   "caucasus"
+  ],
+  "entries": 1
+ },
+ "tang_china": {
+  "aliases": [
+   "Tang China"
+  ],
+  "regions": [
+   "transoxiana"
+  ],
+  "entries": 2
+ },
+ "teispid": {
+  "aliases": [
+   "Teispid Dynasty (Achaemenes/Teispes)",
+   "Teispid Dynasty (Anshan/Persis lines)"
+  ],
+  "regions": [
+   "fars"
+  ],
+  "entries": 2
+ },
+ "tibetan": {
+  "aliases": [
+   "Tibetan Empire"
+  ],
+  "regions": [
+   "transoxiana"
+  ],
+  "entries": 1
+ },
+ "timurid": {
+  "aliases": [
+   "Timurid Empire"
+  ],
+  "regions": [
+   "azerbaijan",
+   "caspian_coast",
+   "caucasus",
+   "chorasmia",
+   "fars",
+   "jibal",
+   "khorasan",
+   "khuzestan",
+   "mesopotamia",
+   "sistan",
+   "transoxiana"
+  ],
+  "entries": 15
+ },
+ "togha_temur": {
+  "aliases": [
+   "Togha Temur",
+   "Togha Temür (Ilkhanid Claimant)"
+  ],
+  "regions": [
+   "khorasan"
+  ],
+  "entries": 2
+ },
+ "tore_puppet_khan": {
+  "aliases": [
+   "Tore (Kazakh) Dynasty / Puppet Khans",
+   "Tore/Kazakh Dynasty (Puppet Khans)"
+  ],
+  "regions": [
+   "chorasmia"
+  ],
+  "entries": 2
+ },
+ "turgesh": {
+  "aliases": [
+   "Türgesh Khaganate"
+  ],
+  "regions": [
+   "transoxiana"
+  ],
+  "entries": 1
+ },
+ "umayyad": {
+  "aliases": [
+   "Umayyad Caliphate",
+   "Umayyad Caliphate (Emirate of Arminiya / Arran)"
+  ],
+  "regions": [
+   "azerbaijan",
+   "caucasus",
+   "chorasmia",
+   "fars",
+   "jibal",
+   "khorasan",
+   "khuzestan",
+   "makran",
+   "mesopotamia",
+   "sistan",
+   "transoxiana"
+  ],
+  "entries": 11
+ },
+ "urartu": {
+  "aliases": [
+   "Kingdom of Urartu (Rusa II to Rusa IV)",
+   "Urartu (Kingdom of Van)",
+   "Urartu (Southern Sector)"
+  ],
+  "regions": [
+   "azerbaijan",
+   "caucasus"
+  ],
+  "entries": 3
+ },
+ "urmia": {
+  "aliases": [
+   "Urmia Khanate",
+   "Urmia Khanate (Afshar tribe)",
+   "Urmia Khanate (Afshars)"
+  ],
+  "regions": [
+   "azerbaijan"
+  ],
+  "entries": 3
+ },
+ "western_turkic": {
+  "aliases": [
+   "Western Turkic Khaganate",
+   "Western Turkic Khaganate (Göktürks)"
+  ],
+  "regions": [
+   "khorasan",
+   "transoxiana"
+  ],
+  "entries": 3
+ },
+ "yaz_ii_culture": {
+  "aliases": [
+   "Yaz II Culture (Early)"
+  ],
+  "regions": [
+   "khorasan"
+  ],
+  "entries": 1
+ },
+ "yuezhi": {
+  "aliases": [
+   "Yuezhi Confederation"
+  ],
+  "regions": [
+   "transoxiana"
+  ],
+  "entries": 1
+ },
+ "zakarid_armenia": {
+  "aliases": [
+   "Zakarid Armenia"
+  ],
+  "regions": [
+   "caucasus"
+  ],
+  "entries": 2
+ },
+ "zand": {
+  "aliases": [
+   "Zand Dynasty",
+   "Zand Dynasty (Imperial Governors/Nominal)",
+   "Zand Dynasty (Karim Khan)",
+   "Zand Dynasty (Lotf Ali Khan)",
+   "Zand Dynasty (Nominal control)",
+   "Zand Dynasty (Occupation of Basra)",
+   "Zand Dynasty (Suzerainty)",
+   "Zand Successors (Zaki, Sadiq, Ali Murad, Jafar)",
+   "Zand-Bakhtiari Alliance"
+  ],
+  "regions": [
+   "azerbaijan",
+   "caspian_coast",
+   "fars",
+   "jibal",
+   "khuzestan",
+   "mesopotamia"
+  ],
+  "entries": 17
+ },
+ "zanjan": {
+  "aliases": [
+   "Zanjan Khanate",
+   "Zanjan Khanate (Afshar tribe)"
+  ],
+  "regions": [
+   "azerbaijan"
+  ],
+  "entries": 2
+ },
+ "zarmihrid": {
+  "aliases": [
+   "Zarmihrids"
+  ],
+  "regions": [
+   "caspian_coast"
+  ],
+  "entries": 2
+ },
+ "zikri_movement": {
+  "aliases": [
+   "Zikri State / Movement"
+  ],
+  "regions": [
+   "makran"
+  ],
+  "entries": 1
+ },
+ "ziyarid": {
+  "aliases": [
+   "Ziyarid Dynasty"
+  ],
+  "regions": [
+   "caspian_coast",
+   "jibal"
+  ],
+  "entries": 8
+ },
+ "zunbil": {
+  "aliases": [
+   "Zunbil Dynasty",
+   "Zunbil Dynasty (Zabulistan)",
+   "Zunbil Dynasty (Zabulistan/Arachosia)"
+  ],
+  "regions": [
+   "sistan"
+  ],
+  "entries": 3
+ }
+}

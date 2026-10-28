@@ -1,5 +1,5 @@
-import { events } from './src/data/events';
-import { regions } from './src/data/regions';
+import { events } from '../../src/data/events';
+import { regions } from '../../src/data/regions';
 
 const missingRegions = new Set<string>();
 

@@ -1,0 +1,326 @@
+{
+  "generic": [
+    "local"
+  ],
+  "merge": {
+    "afrasiyab": {
+      "into": "afrasiyabid",
+      "reason": "same dynasty, singular/plural"
+    },
+    "afsharid_safavid_restoration": {
+      "into": "afsharid",
+      "reason": "Afsharid-controlled Safavid puppet period"
+    },
+    "afsharid_rump": {
+      "into": "afsharid",
+      "reason": "late Afsharid state of Khorasan"
+    },
+    "afsharid_suzerainty": {
+      "into": "afsharid",
+      "reason": "Afsharid overlordship"
+    },
+    "amardian_mardi_tribal_leadership": {
+      "into": "amardian",
+      "reason": "Amardi = Mardi"
+    },
+    "arsacid": {
+      "into": "parthian",
+      "reason": "Arsacids are the Parthian dynasty"
+    },
+    "atropate": {
+      "into": "atropatid",
+      "reason": "House of Atropates = Atropatid house"
+    },
+    "banu_ka_b_sheikhdom": {
+      "into": "banu_ka_b",
+      "reason": "same polity"
+    },
+    "bavand": {
+      "into": "bavandid",
+      "reason": "later Bavandid line"
+    },
+    "bazrangid": {
+      "into": "bazarangid",
+      "reason": "spelling variant"
+    },
+    "cadusian_tribal_chief": {
+      "into": "cadusian",
+      "reason": "same people"
+    },
+    "cadusian_tribal_leadership": {
+      "into": "cadusian",
+      "reason": "same people"
+    },
+    "chupanid": {
+      "into": "chobanid",
+      "reason": "spelling variant"
+    },
+    "gichki_chiefs_local": {
+      "into": "gichki",
+      "reason": "Gichki tribal rulers"
+    },
+    "gichki_nawab": {
+      "into": "gichki",
+      "reason": "later Gichki line"
+    },
+    "hazaraspids_and_khorshidi": {
+      "into": "hazaraspid",
+      "reason": "joint entry, Hazaraspid-led"
+    },
+    "hephthalite_overlordship": {
+      "into": "hephthalite",
+      "reason": "Hephthalite overlordship"
+    },
+    "kart": {
+      "into": "kartid",
+      "reason": "Kart = Kartid"
+    },
+    "kayani_malek": {
+      "into": "kiani_malik",
+      "reason": "spelling variant"
+    },
+    "kayani_malik": {
+      "into": "kiani_malik",
+      "reason": "spelling variant"
+    },
+    "kayani": {
+      "into": "kiani_malik",
+      "reason": "Kayani/Kiani line of Sistan"
+    },
+    "sistani": {
+      "into": "malek_mahmud_sistani",
+      "reason": "same Sistani polity"
+    },
+    "khoy_donboli": {
+      "into": "khoy",
+      "reason": "Khoy Khanate under the Donboli"
+    },
+    "kia": {
+      "into": "kar_kiya",
+      "reason": "Kia = Kar-Kiya of Gilan"
+    },
+    "sufi": {
+      "into": "sufid",
+      "reason": "spelling variant"
+    },
+    "kushan_vassal": {
+      "into": "kushan",
+      "reason": "Kushan vassals"
+    },
+    "chorasmian_local_king": {
+      "into": "chorasmian",
+      "reason": "Chorasmian kingship"
+    },
+    "independent_chorasmian_king": {
+      "into": "chorasmian",
+      "reason": "Chorasmian kingship"
+    },
+    "local_chorasmian_shah": {
+      "into": "chorasmian",
+      "reason": "Chorasmian kingship"
+    },
+    "greater_chorasmian": {
+      "into": "chorasmian",
+      "reason": "Chorasmian kingship"
+    },
+    "mannai": {
+      "into": "mannaean",
+      "reason": "Mannai = Mannaea"
+    },
+    "manghit_ataliq": {
+      "into": "manghit",
+      "reason": "Manghit ataliqs of Bukhara"
+    },
+    "mongol_ilkhanate_golden_horde": {
+      "into": "mongol_ilkhanate",
+      "reason": "joint entry, Ilkhanid-led"
+    },
+    "musha_sha_iya": {
+      "into": "musha_sha",
+      "reason": "spelling variant"
+    },
+    "mushasha": {
+      "into": "musha_sha",
+      "reason": "spelling variant"
+    },
+    "neo_elamite_i": {
+      "into": "neo_elamite",
+      "reason": "Neo-Elamite phases I/II/III"
+    },
+    "neo_elamite_iii": {
+      "into": "neo_elamite",
+      "reason": "Neo-Elamite phases I/II/III"
+    },
+    "qongrat_inaq": {
+      "into": "qungrat",
+      "reason": "Qungrat of Khiva"
+    },
+    "qungrat_inak": {
+      "into": "qungrat",
+      "reason": "Qungrat of Khiva"
+    },
+    "qungrat_inaq": {
+      "into": "qungrat",
+      "reason": "Qungrat of Khiva"
+    },
+    "roman_byzantine": {
+      "into": "roman",
+      "reason": "Roman/Byzantine continuity"
+    },
+    "byzantine": {
+      "into": "roman",
+      "reason": "Roman/Byzantine continuity"
+    },
+    "saka_massagetae_tribal_confederation": {
+      "into": "saka",
+      "reason": "Saka/Massagetae"
+    },
+    "scythian_interregnum": {
+      "into": "scythian",
+      "reason": "Scythian rule in Media"
+    },
+    "sasan": {
+      "into": "sasanian",
+      "reason": "House of Sasan is the Sasanian dynasty"
+    },
+    "sasanian_marzban": {
+      "into": "sasanian",
+      "reason": "Sasanian governors (relation=governor)"
+    },
+    "sasanian_overlordship": {
+      "into": "sasanian",
+      "reason": "Sasanian overlordship"
+    },
+    "seljuk": {
+      "into": "great_seljuq",
+      "reason": "Seljuk = Seljuq"
+    },
+    "shaybanid_uzbek": {
+      "into": "shaybanid",
+      "reason": "same dynasty"
+    },
+    "sogdian": {
+      "into": "sogdian_city",
+      "reason": "Sogdian polities"
+    },
+    "sogdian_principalitie": {
+      "into": "sogdian_city",
+      "reason": "Sogdian polities"
+    },
+    "togha_temur_275": {
+      "into": "togha_temur",
+      "reason": "spelling variant"
+    },
+    "tore_kazakh": {
+      "into": "tore_puppet_khan",
+      "reason": "Tore (Genghisid) khans"
+    },
+    "zand_successor": {
+      "into": "zand",
+      "reason": "Zand successors"
+    },
+    "zand_bakhtiari_alliance": {
+      "into": "zand",
+      "reason": "Zand-led alliance"
+    },
+    "mongol_chagatai": {
+      "into": "mongol",
+      "reason": "Mongol Empire / Chagatai co-rule"
+    },
+    "mongol_golden_horde_chagatai": {
+      "into": "mongol",
+      "reason": "Mongol Empire joint entry"
+    }
+  },
+  "names": {
+    "achaemenid": "Achaemenid Empire",
+    "parthian": "Parthian (Arsacid) Empire",
+    "sasanian": "Sasanian Empire",
+    "roman": "Roman / Byzantine Empire",
+    "great_seljuq": "Great Seljuq Empire",
+    "mongol_ilkhanate": "Ilkhanate (Mongol)",
+    "kiani_malik": "Kiani Maliks of Sistan",
+    "qungrat": "Qungrat Dynasty (Khiva)",
+    "chorasmian": "Chorasmian Kingdom",
+    "sogdian_city": "Sogdian City-States",
+    "afsharid": "Afsharid Dynasty",
+    "zand": "Zand Dynasty",
+    "neo_elamite": "Neo-Elamite Kingdom",
+    "tore_puppet_khan": "Tore Khans (Genghisid puppets)",
+    "median": "Median Empire",
+    "musha_sha": "Musha'sha' Dynasty"
+  },
+  "family": {
+    "buyid": "persian",
+    "justanid": "persian",
+    "dabuyid": "persian",
+    "ziyarid": "persian",
+    "sajid": "persian",
+    "shaddadid": "persian",
+    "hasanwayhid": "persian",
+    "ma_danid": "persian",
+    "alid_zaydi": "arab",
+    "jalayirid": "turkic",
+    "arabshahid": "turkic",
+    "aq_qoyunlu": "turkic",
+    "qashqai": "turkic",
+    "kushan": "foreign",
+    "kushano_sasanian": "persian",
+    "qara_khitai": "nomadic",
+    "yuezhi": "nomadic",
+    "kangju": "nomadic",
+    "khazar": "nomadic",
+    "hotak": "foreign",
+    "azad_khan_afghan": "foreign",
+    "tibetan": "foreign",
+    "turgesh": "turkic",
+    "gokturks_western_turk": "turkic",
+    "western_turkic": "turkic",
+    "zunbil": "foreign",
+    "brahman": "foreign",
+    "kartli_kakheti": "foreign",
+    "imereti": "foreign",
+    "kakheti": "foreign",
+    "samtskhe": "foreign",
+    "colchi": "foreign",
+    "pharnavazid": "foreign",
+    "karabakh": "turkic",
+    "kalat": "persian",
+    "talysh": "persian",
+    "gilan": "persian",
+    "bakhtiari_khan": "persian",
+    "muzaffarid": "persian",
+    "sarbadar": "persian",
+    "shabankara": "persian",
+    "urartu": "foreign",
+    "mamluk_iraq": "foreign",
+    "georgian_mamluk_iraq": "foreign",
+    "al_muntafiq": "arab",
+    "sheikhdom_mohammerah": "arab",
+    "muscat_and_oman": "arab",
+    "hashemites_iraq": "arab",
+    "republic_iraq": "arab",
+    "banu_ka_b": "arab",
+    "soviet_union": "foreign",
+    "soviet_socialist_republic_gilan": "foreign",
+    "khorezm_people_s_soviet_republic": "foreign",
+    "makran_pakistan": "foreign",
+    "andragora": "greek",
+    "diodotid": "greek",
+    "hatra": "semitic",
+    "characene": "semitic",
+    "neo_elamite": "persian",
+    "elamite_governor": "persian",
+    "local_elamite_persian_successor": "persian",
+    "hubanid": "persian",
+    "masmughans_damavand": "persian",
+    "kiani_malik": "persian",
+    "bukhara": "turkic",
+    "manghit": "turkic",
+    "afghanistan": "foreign"
+  },
+  "overlord": {},
+  "skip": {
+    "1375–1468-AD.json|Golden Horde": "years given only as 'Intermittent' — no dates to place on the timeline"
+  }
+}
