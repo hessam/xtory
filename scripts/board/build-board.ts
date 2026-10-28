@@ -15,6 +15,9 @@ import path from 'node:path';
 import * as d3 from 'd3';
 import * as turf from '@turf/turf';
 import regionsGeo from '../../src/data/regions.json';
+import achaemenidMax from '../../src/data/achaemenid_max.json';
+import sasanianMax from '../../src/data/sasanian_max.json';
+import iranModern from '../../src/data/iran_modern.json';
 import neighboursGeo from '../../src/data/neighbours.json';
 import { regions as regionData } from '../../src/data/regions';
 import { getRealmsByRegion } from '../../src/data/registry';
@@ -123,6 +126,45 @@ for (const f of regionFeatures) {
   regionOut[id] = { rings, centroid: c ? [r1(c[0]), r1(c[1])] : [0, 0], name: { en: meta?.displayName.en.full ?? id, fa: meta?.displayName.fa.full ?? id } };
 }
 
+// Seeds: where a realm's cell grows from inside each region. Anchor cities first (they double as capitals),
+// then deterministic interior points so a region can always host up to MAX_SEEDS realms.
+const MAX_SEEDS = 8;
+const hash0 = (s: string) => { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; };
+type Seed = { x: number; y: number; city: { en: string; fa: string } | null };
+const seedsOut: Record<string, Seed[]> = {};
+for (const f of regionFeatures) {
+  const id = f.properties.id as string;
+  const meta = regionData.find(r => r.id === id)!;
+  const [minX, minY, maxX, maxY] = turf.bbox(f);
+  const seeds: Seed[] = [];
+  for (const c of meta.anchorCities) {
+    if (!turf.booleanPointInPolygon([c.lng, c.lat], f)) continue;
+    const p = projection([c.lng, c.lat])!;
+    seeds.push({ x: r1(p[0]), y: r1(p[1]), city: { en: c.name, fa: c.nameFa } });
+  }
+  for (let i = 0; seeds.length < MAX_SEEDS && i < 400; i++) {
+    const h = hash0(`${id}:${i}`);
+    const ll: [number, number] = [minX + ((h & 0xffff) / 0xffff) * (maxX - minX), minY + (((h >>> 16) & 0xffff) / 0xffff) * (maxY - minY)];
+    if (!turf.booleanPointInPolygon(ll, f)) continue;
+    const p = projection(ll)!;
+    // keep seeds apart so cells stay readable
+    if (seeds.some(s => Math.hypot(s.x - p[0], s.y - p[1]) < 40)) continue;
+    seeds.push({ x: r1(p[0]), y: r1(p[1]), city: null });
+  }
+  seedsOut[id] = seeds;
+}
+
+const citiesOut = regionData.flatMap(r => r.anchorCities.map((c, i) => {
+  const p = projection([c.lng, c.lat])!;
+  return { regionId: r.id, name: { en: c.name, fa: c.nameFa }, x: r1(p[0]), y: r1(p[1]), tier: i === 0 ? 1 : i === 1 ? 2 : 3 };
+}));
+
+const overlaysOut = {
+  achaemenidMax: ringsOf((achaemenidMax as any).features, 0.5),
+  sasanianMax: ringsOf((sasanianMax as any).features, 0.5),
+  iranModern: ringsOf((iranModern as any).features, 0.5),
+};
+
 const neighbourOut = (neighboursGeo as any).features.map((f: any) => ({
   id: f.properties.id, name: { en: f.properties.name, fa: f.properties.nameFa ?? f.properties.name }, rings: ringsOf([f], 0.4),
   centroid: (() => { const c = turf.centerOfMass(f).geometry.coordinates; const p = projection(c as [number, number])!; return [r1(p[0]), r1(p[1])]; })(),
@@ -178,7 +220,10 @@ fs.mkdirSync(OUT, { recursive: true });
 const geometry = {
   width: WIDTH, height: HEIGHT, bbox: BBOX,
   land: ringsOf(land, 0.5), lakes: ringsOf(lakes, 0.5), rivers: linesOf(rivers, 0.6),
-  regions: regionOut, neighbours: neighbourOut,
+  regions: Object.fromEntries(Object.entries(regionOut).map(([id, r]) => [id, { ...r, seeds: seedsOut[id] }])),
+  neighbours: neighbourOut, cities: citiesOut, overlays: overlaysOut,
+  // must match runtime: d3.geoConicEqualArea().rotate(rotate).parallels(parallels).scale(scale).translate(translate)
+  projection: { rotate: [-53, 0], parallels: [20, 44], scale: projection.scale(), translate: projection.translate().map(r1) },
 };
 fs.writeFileSync(path.join(OUT, 'geometry.json'), JSON.stringify(geometry) + '\n');
 fs.writeFileSync(path.join(OUT, 'cells.json'), JSON.stringify({ years: SAMPLE_YEARS, cells }) + '\n');

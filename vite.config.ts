@@ -65,6 +65,14 @@ export default defineConfig(({ mode }) => {
             if (id.includes('node_modules/motion/')) {
               return 'vendor-motion';
             }
+            // ── Board geometry libs (small; must NOT drag the intro chunk in) ──
+            if (id.includes('node_modules/d3-geo/') ||
+                id.includes('node_modules/d3-array/') ||
+                id.includes('node_modules/d3-delaunay/') ||
+                id.includes('node_modules/delaunator/') ||
+                id.includes('node_modules/robust-predicates/')) {
+              return 'vendor-board';
+            }
             // ── Intro morph libs (dynamically imported — kept separate) ────
             if (id.includes('node_modules/flubber/') ||
                 id.includes('node_modules/d3')) {

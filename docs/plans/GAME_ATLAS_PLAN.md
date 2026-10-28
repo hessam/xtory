@@ -314,6 +314,19 @@ three.js "hero" moment can be proposed later as a lazy, capable-device-only extr
 - [ ] `fa` labels correct, including curved names; `en`/`fa` toggle swaps labels instantly.
 - [ ] Leaflet, react-leaflet, Thunderforest, tile SW removed from the bundle; budget improves.
 
+**S4 status (2026-10-28): Board v1 built behind `?ff=board`; Leaflet still the default**
+- [x] `MapBoard` (`src/board/`) is a drop-in for `MapLeaflet` (same props, `mapProps.ts`); `App.tsx` swaps it lazily by flag. Layers: base (sea/land/coast glow/rivers/neighbours/ghost extents) → realms → overlay (curved labels, emblems, cities by zoom tier, event/artifact/vazir tokens). Pan/zoom only changes a CSS transform.
+- [x] Realm cells for **any year** computed at runtime (Voronoi seeded at anchor cities, ~1 ms; unit-tested to tile each region), so the whole timeline works, not just sample years.
+- [x] Map modes: Realms · Cultures (family) · Fragmentation (heat + realm count per region) · Terrain. Fog hatch for regions with no data; hatch overlay on low-confidence cells.
+- [x] Camera: drag / wheel (zoom at cursor) / pinch / +,− / reset, eased `flyTo`, clamped to the board, reduced-motion aware; zooms out far enough to frame the plateau on a portrait phone. Reach lens flies to the regions the dynasty held.
+- [x] Procedural emblems per dynasty (tap = reach lens); curved (`textPath`) realm labels, collision-free, en + fa; one counter/HUD shared with Slice 2.
+- [x] **Fixed: App no longer mounts both mobile and desktop layouts** (two maps/timelines + duplicate DOM ids). Verified by a unique-id test.
+- [x] Vazir dots now actually render (the old map was never given the vazir list).
+- [x] Tests: 17 new unit (cells tiling, clipping, camera clamp/frame, projection, emblems), 7 new e2e on desktop + mobile (realms, no duplicate ids, tap → region detail, zoom/reset, drag pan without opening a region, modes, lens, Persian, Leaflet still default). Totals: 77 unit, 46 e2e. First-load JS 189.6 KB; board chunks load only with the flag (MapBoard 8.4 KB + vendor-board 26.7 KB gz).
+- [ ] **Not done, by decision:** realm *morph* between years (flubber) → replaced by fade-in + "border burn" on newly appearing realms; terrain relief; removal of Leaflet / react-leaflet / Thunderforest / tile service worker (only once the flag defaults on and the owner has checked real phones).
+- [ ] **Owner checks before flipping the flag:** (1) phone test on Android + iPhone (drag, pinch, tap, lens, fa); (2) tap targets for events/figures/heritage tokens (e2e does not cover them yet); (3) decide whether schematic cells need an on-map "approximate borders" note.
+- Known limits: cells are schematic (Voronoi, see S3 caveat); regions with more realms than seeds (8) hide the weakest realm's cell (still counted); label collision is computed once at overview zoom.
+
 ---
 
 ## Slice 5 — Backend foundation: AI proxy (no forced BYOK)

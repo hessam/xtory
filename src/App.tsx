@@ -23,7 +23,8 @@ import { pushToDataLayer, markAIUsed } from './services/tagManager';
 import { isFlagOn } from './lib/flags';
 
 // Heavy components — lazy loaded so they never block first paint
-const Map        = lazy(() => import('./components/MapLeaflet'));
+// ff_board swaps the Leaflet map for the strategy-game board (same props)
+const Map        = lazy(() => isFlagOn('board') ? import('./board/MapBoard') : import('./components/MapLeaflet'));
 const Timeline   = lazy(() => import('./components/Timeline').then(m => ({ default: m.Timeline })));
 const EventsPanel = lazy(() => import('./components/EventsPanel').then(m => ({ default: m.EventsPanel })));
 const BottomSheet = lazy(() => import('./components/BottomSheet').then(m => ({ default: m.BottomSheet })));
@@ -81,7 +82,15 @@ export default function App() {
   const [aiError, setAiError] = useState<string | null>(null);
   const [introComplete, setIntroComplete] = useState(() => typeof window !== 'undefined' ? !!localStorage.getItem('atlas_intro_seen') : false);
   const [showExtentTooltip, setShowExtentTooltip] = useState(false);
-  const fragOn = useMemo(() => isFlagOn('fragmentation'), []);
+  // Mount ONE layout (was: both, hidden with CSS → two maps/timelines running and duplicated DOM ids). Matches Tailwind `sm`.
+  const [isDesktop, setIsDesktop] = useState(() => typeof window !== 'undefined' && window.matchMedia('(min-width: 640px)').matches);
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 640px)');
+    const on = () => setIsDesktop(mq.matches);
+    mq.addEventListener('change', on);
+    return () => mq.removeEventListener('change', on);
+  }, []);
+  const fragOn = useMemo(() => isFlagOn('fragmentation') || isFlagOn('board'), []);
 
   // Auto-dismiss AI error after 6 seconds
   useEffect(() => {
@@ -421,6 +430,7 @@ export default function App() {
           MOBILE LAYOUT  (flex column, no absolute children compete)
           max-width: 640px (sm breakpoint)
           ================================================================ */}
+      {!isDesktop && (
       <div className="sm:hidden relative flex flex-col w-full h-full overflow-hidden" id="app-mobile-container">
 
         {/* ── Top Bar  z-40, height 48px + safe area ─────────────────── */}
@@ -567,11 +577,13 @@ export default function App() {
 
 
       </div>
+      )}
 
       {/* ════════════════════════════════════════════════════════════════════
           DESKTOP LAYOUT  (sm+, unchanged from before)
           All children are absolute/overlapping like before
           ================================================================ */}
+      {isDesktop && (
       <div className="hidden sm:flex flex-col w-full h-full overflow-hidden">
 
         {/* Floating Header */}
@@ -921,6 +933,7 @@ export default function App() {
           </div>
         </div>
       </div>
+      )}
 
       {/* ── Shared modals (appear on both layouts) ───────────────────────── */}
       <Suspense fallback={null}>

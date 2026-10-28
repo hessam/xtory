@@ -10,8 +10,11 @@ export type Ring = [number, number][];
 export interface BoardGeometry {
   width: number; height: number; bbox: number[];
   land: Ring[]; lakes: Ring[]; rivers: Ring[];
-  regions: Record<string, { rings: Ring[]; centroid: [number, number]; name: { en: string; fa: string } }>;
+  regions: Record<string, { rings: Ring[]; centroid: [number, number]; name: { en: string; fa: string }; seeds: { x: number; y: number; city: { en: string; fa: string } | null }[] }>;
   neighbours: { id: string; name: { en: string; fa: string }; rings: Ring[]; centroid: [number, number] }[];
+  cities: { regionId: string; name: { en: string; fa: string }; x: number; y: number; tier: number }[];
+  overlays: { achaemenidMax: Ring[]; sasanianMax: Ring[]; iranModern: Ring[] };
+  projection: { rotate: [number, number]; parallels: [number, number]; scale: number; translate: [number, number] };
 }
 export const geometry = geometryJson as unknown as BoardGeometry;
 export const SAMPLE_YEARS: number[] = (cellsJson as any).years;
@@ -42,7 +45,7 @@ export const ringsToPath = (rings: Ring[]): string =>
 export const linesToPath = (lines: Ring[]): string =>
   lines.map(r => 'M' + r.map(p => p[0] + ' ' + p[1]).join('L')).join('');
 
-function stats(rings: Ring[]) {
+export function stats(rings: Ring[]) {
   // largest ring only: good enough for label placement
   const ring = rings.reduce((a, b) => (b.length > a.length ? b : a), rings[0] ?? []);
   if (ring.length < 3) return null;
@@ -110,7 +113,7 @@ export function tint(hex: string, amount: number): string {
  * One label per dynasty (on its largest cell), and no overlaps: biggest cells claim space first,
  * labels that collide or would be unreadably small are hidden (size = 0).
  */
-function placeLabels(cells: DrawCell[], lang: 'en' | 'fa') {
+export function placeLabels(cells: DrawCell[], lang: 'en' | 'fa') {
   const perChar = lang === 'fa' ? 0.55 : 0.95;
   const MIN = 10;
   const placed: { x0: number; y0: number; x1: number; y1: number }[] = [];
