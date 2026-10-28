@@ -9,3 +9,4 @@ coverage/
 .git-old/
 test-results/
 playwright-report/
+.cache/

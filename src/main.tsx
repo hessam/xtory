@@ -1,4 +1,4 @@
-import {StrictMode} from 'react';
+import {StrictMode, Suspense, lazy} from 'react';
 import {createRoot} from 'react-dom/client';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
@@ -6,6 +6,11 @@ import { initClarity } from './services/clarity.ts';
 import App from './App.tsx';
 import { ApiKeyProvider } from './context/ApiKeyContext.tsx';
 import './index.css';
+import { isFlagOn } from './lib/flags';
+
+// Slice 3 spike page, loaded only when ?ff=board_spike
+const BoardSpike = lazy(() => import('./board/BoardSpike'));
+const spike = isFlagOn('board_spike');
 
 // Initialize Microsoft Clarity (deferred, non-blocking)
 initClarity();
@@ -22,9 +27,7 @@ if ('serviceWorker' in navigator) {
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ApiKeyProvider>
-      <App />
-      <Analytics />
-      <SpeedInsights />
+      {spike ? <Suspense fallback={null}><BoardSpike /></Suspense> : <><App /><Analytics /><SpeedInsights /></>}
     </ApiKeyProvider>
   </StrictMode>,
 );

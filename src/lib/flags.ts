@@ -8,6 +8,7 @@
 export type FlagName =
   | 'fragmentation'
   | 'board'
+  | 'board_spike'
   | 'server_ai'
   | 'facts'
   | 'discovery'
