@@ -1,6 +1,6 @@
-import { events } from './src/data/events';
-import { rulers } from './src/data/rulers';
-import { dynasties } from './src/data/dynasties';
+import { events } from '../../src/data/events';
+import { rulers } from '../../src/data/rulers';
+import { dynasties } from '../../src/data/dynasties';
 
 const missingRulers = new Set<string>();
 const missingDynasties = new Set<string>();

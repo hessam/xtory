@@ -1,6 +1,6 @@
 # Xtory — Game Atlas Plan
 
-> **Status:** DRAFT — awaiting approval. No slice starts until the "Decisions" section is confirmed.
+> **Status:** APPROVED 2026-10-28 (decisions D1–D7 confirmed, see section 6). Slice 0 in progress.
 > **Goal:** Turn the Living Atlas into something people who *don't* like history open for fun:
 > a strategy-game-grade map, free exploration that rewards discovery, and facts worth sharing —
 > while keeping the honesty of the data ("claims need a source").
@@ -140,6 +140,19 @@ Sizes: **S** ≈ 1–2 days · **M** ≈ 3–5 days · **L** ≈ 1–2 weeks (on
 - [ ] Secret grep fails the build if a key pattern appears in `dist/`.
 - [ ] `.env.example` has no real keys; old Thunderforest key rotated.
 - [ ] App behaves identically on a Vercel preview (manual pass of `GUARDRAILS.md`).
+
+**S0 status (2026-10-28): implemented, pending owner items**
+- [x] CI workflow added (`.github/workflows/ci.yml`: lint, unit, build, budget, secrets, e2e). *Not yet run on GitHub — it triggers on PRs and pushes to `main`; confirm green on the first PR.*
+- [x] 11 distinct guardrail items automated in Playwright on desktop + mobile (19 runs pass): map render, region click, zoom, timeline visible, context strip, AI button disabled-not-hidden, era navigation changes colours, historian panel open by default, mobile drawer + timeline, EN/FA toggle + RTL + Persian digits, Cmd/Ctrl+K.
+- [x] Budget check (250 KB; currently 188.7 KB) and secret grep, both negative-tested.
+- [x] `.env.example` is placeholder-only. **Owner action: rotate the Thunderforest key** (the old one is in git history).
+- [x] Cleanup: `Map.tsx`, `src/diagnostics/` removed; root scripts moved to `scripts/legacy/`; `.git-old/` git-ignored (not deleted — it holds `soft-launch-prep`/`v1-pre-launch` history).
+- [ ] **Owner action:** manual pass of `GUARDRAILS.md` on a Vercel preview.
+- Not automatable yet (manual): hover highlight, scrub-drag recolouring, touch swipe of the sheet, "Who ruled here?" caching (needs a key / server AI → S5).
+
+**Findings from S0 for later slices**
+- Both the mobile and desktop layouts are mounted at once (CSS-hidden): two Leaflet maps and two timelines run on every year change, and DOM ids (`tour-timeline-ai-*`) are duplicated. → fix in S4 (mount only the active layout).
+- The curated data uses 35 region ids outside the 12 (satrapies/provinces such as `lydia`, `bactria`, `kirman`, `armenia`), all in `550–330-BC.json` and `224–651-AD.json`. → S1 must map or model them; S4 needs geometry for them. Locked by a unit test.
 
 ---
 
@@ -509,3 +522,18 @@ safe area for Telegram/X/WhatsApp crops.
 | D5 | Leaderboard visibility | Public, nickname-only, opt-in to appear (default hidden until a nickname is set) |
 | D6 | Thunderforest key | Rotate now (S0); tiles removed entirely in S4 |
 | D7 | Journey vs Explore as default landing | Journey default once S11 ships; until then, Explore with the counter + discovery |
+
+### Confirmed (2026-10-28)
+
+All recommended defaults above are accepted. Additions:
+
+- **D2 model:** `deepseek/deepseek-v4.1-flash-1017` via OpenRouter as the writer model. Model id lives in
+  server config (env), never hardcoded in the client.
+- **Usage limits are deferred until we have real data.** S5 must therefore ship with
+  *measurement first*: log tokens in/out per request (task, cache hit/miss, anonymous profile/device
+  hash — never raw IP). All limits are env-configurable, with generous placeholder defaults and a
+  report script, so we can later pick between **tokens per user per day**, **tokens per minute**,
+  or **requests per minute** from observed numbers. The global kill-switch and a coarse global
+  daily cap stay on from day one.
+- **Fact-checker model (S6):** the checker must be a different model family from the writer, so it
+  is not DeepSeek. To be chosen when S6 starts.
