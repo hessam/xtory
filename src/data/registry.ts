@@ -103,3 +103,47 @@ export function getReach(dynastyId: string, year: number): Reach {
     concurrentDynastyIds: [...others].sort(),
   };
 }
+
+// ── Ranking & per-region views (used by the map) ─────────────────────────────
+
+/** Higher = stronger hold on a region. Used to pick the dynasty that colours it. */
+export const RELATION_RANK: Record<Relation, number> = {
+  direct: 7, branch: 6, governor: 5, suzerain: 4, vassal: 3, occupation: 2, influence: 1,
+};
+
+/** 0–1 "how firmly held", drives fill opacity (mirrors the legend: direct → influence). */
+export const RELATION_EXTENT: Record<Relation, number> = {
+  direct: 0.9, branch: 0.8, governor: 0.7, suzerain: 0.55, vassal: 0.55, occupation: 0.3, influence: 0.25,
+};
+
+const CONF_RANK: Record<Confidence, number> = { low: 0, medium: 1, high: 2 };
+
+/** Strongest first; ties broken by confidence, then dynasty id (deterministic). */
+export function rankRealms(list: Realm[]): Realm[] {
+  return [...list].sort((a, b) =>
+    RELATION_RANK[b.relation] - RELATION_RANK[a.relation] ||
+    CONF_RANK[b.confidence] - CONF_RANK[a.confidence] ||
+    a.dynastyId.localeCompare(b.dynastyId)
+  );
+}
+
+let cachedYear: number | null = null;
+let cachedByRegion: Map<string, Realm[]> = new Map();
+
+/** regionId → realms in force at `year`, strongest first, one entry per dynasty. Cached for the last year asked. */
+export function getRealmsByRegion(year: number): Map<string, Realm[]> {
+  if (cachedYear === year) return cachedByRegion;
+  const grouped = new Map<string, Realm[]>();
+  for (const r of getRealmsAt(year)) {
+    if (!grouped.has(r.regionId)) grouped.set(r.regionId, []);
+    grouped.get(r.regionId)!.push(r);
+  }
+  const out = new Map<string, Realm[]>();
+  for (const [regionId, list] of grouped) {
+    const seen = new Set<string>();
+    out.set(regionId, rankRealms(list).filter(r => (seen.has(r.dynastyId) ? false : (seen.add(r.dynastyId), true))));
+  }
+  cachedYear = year;
+  cachedByRegion = out;
+  return out;
+}

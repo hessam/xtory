@@ -232,6 +232,16 @@ all read.
 - [ ] `fa` mode: labels, counter, captions fully Persian; RTL correct.
 - [ ] Playwright guardrail suite green; manual phone test on a mid-range Android.
 
+**S2 status (2026-10-28): implemented behind `?ff=fragmentation`, pending owner items**
+- [x] Per-dynasty colours on the Leaflet map (registry-driven; falls back to the old logic for regions with no registry data). `MapLeaflet` `Props` unchanged.
+- [x] Concurrent realms: second realm tinted under the first; one chip per dynasty in every region ruled by ≥2 (names on desktop / zoom ≥ 6, dots-only on small zoom); tap a chip → reach lens.
+- [x] HUD counter ("18 dynasties ruling · 1040 AD", Persian digits in `fa`) with a tap-through list; counter is tested equal to the realms drawn for 6 sampled years.
+- [x] Reach lens: dims everything the dynasty didn't hold; caption "X held N of 12 regions in Y — alongside A, B +k" (en/fa). Triggered from chips, the counter list, or the desktop legend.
+- [x] Legend is contextual (only dynasties ruling now) in fragmentation mode; the old family legend is hidden on mobile in this mode.
+- [x] 8 new unit tests + 5 e2e tests (desktop + mobile); full suite 51 unit / 28 e2e green on a fresh build.
+- Still to do before turning the flag on by default (owner): manual phone check on a mid-range Android; native review of Persian strings; decide whether chips at ~1750 (41 dynasties) need a cap/clustering — chips already cap at 3–4 per region with "+N".
+- Known limits: lens is triggered from dynasties only (not yet from ruler cards); the lens is not cleared automatically when the year changes (caption then says "not active in <year>"); hover recolour on desktop is the pre-existing 1.5× opacity rule.
+
 ---
 
 ## Slice 3 — Board renderer spike & art direction (decision slice)
@@ -240,12 +250,7 @@ all read.
 **Size:** M · **Depends on:** S1 · **Flag:** `ff_board_spike` (preview only)
 
 **Scope**
-- **Art direction board** (moodboard + 3 static mockups). Two directions to compare:
-  - *A — "Grand strategy, modern":* Paradox / Total War campaign feel. Dark relief terrain, glowing
-    realm borders, large curved realm names written across territory, map modes.
-  - *B — "Living manuscript":* a Persian-miniature / illuminated-manuscript cartography — painted
-    terrain, gold-leaf borders, calligraphic (Nastaliq) realm names in fa. Distinctive; no other
-    history map looks like this. *(Recommended to explore seriously.)*
+- **Art direction: modern Western grand-strategy** (Paradox / Total War campaign feel; decided by the owner). Dark relief-style land, glowing realm borders, large letter-spaced realm names, fog where data is thin, map modes. No Persian-miniature or manuscript styling.
 - **Build-time projection:** `scripts/board/project.ts` projects region and neighbour GeoJSON into
   board coordinates (conic equal-area centred on Iran) — no tiles, no runtime projection.
 - **Realm geometry:** capital-based cells clipped to region polygons (d3-delaunay + turf), merged
@@ -263,11 +268,20 @@ all read.
 three.js "hero" moment can be proposed later as a lazy, capable-device-only extra.
 
 **DoD**
-- [ ] Owner picks art direction A or B (or a blend) from the mockups.
+- [x] Art direction decided by the owner: modern Western grand-strategy.
 - [ ] Decision record `docs/adr/001-board-renderer.md` with measured numbers for both renderers.
 - [ ] Chosen renderer meets: ≥ 50 fps pan on 4× CPU throttle, scrub INP < 200 ms, renderer chunk
       ≤ 150 KB gzip (lazy), terrain first view ≤ 250 KB.
 - [ ] Persian curved labels render correctly (screenshot in the ADR).
+
+**S3 status (2026-10-28): spike done, ADR proposed, one owner check open**
+- [x] `scripts/board/build-board.ts`: Natural Earth 50m land/lakes/rivers + the 12 regions + neighbours, conic equal-area projection, simplified → `src/data/generated/board/` (geometry 54 KB / 20 KB gz, cells 16 KB / 2.4 KB gz). No tiles.
+- [x] Three renderers on one scene model (`src/board/`): SVG, **SVG with composited layers**, PixiJS. Spike page: `?ff=board_spike&renderer=svg|svgl|pixi&year=…&lang=fa` (lazy, not in first load; first-load JS still 189 KB).
+- [x] Measured (sandbox, no GPU): composited SVG 60 fps pan at 4× CPU throttle, scrub p95 68 ms, renderer 1.5 KB gz. Pixi 90.7 KB gz and unmeasurable without a GPU. Details and caveats: `docs/adr/001-board-renderer.md`.
+- [x] Persian labels shape correctly on the board (en/fa screenshot-verified); label collision + one label per dynasty (unit-tested).
+- [ ] **Owner check:** run the spike on a real mid-range Android + iPhone (see ADR) → then ADR 001 moves to Accepted.
+- [ ] Not done in S3 (moved to S4): curved `textPath` labels, relief/terrain, schematic-cell visual treatment, fog art.
+- Honest caveat: realm cells are Voronoi splits of region polygons seeded at anchor cities — *schematic*, because the data has no internal borders.
 
 ---
 
@@ -299,6 +313,19 @@ three.js "hero" moment can be proposed later as a lazy, capable-device-only extr
 - [ ] Fog appears exactly where confidence is low/no data (unit test on snapshot → fog mask).
 - [ ] `fa` labels correct, including curved names; `en`/`fa` toggle swaps labels instantly.
 - [ ] Leaflet, react-leaflet, Thunderforest, tile SW removed from the bundle; budget improves.
+
+**S4 status (2026-10-28): Board v1 built behind `?ff=board`; Leaflet still the default**
+- [x] `MapBoard` (`src/board/`) is a drop-in for `MapLeaflet` (same props, `mapProps.ts`); `App.tsx` swaps it lazily by flag. Layers: base (sea/land/coast glow/rivers/neighbours/ghost extents) → realms → overlay (curved labels, emblems, cities by zoom tier, event/artifact/vazir tokens). Pan/zoom only changes a CSS transform.
+- [x] Realm cells for **any year** computed at runtime (Voronoi seeded at anchor cities, ~1 ms; unit-tested to tile each region), so the whole timeline works, not just sample years.
+- [x] Map modes: Realms · Cultures (family) · Fragmentation (heat + realm count per region) · Terrain. Fog hatch for regions with no data; hatch overlay on low-confidence cells.
+- [x] Camera: drag / wheel (zoom at cursor) / pinch / +,− / reset, eased `flyTo`, clamped to the board, reduced-motion aware; zooms out far enough to frame the plateau on a portrait phone. Reach lens flies to the regions the dynasty held.
+- [x] Procedural emblems per dynasty (tap = reach lens); curved (`textPath`) realm labels, collision-free, en + fa; one counter/HUD shared with Slice 2.
+- [x] **Fixed: App no longer mounts both mobile and desktop layouts** (two maps/timelines + duplicate DOM ids). Verified by a unique-id test.
+- [x] Vazir dots now actually render (the old map was never given the vazir list).
+- [x] Tests: 17 new unit (cells tiling, clipping, camera clamp/frame, projection, emblems), 7 new e2e on desktop + mobile (realms, no duplicate ids, tap → region detail, zoom/reset, drag pan without opening a region, modes, lens, Persian, Leaflet still default). Totals: 77 unit, 46 e2e. First-load JS 189.6 KB; board chunks load only with the flag (MapBoard 8.4 KB + vendor-board 26.7 KB gz).
+- [ ] **Not done, by decision:** realm *morph* between years (flubber) → replaced by fade-in + "border burn" on newly appearing realms; terrain relief; removal of Leaflet / react-leaflet / Thunderforest / tile service worker (only once the flag defaults on and the owner has checked real phones).
+- [ ] **Owner checks before flipping the flag:** (1) phone test on Android + iPhone (drag, pinch, tap, lens, fa); (2) tap targets for events/figures/heritage tokens (e2e does not cover them yet); (3) decide whether schematic cells need an on-map "approximate borders" note.
+- Known limits: cells are schematic (Voronoi, see S3 caveat); regions with more realms than seeds (8) hide the weakest realm's cell (still counted); label collision is computed once at overview zoom.
 
 ---
 
@@ -529,7 +556,7 @@ safe area for Telegram/X/WhatsApp crops.
 | D1 | Add a backend (changes the README's "no server, no database" stance) | **Yes** — Vercel Functions + Postgres (e.g. Neon) + Redis (e.g. Upstash); static core still works without it |
 | D2 | AI provider and monthly budget | OpenRouter, a cheap writer model + a different-family checker model; set a monthly cap (you choose the amount) |
 | D3 | Who reviews facts | You (owner) via `/admin/review`, with export to git; add trusted reviewers later |
-| D4 | Art direction | Mock up both in S3; I recommend seriously exploring **B — Living manuscript** |
+| D4 | Art direction | **DECIDED: modern Western grand-strategy** (owner, 2026-10-28). No Persian-miniature / manuscript direction. |
 | D5 | Leaderboard visibility | Public, nickname-only, opt-in to appear (default hidden until a nickname is set) |
 | D6 | Thunderforest key | Rotate now (S0); tiles removed entirely in S4 |
 | D7 | Journey vs Explore as default landing | Journey default once S11 ships; until then, Explore with the counter + discovery |

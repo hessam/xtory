@@ -20,9 +20,11 @@ import { ContextStrip } from './components/ContextStrip';
 import { ByokGate } from './components/ByokGate';
 import { Vazir } from './data/vazirs';
 import { pushToDataLayer, markAIUsed } from './services/tagManager';
+import { isFlagOn } from './lib/flags';
 
 // Heavy components — lazy loaded so they never block first paint
-const Map        = lazy(() => import('./components/MapLeaflet'));
+// ff_board swaps the Leaflet map for the strategy-game board (same props)
+const Map        = lazy(() => isFlagOn('board') ? import('./board/MapBoard') : import('./components/MapLeaflet'));
 const Timeline   = lazy(() => import('./components/Timeline').then(m => ({ default: m.Timeline })));
 const EventsPanel = lazy(() => import('./components/EventsPanel').then(m => ({ default: m.EventsPanel })));
 const BottomSheet = lazy(() => import('./components/BottomSheet').then(m => ({ default: m.BottomSheet })));
@@ -34,6 +36,8 @@ const SupportModal  = lazy(() => import('./components/SupportModal').then(m => (
 const SearchModal   = lazy(() => import('./components/SearchModal').then(m => ({ default: m.SearchModal })));
 const QuizModal     = lazy(() => import('./components/QuizModal').then(m => ({ default: m.QuizModal })));
 const IntroAnimation = lazy(() => import('./components/IntroAnimation'));
+// Pulls in the dynasty registry data — keep it out of the first-load bundle
+const ActiveDynastyList = lazy(() => import('./components/fragmentation/ActiveDynastyList').then(m => ({ default: m.ActiveDynastyList })));
 
 export default function App() {
   const [year, setYear] = useState<number>(-500);
@@ -78,6 +82,15 @@ export default function App() {
   const [aiError, setAiError] = useState<string | null>(null);
   const [introComplete, setIntroComplete] = useState(() => typeof window !== 'undefined' ? !!localStorage.getItem('atlas_intro_seen') : false);
   const [showExtentTooltip, setShowExtentTooltip] = useState(false);
+  // Mount ONE layout (was: both, hidden with CSS → two maps/timelines running and duplicated DOM ids). Matches Tailwind `sm`.
+  const [isDesktop, setIsDesktop] = useState(() => typeof window !== 'undefined' && window.matchMedia('(min-width: 640px)').matches);
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 640px)');
+    const on = () => setIsDesktop(mq.matches);
+    mq.addEventListener('change', on);
+    return () => mq.removeEventListener('change', on);
+  }, []);
+  const fragOn = useMemo(() => isFlagOn('fragmentation') || isFlagOn('board'), []);
 
   // Auto-dismiss AI error after 6 seconds
   useEffect(() => {
@@ -417,6 +430,7 @@ export default function App() {
           MOBILE LAYOUT  (flex column, no absolute children compete)
           max-width: 640px (sm breakpoint)
           ================================================================ */}
+      {!isDesktop && (
       <div className="sm:hidden relative flex flex-col w-full h-full overflow-hidden" id="app-mobile-container">
 
         {/* ── Top Bar  z-40, height 48px + safe area ─────────────────── */}
@@ -563,11 +577,13 @@ export default function App() {
 
 
       </div>
+      )}
 
       {/* ════════════════════════════════════════════════════════════════════
           DESKTOP LAYOUT  (sm+, unchanged from before)
           All children are absolute/overlapping like before
           ================================================================ */}
+      {isDesktop && (
       <div className="hidden sm:flex flex-col w-full h-full overflow-hidden">
 
         {/* Floating Header */}
@@ -672,7 +688,9 @@ export default function App() {
 
                 <div className="flex flex-col gap-2.5">
                   {/* Simple/Detailed Toggle Content */}
-                  {legendMode === 'simple' ? (
+                  {fragOn ? (
+                    <Suspense fallback={null}><ActiveDynastyList year={mapYear} lang={lang} compact /></Suspense>
+                  ) : legendMode === 'simple' ? (
                     <>
                       <LegendItem colors={['persian']} label={{ en: 'Persian/Iranian', fa: 'ایرانی/پارسی' }} lang={lang} />
                       <LegendItem colors={['arab', 'greek', 'foreign', 'semitic']} label={{ en: 'Caliphate/Foreign', fa: 'خلافت/خارجی' }} lang={lang} />
@@ -695,14 +713,14 @@ export default function App() {
                 </div>
 
                 {/* Toggle Button */}
-                <button
+                {!fragOn && <button
                   onClick={() => setLegendMode(m => m === 'simple' ? 'detailed' : 'simple')}
                   className="text-[10px] text-indigo-400 hover:text-indigo-300 calm-transition text-left underline"
                 >
                   {legendMode === 'simple'
                     ? (lang === 'en' ? 'Detailed View ↓' : 'نمای دقیق ↓')
                     : (lang === 'en' ? 'Simplified View ↑' : 'نمای ساده ↑')}
-                </button>
+                </button>}
 
                 {/* MAP DOTS Key */}
                 <div className="mt-4 flex flex-col gap-2">
@@ -915,6 +933,7 @@ export default function App() {
           </div>
         </div>
       </div>
+      )}
 
       {/* ── Shared modals (appear on both layouts) ───────────────────────── */}
       <Suspense fallback={null}>
