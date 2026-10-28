@@ -143,12 +143,12 @@ export const QuizModal: React.FC<QuizModalProps> = ({
     const bestQuestion = questions.find(q => q.answer !== 'TRUE') || questions[0];
     if (!bestQuestion) return;
     const text = lang === 'en' 
-      ? `I scored ${score}/5 on an Xtory history challenge! I learned that "${bestQuestion.myth}" is actually false. The real story is wild. Test yourself → https://xtroy.sbs`
-      : `در چالش تاریخی اکس‌توری ${score} از ۵ گرفتم! تازه فهمیدم که "${bestQuestion.myth_fa}" درست نیست. داستان واقعی خیلی جالب‌تره. تو هم امتحان کن ← https://xtroy.sbs`;
+      ? `I scored ${score}/5 on an Xtory history challenge! I learned that "${bestQuestion.myth}" is actually false. The real story is wild. Test yourself → https://xtory.sbs`
+      : `در چالش تاریخی اکس‌توری ${score} از ۵ گرفتم! تازه فهمیدم که "${bestQuestion.myth_fa}" درست نیست. داستان واقعی خیلی جالب‌تره. تو هم امتحان کن ← https://xtory.sbs`;
     
     const url = platform === 'twitter' 
       ? `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`
-      : `https://t.me/share/url?url=https://xtroy.sbs&text=${encodeURIComponent(text)}`;
+      : `https://t.me/share/url?url=https://xtory.sbs&text=${encodeURIComponent(text)}`;
     
     window.open(url, '_blank');
   };

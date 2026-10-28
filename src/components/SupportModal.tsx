@@ -45,7 +45,7 @@ export const SupportModal: React.FC<SupportModalProps> = ({ onClose, lang }) => 
   };
 
   const [linkCopied, setLinkCopied] = useState(false);
-  const shareUrl = "https://xtroy.sbs";
+  const shareUrl = "https://xtory.sbs";
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(shareUrl);

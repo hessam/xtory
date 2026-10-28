@@ -210,9 +210,13 @@ export default function App() {
 
       });
 
+      // Cached AI results come back with the same ids, so skip events already added
+      const knownIds = new Set(prev.events.map(e => e.id));
+      const freshEvents = newEvents.filter(e => !knownIds.has(e.id));
+
       return {
         ...prev,
-        events: [...prev.events, ...newEvents],
+        events: [...prev.events, ...freshEvents],
         rulers: { ...prev.rulers, ...newRulers },
         dynasties: { ...prev.dynasties, ...newDynasties }
       };
