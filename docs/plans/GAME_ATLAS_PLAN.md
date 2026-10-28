@@ -416,6 +416,17 @@ fact_reviews(fact_id, reviewer, verdict, notes, at)   fact_reports(fact_id, prof
 - [ ] Deterministic checker rejects a planted wrong age in a test.
 - [ ] Review queue works end-to-end; export produces valid JSON; verified facts load with no backend.
 
+**S6 status (2026-10-28): engine built and tested offline; 3 owner actions open**
+- [x] **249 computed facts** (no AI; 210 verified, 39 held `unverified` until their source dates are confirmed): reign lengths/extremes, concurrency counts/peak/trough/jumps, per-region fragmentation peaks, dynasty reach, dynasty overlaps, ages and contemporaries. Bilingual, each with `derivedFrom` + sources; 20th century excluded (sensitive-era rule). `data/facts/SPOT_CHECK.md` = 20 sampled facts with raw inputs; a unit test re-derives the same families with independent code.
+- [x] **Yazdgerd III is a computed fact** ("lived about 27 years", "took power at about 8") from dates, not AI — held back as `unverified` until the dates in `data/facts/lives.json` are confirmed (owner or Wikidata).
+- [x] **Deterministic checker** rejects a planted wrong age (also wrong reign length / birth / death year / English-vs-Persian number mismatch); proven in unit tests and over real HTTP.
+- [x] **AI facts pipeline** `POST /api/facts/dig`: writer (bilingual, sources required) → arithmetic → judge from a *different vendor* → number-aware dedupe → store; stored facts served first, writer at most once per entity per day. Fails closed (no checker ⇒ nothing AI-written is shown).
+- [x] **Guardrails enforced in code:** rejected/unsupported never shown; ai_checked shown with badge; no source ⇒ cannot be verified; sensitive era ⇒ human first.
+- [x] **Review queue** `#/admin/review` (ordered by times found, checks and verdict visible, approve / edit / reject / dispute / reopen, reported list, validated Export → `data/facts/verified/ai.json`); `npm run facts:export`. **User reports** pull a fact back to review at a threshold; rejecting a verified fact writes `points_revoked` for Slice 8.
+- [x] Static facts load with **no backend** (`staticFacts()`); tests: 56 new unit (facts model/check/computed/loader + 18 server flow tests) + 5 e2e for the review page. CI: `facts:check`, `api:check`.
+- [ ] **Owner:** confirm the dates in `data/facts/lives.json` (Yazdgerd III first) or unblock Wikidata + add QIDs; **set `AI_CHECKER_MODEL`** (non-DeepSeek) or no AI fact will ever show; native review of Persian wording.
+- [ ] Not verified against real OpenRouter/Upstash. Facts are not yet displayed in the app (Slice 7). Deviations: Redis not Postgres (git export is the durable record). See `docs/adr/003-fact-engine.md`.
+
 ---
 
 ## Slice 7 — Discovery UX: hidden facts on the map

@@ -193,10 +193,11 @@ describe('mechanical guards (null beats a fabrication)', () => {
     expect(d.rulerNameEn).toBe('Someone'); expect(d.rulerReignStart).toBeNull(); expect(d.rulerReignEnd).toBeNull();
   });
   it('dig_deeper: a fact without a source is dropped', async () => {
-    const out = { facts: [{ hook: 'a', claim: 'b', confidence: 'high', sources: [] }, { hook: 'c', claim: 'd', confidence: 'medium', sources: ['Tabari, Tarikh'] }] };
+    const f = (hook: string, sources: string[]) => ({ hookEn: hook, hookFa: 'ه', claimEn: 'c', claimFa: 'ک', confidence: 'high', sources });
+    const out = { facts: [f('a', []), f('c', ['Tabari, Tarikh'])] };
     const s = setup({ reply: () => new Response(JSON.stringify(orBody(out)), { status: 200 }) });
     const d = (await (await ask(s.deps, 'dig_deeper', { kind: 'ruler', name: 'Yazdgerd III' })).json()).data;
-    expect(d.facts).toHaveLength(1); expect(d.facts[0].hook).toBe('c');
+    expect(d.facts).toHaveLength(1); expect(d.facts[0].hookEn).toBe('c');
   });
   it('year_dynasties: unknown regions are dropped; prompt carries the curated dynasties for that year', async () => {
     const item = { dynastyNameEn: 'Buyid Dynasty', dynastyNameFa: 'آل بویه', dynastyColorFamily: 'persian', dynastyClassification: 'Dynasty', capitalCityEn: 'Rayy', capitalCityFa: 'ری', dynastyStartYear: 934, dynastyEndYear: 1062, regionId: 'jibal', status: 'Direct Control', confidence: 'high' };

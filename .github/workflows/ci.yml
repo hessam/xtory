@@ -17,6 +17,7 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run api:check        # deployed function bundles must match server/ sources
+      - run: npm run facts:check      # computed facts must match the generator
       - run: npm run registry:check   # generated registry must match the curated data
       - run: npm test
       - run: npm run build

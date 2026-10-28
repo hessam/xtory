@@ -1017,7 +1017,21 @@ var digSchema = {
     facts: {
       type: "array",
       maxItems: 3,
-      items: { type: "object", properties: { hook: { type: "string", maxLength: 140 }, claim: { type: "string", maxLength: 400 }, context: { type: "string", maxLength: 500 }, confidence: { type: "string", enum: ["high", "medium", "low"] }, sources: { type: "array", items: S, maxItems: 4 } }, required: ["hook", "claim", "confidence", "sources"] }
+      items: {
+        type: "object",
+        properties: {
+          hookEn: { type: "string", maxLength: 140 },
+          hookFa: { type: "string", maxLength: 200 },
+          claimEn: { type: "string", maxLength: 400 },
+          claimFa: { type: "string", maxLength: 600 },
+          contextEn: { type: "string", maxLength: 500 },
+          contextFa: { type: "string", maxLength: 700 },
+          year: { type: "integer", nullable: true },
+          confidence: { type: "string", enum: ["high", "medium", "low"] },
+          sources: { type: "array", items: S, maxItems: 4 }
+        },
+        required: ["hookEn", "hookFa", "claimEn", "claimFa", "confidence", "sources"]
+      }
     }
   },
   required: ["facts"]
@@ -1028,15 +1042,15 @@ var digDeeper = {
     const p = obj(raw, ["kind", "name", "year", "context"]);
     return { kind: oneOf(p.kind, "kind", DIG_KINDS), name: str(p.name, "name", 120), year: p.year === void 0 ? void 0 : year(p.year), context: p.context === void 0 ? void 0 : str(p.context, "context", 300) };
   },
-  cacheKey: (p, lang) => `${PROMPT_VERSION}|dig_deeper|${p.kind}|${p.name.toLowerCase()}|${p.year ?? ""}|${lang}`,
-  maxTokens: 900,
-  build: (p, lang) => ({
+  cacheKey: (p) => `${PROMPT_VERSION}|dig_deeper|${p.kind}|${p.name.toLowerCase()}|${p.year ?? ""}`,
+  maxTokens: 1500,
+  build: (p) => ({
     system: SYSTEM(digSchema),
     schema: digSchema,
     prompt: `Find up to 3 SURPRISING but well-documented facts that most people do not know about this ${p.kind}: "${p.name}"${p.year !== void 0 ? ` (around ${yearLabel(p.year)})` : ""}.${p.context ? `
 Context: ${p.context}` : ""}
-Write in ${lang === "en" ? "English" : "Persian (Farsi)"}. Good facts are specific and checkable (ages, dates, numbers, who-ruled-while-whom, odd consequences) \u2014 not famous textbook lines.
-For each: "hook" (one short, striking sentence), "claim" (the precise fact), optional "context" (1\u20132 sentences), "confidence", and "sources" (real works or well-known references you are sure exist).
+Write every text field in BOTH English (\u2026En) and Persian (\u2026Fa); the two versions must say exactly the same thing. Good facts are specific and checkable (ages, dates, numbers, who-ruled-while-whom, odd consequences) \u2014 not famous textbook lines.
+For each: "hook" (one short, striking sentence), "claim" (the precise fact, with its numbers), optional "context" (1\u20132 sentences), "year" (the year the fact is about, negative for BC, or null), "confidence", and "sources" (real works or well-known references you are sure exist).
 If you are not confident of any fact, return {"facts": []}. Never invent a source.`
   }),
   post: (d) => ({ facts: (d.facts ?? []).filter((f) => f.sources && f.sources.length > 0) })
@@ -1080,6 +1094,8 @@ function loadConfig(env) {
     allowedOrigins: (env.AI_ALLOWED_ORIGINS || "").split(",").map((s) => s.trim()).filter(Boolean),
     hashSalt: env.AI_HASH_SALT || void 0,
     adminToken: env.AI_ADMIN_TOKEN || void 0,
+    checkerModel: env.AI_CHECKER_MODEL || void 0,
+    factReportThreshold: num(env.AI_FACT_REPORT_THRESHOLD, 2),
     upstash: env.UPSTASH_REDIS_REST_URL && env.UPSTASH_REDIS_REST_TOKEN ? { url: env.UPSTASH_REDIS_REST_URL, token: env.UPSTASH_REDIS_REST_TOKEN } : void 0,
     isProduction: env.VERCEL_ENV === "production" || env.NODE_ENV === "production",
     referer: env.AI_REFERER || "https://xtory.sbs"
@@ -1170,6 +1186,40 @@ async function chatJson(opts) {
   }
 }
 
+// server/ai/run.ts
+var InvalidOutputError = class extends Error {
+  constructor(tokensIn, tokensOut, problems) {
+    super("invalid_model_output");
+    this.tokensIn = tokensIn;
+    this.tokensOut = tokensOut;
+    this.problems = problems;
+  }
+};
+async function runStructured(cfg, built, opts) {
+  const wire = wrapRoot(built.schema);
+  let tokensIn = 0, tokensOut = 0, problems = [], prompt = built.prompt;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const r = await chatJson({ apiKey: cfg.apiKey, model: opts.model, system: built.system, prompt, maxTokens: opts.maxTokens, temperature: cfg.temperature, timeoutMs: cfg.timeoutMs, referer: cfg.referer, fetchImpl: opts.fetchImpl });
+    tokensIn += r.tokensIn;
+    tokensOut += r.tokensOut;
+    let parsed;
+    try {
+      parsed = JSON.parse(r.text);
+    } catch {
+      problems = ["output was not valid JSON"];
+      parsed = void 0;
+    }
+    if (parsed !== void 0) {
+      problems = validate(parsed, wire);
+      if (problems.length === 0) return { data: built.schema.type === "array" ? parsed.items : parsed, model: r.model, tokensIn, tokensOut };
+    }
+    prompt = `${built.prompt}
+
+Your previous answer was rejected: ${problems.slice(0, 4).join("; ")}. Return ONLY corrected JSON that matches the schema.`;
+  }
+  throw new InvalidOutputError(tokensIn, tokensOut, problems);
+}
+
 // server/ai/usage.ts
 var TOKEN_THRESHOLDS = [1e3, 5e3, 1e4, 25e3, 5e4, 1e5, 25e4];
 var TTL = 90 * 86400;
@@ -1204,6 +1254,8 @@ var MemoryStore = class {
     this.now = now;
     this.durable = false;
     this.m = /* @__PURE__ */ new Map();
+    this.sets = /* @__PURE__ */ new Map();
+    this.zsets = /* @__PURE__ */ new Map();
   }
   live(key) {
     const e = this.m.get(key);
@@ -1232,6 +1284,48 @@ var MemoryStore = class {
   /** test helper */
   get size() {
     return this.m.size;
+  }
+  async sadd(key, member) {
+    const s = this.sets.get(key) ?? /* @__PURE__ */ new Set();
+    this.sets.set(key, s);
+    const had = s.has(member);
+    s.add(member);
+    return !had;
+  }
+  async smembers(key) {
+    return [...this.sets.get(key) ?? []];
+  }
+  async srem(key, member) {
+    this.sets.get(key)?.delete(member);
+  }
+  z(key) {
+    const z = this.zsets.get(key) ?? /* @__PURE__ */ new Map();
+    this.zsets.set(key, z);
+    return z;
+  }
+  async zadd(key, score, member) {
+    this.z(key).set(member, score);
+  }
+  async zincrby(key, by, member) {
+    const z = this.z(key);
+    const v = (z.get(member) ?? 0) + by;
+    z.set(member, v);
+    return v;
+  }
+  async zrem(key, member) {
+    this.zsets.get(key)?.delete(member);
+  }
+  async zrevrange(key, start, stop) {
+    const all = [...this.zsets.get(key) ?? []].map(([member, score]) => ({ member, score })).sort((a, b) => b.score - a.score || a.member.localeCompare(b.member));
+    return all.slice(start, stop < 0 ? void 0 : stop + 1);
+  }
+  async zcard(key) {
+    return this.zsets.get(key)?.size ?? 0;
+  }
+  async del(key) {
+    this.m.delete(key);
+    this.sets.delete(key);
+    this.zsets.delete(key);
   }
 };
 var UpstashStore = class {
@@ -1266,6 +1360,41 @@ var UpstashStore = class {
   }
   async set(key, value, ttlSec) {
     await this.pipeline([["SET", key, value, "EX", ttlSec]]);
+  }
+  async sadd(key, member) {
+    const [n] = await this.pipeline([["SADD", key, member]]);
+    return Number(n) === 1;
+  }
+  async smembers(key) {
+    const [r] = await this.pipeline([["SMEMBERS", key]]);
+    return r ?? [];
+  }
+  async srem(key, member) {
+    await this.pipeline([["SREM", key, member]]);
+  }
+  async zadd(key, score, member) {
+    await this.pipeline([["ZADD", key, score, member]]);
+  }
+  async zincrby(key, by, member) {
+    const [v] = await this.pipeline([["ZINCRBY", key, by, member]]);
+    return Number(v);
+  }
+  async zrem(key, member) {
+    await this.pipeline([["ZREM", key, member]]);
+  }
+  async zrevrange(key, start, stop) {
+    const [r] = await this.pipeline([["ZREVRANGE", key, start, stop, "WITHSCORES"]]);
+    const flat = r ?? [];
+    const out = [];
+    for (let i = 0; i < flat.length; i += 2) out.push({ member: flat[i], score: Number(flat[i + 1]) });
+    return out;
+  }
+  async zcard(key) {
+    const [n] = await this.pipeline([["ZCARD", key]]);
+    return Number(n);
+  }
+  async del(key) {
+    await this.pipeline([["DEL", key]]);
   }
 };
 
@@ -1354,36 +1483,8 @@ async function handleAsk(req, deps) {
     if (!budget.ok) return denied(budget);
     const run = async () => {
       const built = def.build(params, lang);
-      const wire = wrapRoot(built.schema);
-      const model = cfg.models[body.task];
-      let tokensIn = 0, tokensOut = 0, problems = [], prompt = built.prompt;
-      for (let attempt = 0; attempt < 2; attempt++) {
-        const r = await chatJson({ apiKey: cfg.apiKey, model, system: built.system, prompt, maxTokens: def.maxTokens, temperature: cfg.temperature, timeoutMs: cfg.timeoutMs, referer: cfg.referer, fetchImpl: deps.fetchImpl });
-        tokensIn += r.tokensIn;
-        tokensOut += r.tokensOut;
-        let parsed;
-        try {
-          parsed = JSON.parse(r.text);
-        } catch {
-          problems = ["output was not valid JSON"];
-          parsed = void 0;
-        }
-        if (parsed !== void 0) {
-          problems = validate(parsed, wire);
-          if (problems.length === 0) {
-            const data = built.schema.type === "array" ? parsed.items : parsed;
-            return { data: def.post ? def.post(data, params) : data, model: r.model, tokensIn, tokensOut };
-          }
-        }
-        prompt = `${built.prompt}
-
-Your previous answer was rejected: ${problems.slice(0, 4).join("; ")}. Return ONLY corrected JSON that matches the schema.`;
-      }
-      const err = new Error("invalid_model_output");
-      err.tokensIn = tokensIn;
-      err.tokensOut = tokensOut;
-      err.problems = problems;
-      throw err;
+      const r = await runStructured(cfg, built, { model: cfg.models[body.task], maxTokens: def.maxTokens, fetchImpl: deps.fetchImpl });
+      return { data: def.post ? def.post(r.data, params) : r.data, model: r.model, tokensIn: r.tokensIn, tokensOut: r.tokensOut };
     };
     let promise = cacheId ? inflight.get(cacheId) : void 0;
     const leader = !promise;
@@ -1404,7 +1505,7 @@ Your previous answer was rejected: ${problems.slice(0, 4).join("; ")}. Return ON
       await record("miss", 0, 0, false, `upstream_${e.kind}`);
       return e.kind === "rate_limited" || e.kind === "payment" ? fail(503, "ai_busy", {}, { "Retry-After": "30" }) : fail(502, "upstream_error", { kind: e.kind });
     }
-    if (e?.message === "invalid_model_output") {
+    if (e instanceof InvalidOutputError) {
       await record("miss", e.tokensIn ?? 0, e.tokensOut ?? 0, false, "invalid_output");
       return fail(422, "invalid_model_output");
     }

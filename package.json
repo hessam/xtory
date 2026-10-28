@@ -17,7 +17,11 @@
     "registry:check": "npm run registry:build && git diff --exit-code -- src/data/generated",
     "registry:wikidata": "tsx scripts/registry/enrich-wikidata.ts",
     "api:build": "node scripts/build-api.mjs",
-    "api:check": "npm run api:build && git diff --exit-code -- api"
+    "api:check": "npm run api:build && git diff --exit-code -- api",
+    "facts:build": "tsx scripts/facts/build-computed.ts",
+    "facts:check": "npm run facts:build && git diff --exit-code -- src/data/generated/facts.computed.json",
+    "facts:export": "tsx scripts/facts/export-verified.ts",
+    "facts:spotcheck": "tsx scripts/facts/spot-check.ts"
   },
   "dependencies": {
     "@google/genai": "^1.29.0",

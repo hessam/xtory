@@ -47,7 +47,7 @@ export interface UsageReport {
 export async function readUsage(store: Store, day: string): Promise<UsageReport> {
   const n = async (key: string) => Number((await store.get(key)) ?? 0);
   const tasks: UsageReport['tasks'] = {};
-  for (const t of TASK_IDS) {
+  for (const t of [...TASK_IDS, 'fact_check']) {
     const [requests, hits, errors, tin, tout] = await Promise.all([n(`u:${day}:${t}:req`), n(`u:${day}:${t}:hit`), n(`u:${day}:${t}:err`), n(`u:${day}:${t}:in`), n(`u:${day}:${t}:out`)]);
     if (!requests) continue;
     const misses = Math.max(1, requests - hits);

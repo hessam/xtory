@@ -11,6 +11,9 @@ import { isFlagOn } from './lib/flags';
 // Slice 3 spike page, loaded only when ?ff=board_spike
 const BoardSpike = lazy(() => import('./board/BoardSpike'));
 const spike = isFlagOn('board_spike');
+// Owner-only review tool (#/admin/review), loaded on demand so it never touches the main bundle
+const ReviewPage = lazy(() => import('./admin/ReviewPage'));
+const adminRoute = typeof window !== 'undefined' && window.location.hash.startsWith('#/admin/review');
 
 // Initialize Microsoft Clarity (deferred, non-blocking)
 initClarity();
@@ -27,7 +30,7 @@ if ('serviceWorker' in navigator) {
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ApiKeyProvider>
-      {spike ? <Suspense fallback={null}><BoardSpike /></Suspense> : <><App /><Analytics /><SpeedInsights /></>}
+      {adminRoute ? <Suspense fallback={null}><ReviewPage /></Suspense> : spike ? <Suspense fallback={null}><BoardSpike /></Suspense> : <><App /><Analytics /><SpeedInsights /></>}
     </ApiKeyProvider>
   </StrictMode>,
 );

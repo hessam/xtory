@@ -23,6 +23,10 @@ export interface AiConfig {
   hashSalt?: string;
   adminToken?: string;
   upstash?: { url: string; token: string };
+  /** second model that judges AI facts; must be a different vendor/family than the writer (enforced by `checkerUsable`) */
+  checkerModel?: string;
+  /** reports from distinct devices before a visible fact is pulled back for review */
+  factReportThreshold: number;
   isProduction: boolean;
   referer: string;
 }
@@ -54,8 +58,18 @@ export function loadConfig(env: Record<string, string | undefined>): AiConfig {
     allowedOrigins: (env.AI_ALLOWED_ORIGINS || '').split(',').map(s => s.trim()).filter(Boolean),
     hashSalt: env.AI_HASH_SALT || undefined,
     adminToken: env.AI_ADMIN_TOKEN || undefined,
+    checkerModel: env.AI_CHECKER_MODEL || undefined,
+    factReportThreshold: num(env.AI_FACT_REPORT_THRESHOLD, 2),
     upstash: env.UPSTASH_REDIS_REST_URL && env.UPSTASH_REDIS_REST_TOKEN ? { url: env.UPSTASH_REDIS_REST_URL, token: env.UPSTASH_REDIS_REST_TOKEN } : undefined,
     isProduction: env.VERCEL_ENV === 'production' || env.NODE_ENV === 'production',
     referer: env.AI_REFERER || 'https://xtory.sbs',
   };
+}
+
+const vendor = (model: string) => model.split('/')[0].toLowerCase();
+/** The checker must not share a vendor with the writer: a model family grading its own homework is not a check. */
+export function checkerUsable(cfg: AiConfig): { ok: true; model: string } | { ok: false; reason: 'not_configured' | 'same_family' } {
+  if (!cfg.checkerModel) return { ok: false, reason: 'not_configured' };
+  if (vendor(cfg.checkerModel) === vendor(cfg.models.dig_deeper)) return { ok: false, reason: 'same_family' };
+  return { ok: true, model: cfg.checkerModel };
 }

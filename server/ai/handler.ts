@@ -6,12 +6,12 @@
  *   per-device/IP limits → global token budget → model call (+1 repair retry) → validate → post-guards → cache → usage.
  */
 import { TASKS, isTaskId, ParamError, type Lang } from '../../src/ai/tasks.js';
-import { validate, wrapRoot } from '../../src/ai/schema.js';
 import type { AiConfig } from './config.js';
 import { loadConfig } from './config.js';
 import { identify, utcDay } from './identity.js';
 import { checkBudget, checkHitLimit, checkPaidLimits, type LimitDenied } from './limits.js';
-import { chatJson, UpstreamError } from './openrouter.js';
+import { UpstreamError } from './openrouter.js';
+import { runStructured, InvalidOutputError } from './run.js';
 import { recordUsage, readUsage } from './usage.js';
 import type { Store } from './store.js';
 import { MemoryStore, UpstashStore } from './store.js';
@@ -106,24 +106,8 @@ export async function handleAsk(req: Request, deps: Deps): Promise<Response> {
     // 3) model call, de-duplicated per instance so a burst of identical misses pays once
     const run = async () => {
       const built = def.build(params, lang);
-      const wire = wrapRoot(built.schema);
-      const model = cfg.models[body.task as keyof typeof cfg.models];
-      let tokensIn = 0, tokensOut = 0, problems: string[] = [], prompt = built.prompt;
-      for (let attempt = 0; attempt < 2; attempt++) {
-        const r = await chatJson({ apiKey: cfg.apiKey!, model, system: built.system, prompt, maxTokens: def.maxTokens, temperature: cfg.temperature, timeoutMs: cfg.timeoutMs, referer: cfg.referer, fetchImpl: deps.fetchImpl });
-        tokensIn += r.tokensIn; tokensOut += r.tokensOut;
-        let parsed: any;
-        try { parsed = JSON.parse(r.text); } catch { problems = ['output was not valid JSON']; parsed = undefined; }
-        if (parsed !== undefined) {
-          problems = validate(parsed, wire);
-          if (problems.length === 0) {
-            const data = built.schema.type === 'array' ? parsed.items : parsed;
-            return { data: def.post ? def.post(data, params) : data, model: r.model, tokensIn, tokensOut };
-          }
-        }
-        prompt = `${built.prompt}\n\nYour previous answer was rejected: ${problems.slice(0, 4).join('; ')}. Return ONLY corrected JSON that matches the schema.`;
-      }
-      const err: any = new Error('invalid_model_output'); err.tokensIn = tokensIn; err.tokensOut = tokensOut; err.problems = problems; throw err;
+      const r = await runStructured(cfg, built, { model: cfg.models[body.task as keyof typeof cfg.models], maxTokens: def.maxTokens, fetchImpl: deps.fetchImpl });
+      return { data: def.post ? def.post(r.data, params) : r.data, model: r.model, tokensIn: r.tokensIn, tokensOut: r.tokensOut };
     };
     let promise = cacheId ? inflight.get(cacheId) : undefined;
     const leader = !promise;
@@ -138,7 +122,7 @@ export async function handleAsk(req: Request, deps: Deps): Promise<Response> {
       // 429/402 from the provider is OUR capacity problem, not the user's: tell the client to back off / fall back to BYOK.
       return e.kind === 'rate_limited' || e.kind === 'payment' ? fail(503, 'ai_busy', {}, { 'Retry-After': '30' }) : fail(502, 'upstream_error', { kind: e.kind });
     }
-    if (e?.message === 'invalid_model_output') {
+    if (e instanceof InvalidOutputError) {
       await record('miss', e.tokensIn ?? 0, e.tokensOut ?? 0, false, 'invalid_output');
       return fail(422, 'invalid_model_output');
     }

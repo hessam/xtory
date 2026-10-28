@@ -424,6 +424,8 @@ function loadConfig(env) {
     allowedOrigins: (env.AI_ALLOWED_ORIGINS || "").split(",").map((s) => s.trim()).filter(Boolean),
     hashSalt: env.AI_HASH_SALT || void 0,
     adminToken: env.AI_ADMIN_TOKEN || void 0,
+    checkerModel: env.AI_CHECKER_MODEL || void 0,
+    factReportThreshold: num(env.AI_FACT_REPORT_THRESHOLD, 2),
     upstash: env.UPSTASH_REDIS_REST_URL && env.UPSTASH_REDIS_REST_TOKEN ? { url: env.UPSTASH_REDIS_REST_URL, token: env.UPSTASH_REDIS_REST_TOKEN } : void 0,
     isProduction: env.VERCEL_ENV === "production" || env.NODE_ENV === "production",
     referer: env.AI_REFERER || "https://xtory.sbs"
@@ -439,6 +441,8 @@ var MemoryStore = class {
     this.now = now;
     this.durable = false;
     this.m = /* @__PURE__ */ new Map();
+    this.sets = /* @__PURE__ */ new Map();
+    this.zsets = /* @__PURE__ */ new Map();
   }
   live(key) {
     const e = this.m.get(key);
@@ -467,6 +471,48 @@ var MemoryStore = class {
   /** test helper */
   get size() {
     return this.m.size;
+  }
+  async sadd(key, member) {
+    const s = this.sets.get(key) ?? /* @__PURE__ */ new Set();
+    this.sets.set(key, s);
+    const had = s.has(member);
+    s.add(member);
+    return !had;
+  }
+  async smembers(key) {
+    return [...this.sets.get(key) ?? []];
+  }
+  async srem(key, member) {
+    this.sets.get(key)?.delete(member);
+  }
+  z(key) {
+    const z = this.zsets.get(key) ?? /* @__PURE__ */ new Map();
+    this.zsets.set(key, z);
+    return z;
+  }
+  async zadd(key, score, member) {
+    this.z(key).set(member, score);
+  }
+  async zincrby(key, by, member) {
+    const z = this.z(key);
+    const v = (z.get(member) ?? 0) + by;
+    z.set(member, v);
+    return v;
+  }
+  async zrem(key, member) {
+    this.zsets.get(key)?.delete(member);
+  }
+  async zrevrange(key, start, stop) {
+    const all = [...this.zsets.get(key) ?? []].map(([member, score]) => ({ member, score })).sort((a, b) => b.score - a.score || a.member.localeCompare(b.member));
+    return all.slice(start, stop < 0 ? void 0 : stop + 1);
+  }
+  async zcard(key) {
+    return this.zsets.get(key)?.size ?? 0;
+  }
+  async del(key) {
+    this.m.delete(key);
+    this.sets.delete(key);
+    this.zsets.delete(key);
   }
 };
 var UpstashStore = class {
@@ -501,6 +547,41 @@ var UpstashStore = class {
   }
   async set(key, value, ttlSec) {
     await this.pipeline([["SET", key, value, "EX", ttlSec]]);
+  }
+  async sadd(key, member) {
+    const [n] = await this.pipeline([["SADD", key, member]]);
+    return Number(n) === 1;
+  }
+  async smembers(key) {
+    const [r] = await this.pipeline([["SMEMBERS", key]]);
+    return r ?? [];
+  }
+  async srem(key, member) {
+    await this.pipeline([["SREM", key, member]]);
+  }
+  async zadd(key, score, member) {
+    await this.pipeline([["ZADD", key, score, member]]);
+  }
+  async zincrby(key, by, member) {
+    const [v] = await this.pipeline([["ZINCRBY", key, by, member]]);
+    return Number(v);
+  }
+  async zrem(key, member) {
+    await this.pipeline([["ZREM", key, member]]);
+  }
+  async zrevrange(key, start, stop) {
+    const [r] = await this.pipeline([["ZREVRANGE", key, start, stop, "WITHSCORES"]]);
+    const flat = r ?? [];
+    const out = [];
+    for (let i = 0; i < flat.length; i += 2) out.push({ member: flat[i], score: Number(flat[i + 1]) });
+    return out;
+  }
+  async zcard(key) {
+    const [n] = await this.pipeline([["ZCARD", key]]);
+    return Number(n);
+  }
+  async del(key) {
+    await this.pipeline([["DEL", key]]);
   }
 };
 

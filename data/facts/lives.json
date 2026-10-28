@@ -1,0 +1,385 @@
+{
+ "_readme": "Birth/death/reign years used for COMPUTED facts and for the deterministic checker. Entries were seeded by an AI assistant from memory and are NOT confirmed. A computed fact built from an entry is only 'verified' (shown without a badge) once `confirmedBy` is set: 'owner' after you check the dates against the cited sources, or 'wikidata' automatically when `npm run facts:build` finds a Wikidata cache entry (data/registry/wikidata-cache.json, ids in data/registry/ruler_qids.json) that agrees within 1 year. 20th-century people are deliberately excluded (sensitive-era rule).",
+ "lives": [
+  {
+   "id": "yazdgerd_iii",
+   "name": {
+    "en": "Yazdgerd III",
+    "fa": "یزدگرد سوم"
+   },
+   "aliases": [
+    "Yazdegerd III",
+    "Yazdgerd III",
+    "Yazdegerd"
+   ],
+   "born": 624,
+   "died": 651,
+   "sources": [
+    "Encyclopaedia Iranica, 'Yazdgerd III'",
+    "Wikipedia, 'Yazdegerd III'"
+   ],
+   "provenance": "assistant_seed",
+   "reignStart": 632,
+   "reignEnd": 651,
+   "note": "Sasanian king; crowned as a child, killed at Merv in 651."
+  },
+  {
+   "id": "alp_arslan",
+   "name": {
+    "en": "Alp Arslan",
+    "fa": "آلپ ارسلان"
+   },
+   "aliases": [
+    "Alp Arslan"
+   ],
+   "born": 1029,
+   "died": 1072,
+   "sources": [
+    "Encyclopaedia Iranica, 'Alp Arslan'",
+    "Wikipedia, 'Alp Arslan'"
+   ],
+   "provenance": "assistant_seed",
+   "rulerId": "alp_arslan",
+   "reignStart": 1063,
+   "reignEnd": 1072
+  },
+  {
+   "id": "malik_shah_i",
+   "name": {
+    "en": "Malik-Shah I",
+    "fa": "ملکشاه یکم"
+   },
+   "aliases": [
+    "Malik-Shah I",
+    "Malik Shah I",
+    "Malikshah"
+   ],
+   "born": 1055,
+   "died": 1092,
+   "sources": [
+    "Encyclopaedia Iranica, 'Malekšāh'",
+    "Wikipedia, 'Malik-Shah I'"
+   ],
+   "provenance": "assistant_seed",
+   "rulerId": "malik_shah_i",
+   "reignStart": 1072,
+   "reignEnd": 1092
+  },
+  {
+   "id": "timur",
+   "name": {
+    "en": "Timur",
+    "fa": "تیمور"
+   },
+   "aliases": [
+    "Timur",
+    "Tamerlane",
+    "Amir Timur"
+   ],
+   "born": 1336,
+   "died": 1405,
+   "sources": [
+    "Encyclopaedia Iranica, 'Timur'",
+    "Wikipedia, 'Timur'"
+   ],
+   "provenance": "assistant_seed",
+   "rulerId": "timur",
+   "reignStart": 1370,
+   "reignEnd": 1405
+  },
+  {
+   "id": "ismail_i",
+   "name": {
+    "en": "Ismail I",
+    "fa": "شاه اسماعیل یکم"
+   },
+   "aliases": [
+    "Ismail I",
+    "Shah Ismail",
+    "Shah Ismail I"
+   ],
+   "born": 1487,
+   "died": 1524,
+   "sources": [
+    "Encyclopaedia Iranica, 'Esmāʿil I Ṣafawī'",
+    "Wikipedia, 'Ismail I'"
+   ],
+   "provenance": "assistant_seed",
+   "rulerId": "ismail_i",
+   "reignStart": 1501,
+   "reignEnd": 1524,
+   "note": "Crowned at Tabriz in 1501."
+  },
+  {
+   "id": "abbas_i",
+   "name": {
+    "en": "Abbas I",
+    "fa": "شاه عباس یکم"
+   },
+   "aliases": [
+    "Abbas I",
+    "Shah Abbas",
+    "Shah Abbas the Great"
+   ],
+   "born": 1571,
+   "died": 1629,
+   "sources": [
+    "Encyclopaedia Iranica, 'ʿAbbās I'",
+    "Wikipedia, 'Abbas I of Persia'"
+   ],
+   "provenance": "assistant_seed",
+   "rulerId": "abbas_i",
+   "reignStart": 1588,
+   "reignEnd": 1629
+  },
+  {
+   "id": "nader_shah",
+   "name": {
+    "en": "Nader Shah",
+    "fa": "نادر شاه"
+   },
+   "aliases": [
+    "Nader Shah",
+    "Nadir Shah"
+   ],
+   "born": 1688,
+   "died": 1747,
+   "sources": [
+    "Encyclopaedia Iranica, 'Nāder Shah'",
+    "Wikipedia, 'Nader Shah'"
+   ],
+   "provenance": "assistant_seed",
+   "rulerId": "nader_shah",
+   "reignStart": 1736,
+   "reignEnd": 1747
+  },
+  {
+   "id": "agha_mohammad_khan",
+   "name": {
+    "en": "Agha Mohammad Khan",
+    "fa": "آقامحمدخان"
+   },
+   "aliases": [
+    "Agha Mohammad Khan",
+    "Agha Muhammad Khan"
+   ],
+   "born": 1742,
+   "died": 1797,
+   "sources": [
+    "Encyclopaedia Iranica, 'Āḡā Moḥammad Khan Qājār'",
+    "Wikipedia, 'Agha Mohammad Khan Qajar'"
+   ],
+   "provenance": "assistant_seed",
+   "rulerId": "agha_mohammad_khan",
+   "reignStart": 1789,
+   "reignEnd": 1797
+  },
+  {
+   "id": "naser_al_din_shah",
+   "name": {
+    "en": "Naser al-Din Shah",
+    "fa": "ناصرالدین شاه"
+   },
+   "aliases": [
+    "Naser al-Din Shah",
+    "Nasir al-Din Shah"
+   ],
+   "born": 1831,
+   "died": 1896,
+   "sources": [
+    "Encyclopaedia Iranica, 'Nāṣer-al-Din Shah'",
+    "Wikipedia, 'Naser al-Din Shah Qajar'"
+   ],
+   "provenance": "assistant_seed",
+   "rulerId": "naser_al_din_shah",
+   "reignStart": 1848,
+   "reignEnd": 1896
+  },
+  {
+   "id": "ghazan",
+   "name": {
+    "en": "Ghazan",
+    "fa": "غازان خان"
+   },
+   "aliases": [
+    "Ghazan",
+    "Ghazan Khan",
+    "Mahmud Ghazan"
+   ],
+   "born": 1271,
+   "died": 1304,
+   "sources": [
+    "Encyclopaedia Iranica, 'Ḡāzān Khan'",
+    "Wikipedia, 'Ghazan'"
+   ],
+   "provenance": "assistant_seed",
+   "rulerId": "ghazan",
+   "reignStart": 1295,
+   "reignEnd": 1304
+  },
+  {
+   "id": "mahmud_ghazni",
+   "name": {
+    "en": "Mahmud of Ghazni",
+    "fa": "محمود غزنوی"
+   },
+   "aliases": [
+    "Mahmud of Ghazni",
+    "Mahmud Ghaznavi",
+    "Sultan Mahmud"
+   ],
+   "born": 971,
+   "died": 1030,
+   "sources": [
+    "Encyclopaedia Iranica, 'Maḥmud b. Sebüktegin'",
+    "Wikipedia, 'Mahmud of Ghazni'"
+   ],
+   "provenance": "assistant_seed",
+   "reignStart": 998,
+   "reignEnd": 1030
+  },
+  {
+   "id": "nizam_al_mulk",
+   "name": {
+    "en": "Nizam al-Mulk",
+    "fa": "خواجه نظام‌الملک"
+   },
+   "aliases": [
+    "Nizam al-Mulk",
+    "Nezam al-Molk"
+   ],
+   "born": 1018,
+   "died": 1092,
+   "sources": [
+    "Encyclopaedia Iranica, 'Neẓām-al-Molk'",
+    "Wikipedia, 'Nizam al-Mulk'"
+   ],
+   "provenance": "assistant_seed",
+   "note": "Seljuk vizier; assassinated 1092."
+  },
+  {
+   "id": "ibn_sina",
+   "name": {
+    "en": "Avicenna",
+    "fa": "ابن سینا"
+   },
+   "aliases": [
+    "Avicenna",
+    "Ibn Sina"
+   ],
+   "born": 980,
+   "died": 1037,
+   "sources": [
+    "Encyclopaedia Iranica, 'Avicenna'",
+    "Wikipedia, 'Avicenna'"
+   ],
+   "provenance": "assistant_seed"
+  },
+  {
+   "id": "omar_khayyam",
+   "name": {
+    "en": "Omar Khayyam",
+    "fa": "عمر خیام"
+   },
+   "aliases": [
+    "Omar Khayyam",
+    "Umar Khayyam"
+   ],
+   "born": 1048,
+   "died": 1131,
+   "sources": [
+    "Encyclopaedia Iranica, 'Ḵayyām'",
+    "Wikipedia, 'Omar Khayyam'"
+   ],
+   "provenance": "assistant_seed"
+  },
+  {
+   "id": "rumi",
+   "name": {
+    "en": "Rumi",
+    "fa": "مولانا جلال‌الدین رومی"
+   },
+   "aliases": [
+    "Rumi",
+    "Jalal ad-Din Rumi",
+    "Mevlana"
+   ],
+   "born": 1207,
+   "died": 1273,
+   "sources": [
+    "Encyclopaedia Iranica, 'Jalāl-al-Din Rumi'",
+    "Wikipedia, 'Rumi'"
+   ],
+   "provenance": "assistant_seed"
+  },
+  {
+   "id": "alexander_iii",
+   "name": {
+    "en": "Alexander the Great",
+    "fa": "اسکندر مقدونی"
+   },
+   "aliases": [
+    "Alexander the Great",
+    "Alexander III of Macedon",
+    "Alexander III"
+   ],
+   "born": -356,
+   "died": -323,
+   "sources": [
+    "Wikipedia, 'Alexander the Great'",
+    "Encyclopaedia Iranica, 'Alexander III'"
+   ],
+   "provenance": "assistant_seed",
+   "reignStart": -336,
+   "reignEnd": -323,
+   "note": "Defeated Darius III; the Achaemenid empire fell 330 BC."
+  },
+  {
+   "id": "darius_i",
+   "name": {
+    "en": "Darius I",
+    "fa": "داریوش یکم"
+   },
+   "aliases": [
+    "Darius I",
+    "Darius the Great"
+   ],
+   "born": -550,
+   "died": -486,
+   "sources": [
+    "Wikipedia, 'Darius the Great'",
+    "Encyclopaedia Iranica, 'Darius I'"
+   ],
+   "provenance": "assistant_seed",
+   "rulerId": "darius_i",
+   "reignStart": -522,
+   "reignEnd": -486,
+   "approximate": true,
+   "note": "Birth year approximate (c. 550 BC)."
+  },
+  {
+   "id": "khosrow_i",
+   "name": {
+    "en": "Khosrow I",
+    "fa": "خسرو انوشیروان"
+   },
+   "aliases": [
+    "Khosrow I",
+    "Khosrow Anushirvan",
+    "Chosroes I"
+   ],
+   "born": 501,
+   "died": 579,
+   "sources": [
+    "Wikipedia, 'Khosrow I'",
+    "Encyclopaedia Iranica, 'Anōšīravān'"
+   ],
+   "provenance": "assistant_seed",
+   "rulerId": "khosrow_i",
+   "reignStart": 531,
+   "reignEnd": 579,
+   "approximate": true,
+   "note": "Birth year approximate (c. 501)."
+  }
+ ]
+}

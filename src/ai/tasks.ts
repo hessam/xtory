@@ -265,36 +265,73 @@ Be concise. Only state things you are confident are true.${p.askedMyths.length ?
   }),
 };
 
-// ── 7. dig_deeper: surprising, checkable facts about one thing ───────────────
+// ── 7. dig_deeper: surprising, checkable facts about one thing (candidates for the fact engine) ──
 export const DIG_KINDS = ['ruler', 'dynasty', 'event', 'figure', 'region', 'artifact'] as const;
 const digSchema: JsonSchema = {
   type: 'object',
   properties: {
     facts: {
       type: 'array', maxItems: 3,
-      items: { type: 'object', properties: { hook: { type: 'string', maxLength: 140 }, claim: { type: 'string', maxLength: 400 }, context: { type: 'string', maxLength: 500 }, confidence: { type: 'string', enum: ['high', 'medium', 'low'] }, sources: { type: 'array', items: S, maxItems: 4 } }, required: ['hook', 'claim', 'confidence', 'sources'] },
+      items: {
+        type: 'object',
+        properties: {
+          hookEn: { type: 'string', maxLength: 140 }, hookFa: { type: 'string', maxLength: 200 },
+          claimEn: { type: 'string', maxLength: 400 }, claimFa: { type: 'string', maxLength: 600 },
+          contextEn: { type: 'string', maxLength: 500 }, contextFa: { type: 'string', maxLength: 700 },
+          year: { type: 'integer', nullable: true },
+          confidence: { type: 'string', enum: ['high', 'medium', 'low'] },
+          sources: { type: 'array', items: S, maxItems: 4 },
+        },
+        required: ['hookEn', 'hookFa', 'claimEn', 'claimFa', 'confidence', 'sources'],
+      },
     },
   },
   required: ['facts'],
 };
-interface DigParams { kind: (typeof DIG_KINDS)[number]; name: string; year?: number; context?: string }
+export interface DigParams { kind: (typeof DIG_KINDS)[number]; name: string; year?: number; context?: string }
 const digDeeper: TaskDef<DigParams> = {
   id: 'dig_deeper',
   parse: raw => {
     const p = obj(raw, ['kind', 'name', 'year', 'context']);
     return { kind: oneOf(p.kind, 'kind', DIG_KINDS), name: str(p.name, 'name', 120), year: p.year === undefined ? undefined : year(p.year), context: p.context === undefined ? undefined : str(p.context, 'context', 300) };
   },
-  cacheKey: (p, lang) => `${PROMPT_VERSION}|dig_deeper|${p.kind}|${p.name.toLowerCase()}|${p.year ?? ''}|${lang}`,
-  maxTokens: 900,
-  build: (p, lang) => ({
+  cacheKey: p => `${PROMPT_VERSION}|dig_deeper|${p.kind}|${p.name.toLowerCase()}|${p.year ?? ''}`,
+  maxTokens: 1500,
+  build: p => ({
     system: SYSTEM(digSchema), schema: digSchema,
     prompt: `Find up to 3 SURPRISING but well-documented facts that most people do not know about this ${p.kind}: "${p.name}"${p.year !== undefined ? ` (around ${yearLabel(p.year)})` : ''}.${p.context ? `\nContext: ${p.context}` : ''}
-Write in ${lang === 'en' ? 'English' : 'Persian (Farsi)'}. Good facts are specific and checkable (ages, dates, numbers, who-ruled-while-whom, odd consequences) — not famous textbook lines.
-For each: "hook" (one short, striking sentence), "claim" (the precise fact), optional "context" (1–2 sentences), "confidence", and "sources" (real works or well-known references you are sure exist).
+Write every text field in BOTH English (…En) and Persian (…Fa); the two versions must say exactly the same thing. Good facts are specific and checkable (ages, dates, numbers, who-ruled-while-whom, odd consequences) — not famous textbook lines.
+For each: "hook" (one short, striking sentence), "claim" (the precise fact, with its numbers), optional "context" (1–2 sentences), "year" (the year the fact is about, negative for BC, or null), "confidence", and "sources" (real works or well-known references you are sure exist).
 If you are not confident of any fact, return {"facts": []}. Never invent a source.`,
   }),
   post: d => ({ facts: (d.facts ?? []).filter((f: any) => f.sources && f.sources.length > 0) }), // a fact without a source is dropped
 };
+
+/** Internal (never callable from the browser): second-model judge for a candidate fact. */
+export const factCheckSchema: JsonSchema = {
+  type: 'object',
+  properties: {
+    verdict: { type: 'string', enum: ['supported', 'unsupported', 'uncertain'] },
+    persianMatches: { type: 'boolean' },
+    reason: { type: 'string', maxLength: 300 },
+  },
+  required: ['verdict', 'persianMatches', 'reason'],
+};
+export function buildFactCheck(f: { entity: string; claimEn: string; claimFa: string; sources: string[] }): BuiltTask {
+  return {
+    system: SYSTEM(factCheckSchema), schema: factCheckSchema,
+    prompt: `You are a skeptical fact-checker of history. Judge ONE claim.
+Entity: ${f.entity}
+Claim (English): ${f.claimEn}
+Claim (Persian): ${f.claimFa}
+Cited sources: ${f.sources.join(' | ') || '(none)'}
+
+"verdict": "supported" only if you are confident the claim is accurate in every number and date; "unsupported" if it is wrong, exaggerated or you know a contradicting fact; "uncertain" if you cannot tell. When in doubt choose "uncertain". Do not give the benefit of the doubt.
+"persianMatches": true only if the Persian claim says exactly the same as the English one (same numbers, same meaning).
+"reason": one short sentence.`,
+  };
+}
+export const FACT_CHECK_MAX_TOKENS = 250;
 
 export const TASKS: Record<TaskId, TaskDef> = {
   year_dynasties: yearDynasties, ruler_detail: rulerDetail, events, figures, artifacts, quiz, dig_deeper: digDeeper,
