@@ -7,6 +7,8 @@ import { getAnchorsForYear, formatAnchorsForPrompt } from '../data/historicalDat
 import { events as staticEvents } from '../data/events';
 import { rulers as staticRulers } from '../data/rulers';
 import { QuizQuestion } from '../types/quiz';
+import type { TaskId } from '../ai/tasks';
+import { askServer, AiServerError, serverErrorMessage } from './aiTransport';
 
 const ERA_BOUNDARIES = [
   { id: 'median',        start: -678, end: -550 },
@@ -160,6 +162,7 @@ function formatAIResponseForUI(content: AIContentResult, lang: 'en' | 'fa'): str
 
 function handleAIError(error: any, lang: 'en' | 'fa'): string {
   console.error("AI Service Error:", error);
+  if (error instanceof AiServerError) return serverErrorMessage(error, lang);
   const msg = error?.message || "";
   
   if (msg.includes("429") || msg.toLowerCase().includes("quota") || msg.toLowerCase().includes("limit") || msg.includes("503")) {
@@ -257,6 +260,22 @@ const getAiAsync = async () => {
   if (!aiInstance) throw new Error("API key not set");
   return aiInstance;
 };
+
+// ── Server AI (no user key needed) ─────────────────────────────────────────────
+// A user-supplied key always wins (direct browser → Google). Otherwise, when the server proxy is on, the same
+// features run through typed tasks at /api/ai/ask (see src/ai/tasks.ts); no prompt ever comes from the client.
+/** The map plots these as [lat, lng]; anything outside the atlas (or the old 0-1000 grid values) is dropped, not drawn. */
+const validLatLng = (c: unknown): [number, number] | undefined =>
+  Array.isArray(c) && c.length === 2 && typeof c[0] === 'number' && typeof c[1] === 'number' && c[0] >= 10 && c[0] <= 45 && c[1] >= 24 && c[1] <= 77 ? [c[0], c[1]] : undefined;
+
+let serverAiActive = false;
+export const setServerAiActive = (on: boolean) => { serverAiActive = on; };
+const useServerAi = () => !aiInstance && serverAiActive;
+
+async function generateJson(task: TaskId, params: Record<string, unknown>, lang: 'en' | 'fa', viaGemini: () => Promise<string>): Promise<any> {
+  if (useServerAi()) return askServer(task, params, lang);
+  return JSON.parse(await viaGemini());
+}
 
 export interface DynamicRulerData {
   id: string;
@@ -435,9 +454,10 @@ export async function fetchHistoricalEventsForYear(year: number, lang: 'en' | 'f
   - descriptionEn: A short, 1-2 sentence description in English
   - descriptionFa: A short, 1-2 sentence description in Persian
   - type: Must be exactly one of: "battle", "downfall", "political", "cultural", "universal"
-  - coordinates: An array of two numbers [x, y] representing the approximate location on a map (x: 0-1000, y: 0-600). For example, Anatolia is around [150, 150], Mesopotamia [250, 250], Fars [350, 350], Khorasan [500, 200]. If unknown, omit this field.`;
+  - coordinates: [latitude, longitude] in decimal degrees of the real location (latitude 10-45, longitude 24-77). For example Persepolis is [29.93, 52.89]. If unknown, omit this field.`;
 
   try {
+    const data = (await generateJson('events', { year }, lang, async () => {
     const response = await (await getAiAsync()).models.generateContent({
       model: "gemini-3-flash-preview",
       contents: prompt,
@@ -466,8 +486,8 @@ export async function fetchHistoricalEventsForYear(year: number, lang: 'en' | 'f
       }
     });
     
-    const text = response.text || "[]";
-    const data = JSON.parse(text);
+    return response.text || "[]";
+  }));
     
     const result = data.map((item: any) => ({
       id: `${item.id}_${Date.now()}`,
@@ -475,7 +495,7 @@ export async function fetchHistoricalEventsForYear(year: number, lang: 'en' | 'f
       title: { en: item.titleEn, fa: item.titleFa },
       description: { en: item.descriptionEn, fa: item.descriptionFa },
       type: item.type,
-      coordinates: item.coordinates
+      coordinates: validLatLng(item.coordinates)
     })) as HistoricalEvent[];
 
     setCache(cacheKey, result);
@@ -505,6 +525,7 @@ export async function fetchHistoricalFiguresForYear(year: number, lang: 'en' | '
   }]`;
 
   try {
+    const data = (await generateJson('figures', { year }, lang, async () => {
     const response = await (await getAiAsync()).models.generateContent({
       model: "gemini-3-flash-preview",
       contents: prompt,
@@ -530,8 +551,8 @@ export async function fetchHistoricalFiguresForYear(year: number, lang: 'en' | '
       }
     });
     
-    const text = response.text || "[]";
-    const data = JSON.parse(text);
+    return response.text || "[]";
+  }));
     
     const result = data.map((item: any, index: number) => ({
       id: `ai_figure_${year}_${index}_${Date.now()}`,
@@ -566,11 +587,12 @@ export async function fetchArtifactsForYear(year: number, lang: 'en' | 'fa'): Pr
     "year": number (negative for BC),
     "currentLocationEn": "Current location (e.g., British Museum, Tehran, Isfahan)",
     "currentLocationFa": "Current location in Persian",
-    "coordinates": [x, y] (array of two numbers representing the approximate location on a map where x: 0-1000, y: 0-600. For example, Anatolia is around [150, 150], Mesopotamia [250, 250], Fars [350, 350], Khorasan [500, 200], Transoxiana/Turkmenistan [700, 100]),
+    "coordinates": [latitude, longitude] (decimal degrees of the real place: latitude 10-45, longitude 24-77; for example Chogha Zanbil is [32.01, 48.52]),
     "type": "monument" | "artifact" | "manuscript" | "architecture"
   }]`;
 
   try {
+    const data = (await generateJson('artifacts', { year }, lang, async () => {
     const response = await (await getAiAsync()).models.generateContent({
       model: "gemini-3-flash-preview",
       contents: prompt,
@@ -601,8 +623,8 @@ export async function fetchArtifactsForYear(year: number, lang: 'en' | 'fa'): Pr
       }
     });
     
-    const text = response.text || "[]";
-    const data = JSON.parse(text);
+    return response.text || "[]";
+  }));
     
     const result = data.map((item: any, index: number) => ({
       id: `ai_artifact_${year}_${index}_${Date.now()}`,
@@ -610,7 +632,7 @@ export async function fetchArtifactsForYear(year: number, lang: 'en' | 'fa'): Pr
       description: { en: item.descriptionEn, fa: item.descriptionFa },
       year: item.year,
       currentLocation: { en: item.currentLocationEn, fa: item.currentLocationFa },
-      coordinates: item.coordinates,
+      coordinates: validLatLng(item.coordinates),
       type: item.type
     })) as Artifact[];
 
@@ -721,6 +743,7 @@ Regions Manifest: ${JSON.stringify(regionManifest)}`;
   };
 
   const callGemini = async (retryLabel = '') => {
+    const data = (await generateJson('year_dynasties', { year }, lang, async () => {
     const response = await (await getAiAsync()).models.generateContent({
       model: "gemini-3-flash-preview",
       contents: prompt,
@@ -729,8 +752,8 @@ Regions Manifest: ${JSON.stringify(regionManifest)}`;
         responseSchema: dynastySchema
       }
     });
-    const text = response.text || "[]";
-    const data = JSON.parse(text);
+    return response.text || "[]";
+  }));
     
     // Filter out redundant dynasties that overlap with static data
     const filteredData = data.filter((item: any) => {
@@ -859,6 +882,7 @@ STRICT RULES:
 Return JSON only.`;
 
   try {
+    const data = (await generateJson('ruler_detail', { dynastyNameEn: dynastyNameEn, dynastyNameFa: dynastyNameFa, dynastyStart, dynastyEnd, regionId, year }, lang, async () => {
     const response = await (await getAiAsync()).models.generateContent({
       model: "gemini-3-flash-preview",
       contents: prompt,
@@ -880,8 +904,8 @@ Return JSON only.`;
       }
     });
 
-    const text = response.text || "{}";
-    const data = JSON.parse(text) as RulerDetailResult;
+    return response.text || "{}";
+  })) as RulerDetailResult;
 
     // Validate: if confidence is "unknown" or names are empty, force nulls
     if (data.confidence === 'unknown' || !data.rulerNameEn || data.rulerNameEn.trim() === '') {
@@ -1129,6 +1153,7 @@ export async function generateQuizQuestion(year: number, lang: 'en' | 'fa', aske
       }
     };
 
+    const data = (await generateJson('quiz', { year, angle: ANGLES.indexOf(randomAngle), askedMyths: askedMyths.slice(-8) }, lang, async () => {
     let response;
     try {
       response = await (await getAiAsync()).models.generateContent({
@@ -1147,8 +1172,8 @@ export async function generateQuizQuestion(year: number, lang: 'en' | 'fa', aske
       }
     }
 
-    const text = response.text || "{}";
-    const data = JSON.parse(text);
+    return response.text || "{}";
+  }));
     return {
       id: `ai_quiz_${year}_${Date.now()}`,
       myth: data.myth,

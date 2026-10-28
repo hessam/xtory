@@ -40,7 +40,7 @@ interface EventsPanelProps {
 export const EventsPanel: React.FC<EventsPanelProps> = ({ year, lang, events, figures, artifacts, onEventClick, onFigureClick, onArtifactClick, onFetchAIEvents, onFetchAIFigures, onFetchAIArtifacts, isLoadingAI, isLoadingAIFigures, isLoadingAIArtifacts, setShowSettings, onOpenQuiz, onJumpToYear, selectedVazir, onVazirClose, onVazirClick, onBannerClick }) => {
   const [isOpen, setIsOpen] = useState(true);
   const [activeTab, setActiveTab] = useState<'events' | 'figures' | 'artifacts'>('events');
-  const { apiKey } = useApiKey();
+  const { canUseAi } = useApiKey();
 
   // Show events within +/- 25 years of the current year
   const activeEvents = useMemo(() => {
@@ -294,7 +294,7 @@ export const EventsPanel: React.FC<EventsPanelProps> = ({ year, lang, events, fi
                       question={mythsForEra[0]}
                       lang={lang}
                       year={year}
-                      hasApiKey={!!apiKey}
+                      hasApiKey={!!canUseAi}
                       onOpenQuiz={() => onOpenQuiz(mythsForEra)}
                       onOpenSettings={() => setShowSettings && setShowSettings(true)}
                     />
@@ -304,7 +304,7 @@ export const EventsPanel: React.FC<EventsPanelProps> = ({ year, lang, events, fi
                       question={undefined}
                       lang={lang}
                       year={year}
-                      hasApiKey={!!apiKey}
+                      hasApiKey={!!canUseAi}
                       onOpenQuiz={() => onOpenQuiz(mythsForEra)}
                       onOpenSettings={() => setShowSettings && setShowSettings(true)}
                     />
@@ -402,7 +402,7 @@ export const EventsPanel: React.FC<EventsPanelProps> = ({ year, lang, events, fi
               <button
                 id="tour-ai-fetch-desktop"
                 onClick={handleFetch}
-                disabled={isLoading || !apiKey}
+                disabled={isLoading || !canUseAi}
                 className="w-full flex items-center justify-center gap-2 py-3.5 px-4 liquid-glass text-indigo-300 border border-white/10 rounded-2xl hover:bg-white/20 active:scale-[0.98] calm-transition disabled:opacity-50 disabled:cursor-not-allowed text-sm font-bold"
               >
                 {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}

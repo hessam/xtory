@@ -53,7 +53,7 @@ export const Timeline: React.FC<TimelineProps> = ({ year, setYear, lang, onEvent
   }, [containerRef.current]);
   const [zoomLevel, setZoomLevel] = useState(1);
   const [hoveredEvent, setHoveredEvent] = useState<string | null>(null);
-  const { apiKey } = useApiKey();
+  const { canUseAi } = useApiKey();
 
   // Responsive zoom limits
   const minZoom = 0.5;
@@ -382,7 +382,7 @@ export const Timeline: React.FC<TimelineProps> = ({ year, setYear, lang, onEvent
                   is_mobile: true
                 });
               }}
-              disabled={isLoadingAI || !apiKey}
+              disabled={isLoadingAI || !canUseAi}
               className="sm:hidden flex items-center justify-center gap-1.5 px-3 py-1.5 liquid-glass text-amber-400 border border-white/10 hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl text-[10px] font-medium calm-transition whitespace-nowrap pointer-events-auto shadow-inner"
             >
               {isLoadingAI ? (
@@ -551,9 +551,9 @@ export const Timeline: React.FC<TimelineProps> = ({ year, setYear, lang, onEvent
                 is_mobile: false
               });
             }}
-            disabled={isLoadingAI || !apiKey}
+            disabled={isLoadingAI || !canUseAi}
             className="hidden sm:flex items-center justify-center gap-1.5 px-4 py-2 liquid-glass text-amber-400 border border-white/10 hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed rounded-2xl text-sm font-medium calm-transition whitespace-nowrap shrink-0 pointer-events-auto"
-            title={!apiKey ? (lang === 'en' ? 'Add your free Gemini key to unlock AI features' : 'برای استفاده از ویژگی‌های هوش مصنوعی کلید جمینای خود را وارد کنید') : (lang === 'en' ? 'Get AI Historical Context for this year' : 'دریافت زمینه تاریخی هوش مصنوعی برای این سال')}
+            title={!canUseAi ? (lang === 'en' ? 'Add your free Gemini key to unlock AI features' : 'برای استفاده از ویژگی‌های هوش مصنوعی کلید جمینای خود را وارد کنید') : (lang === 'en' ? 'Get AI Historical Context for this year' : 'دریافت زمینه تاریخی هوش مصنوعی برای این سال')}
           >
             {isLoadingAI ? (
               <Loader2 className="w-4 h-4 animate-spin" />

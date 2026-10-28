@@ -20,6 +20,16 @@ const hits = [];
     for (const [label, re] of PATTERNS) if (re.test(text)) hits.push(`${label} in ${p}`);
   }
 })('dist');
+// generated serverless bundles are shipped code too
+if (fs.existsSync('api')) (function walkApi(dir) {
+  for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+    const p = path.join(dir, e.name);
+    if (e.isDirectory()) { walkApi(p); continue; }
+    if (!e.name.endsWith('.js')) continue;
+    const text = fs.readFileSync(p, 'utf8');
+    for (const [label, re] of PATTERNS) if (re.test(text)) hits.push(`${label} in ${p}`);
+  }
+})('api');
 
 if (hits.length) { console.error('Possible secrets in build output:\n' + hits.join('\n')); process.exit(1); }
 console.log('No secret patterns found in dist/.');

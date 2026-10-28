@@ -356,6 +356,21 @@ three.js "hero" moment can be proposed later as a lazy, capable-device-only extr
 - [ ] Cache hit rate visible in logs; repeated request returns < 300 ms.
 - [ ] BYOK path still works for users who prefer it.
 
+**S5 status (2026-10-28): implemented and tested offline; OFF in production until you set env vars**
+- [x] `POST /api/ai/ask` with **typed tasks only** (`year_dynasties`, `ruler_detail`, `events`, `figures`, `artifacts`, `quiz`, `dig_deeper`): strict param validation, server-built prompts, schema validation + one repair retry, mechanical guards, no free-form prompt possible. `GET /api/ai/status`, owner-only `GET /api/ai/usage`.
+- [x] OpenRouter client (`deepseek/deepseek-v4.1-flash-1017`, per-task override via env), JSON mode, timeout, token ceilings per task.
+- [x] Upstash Redis (REST, no dependency) for limits, cache and usage; memory store for dev/tests; production **refuses** to serve without a durable store.
+- [x] Shared answer cache (first user pays) with in-flight de-duplication; cache hits ≈ 5 ms in the HTTP check.
+- [x] Limits: per-device/min and /day, per-IP/min (paid calls only), loose per-IP ceiling for hits, global daily token breaker, kill switch (`AI_ENABLED`, default off). All env-tunable.
+- [x] **Measure first:** per-task requests/hits/errors/tokens, hourly curve, and a per-device daily-token histogram (1k…250k) so you can pick per-user / per-minute limits from real data. Privacy: IP and device are salted-hashed with the UTC day; never stored or logged raw (tested).
+- [x] Client: `aiTransport` + routing inside `geminiService` (personal key always wins); AI buttons enable via `canUseAi` when the server is ready; friendly en/fa errors that point to the BYOK option.
+- [x] Bug fixed: AI events/artifacts used an invented 0–1000 coordinate grid but the map plots `[lat, lng]`; prompts fixed, out-of-atlas values dropped (BYOK path too).
+- [x] Tests: 40 server/unit (kill switch, origin, validation, cache, concurrency, every limit and window reset, budget, repair/422, provider errors, guards, privacy, usage report, Upstash protocol, OpenRouter client) + 10 e2e (desktop + mobile).
+- [x] Deployable bundles `api/ai/{ask,status,usage}.js` (esbuild, committed; CI `api:check`). Checked end-to-end over real HTTP against a fake provider.
+- [ ] **Owner to do:** create the Upstash database and set the env vars (docs/AI_SERVER.md); then try `?ff=server_ai` on a preview. **Not verified against real OpenRouter / Upstash / Vercel** (no network or keys in the sandbox).
+- [ ] **Open:** provider terms for serving users in Iran (docs/adr/002-ai-provider.md) — not resolved by research; needs the owner's reading of the current terms.
+- Not in this slice: biography / alternate-history / what-if / lineage / chat / search still BYOK-only; BYOK prompts still duplicate the server prompts (consolidation planned with S6); per-user token *caps* are measured but not enforced.
+
 ---
 
 ## Slice 6 — Fact engine: computed facts, AI facts, fact-checking
