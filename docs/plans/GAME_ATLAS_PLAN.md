@@ -1,0 +1,511 @@
+# Xtory — Game Atlas Plan
+
+> **Status:** DRAFT — awaiting approval. No slice starts until the "Decisions" section is confirmed.
+> **Goal:** Turn the Living Atlas into something people who *don't* like history open for fun:
+> a strategy-game-grade map, free exploration that rewards discovery, and facts worth sharing —
+> while keeping the honesty of the data ("claims need a source").
+> **Rule:** One slice at a time per track. A slice is done only when every DoD box is ticked.
+
+---
+
+## 0. Where we are (baseline, measured 2026-10-28)
+
+| Area | Today |
+|---|---|
+| Initial JS (entry + preloads) | ~188 KB gzip — under the 500 KB launch target |
+| Type check / build | `tsc --noEmit` clean, `vite build` OK |
+| Automated tests | **None.** `GUARDRAILS.md` is a manual checklist |
+| Map | Leaflet + Thunderforest tiles. **One dynasty per region** (`MapLeaflet.tsx` `styleRegion` picks a single `primaryEvent`), coloured **by family** (`getDynastyColor`), so ≤ 12 rulers ever visible and same-family dynasties look identical |
+| Curated data | 1,043 entries in `docs/historical_data/`, ~458 *raw* dynasty names (with duplicates like "Justanids" / "Justanid Dynasty"). Used **only** as AI prompt anchors, never drawn |
+| AI | Browser → Google Gemini with the user's key (BYOK). Gemini API is not offered in Iran, so most Iranian users can't use it without a VPN |
+| Static "fun" content | 5 quiz questions, 26 events, 15 figures, 6 vazirs, 16 era cards |
+| Backend | None |
+
+---
+
+## 1. Target experience (one paragraph)
+
+You open Xtory on your phone and see a living strategy-game map of the Iranian plateau. As you
+drag through time, realms split, merge, and burn across the board; a counter says **"In 1000 AD:
+14 dynasties ruled here."** Tap a famous king and everything he *didn't* rule goes dark. Sparkles
+hide on the map — tap one and you uncover a fact few people know ("Yazdgerd III was 27 when he
+died"). Each fact goes into your inventory, gets fact-checked, and earns points on a leaderboard
+under an optional nickname. Edge arrows tell you what Rome and China were doing at the same
+moment. Any fact or your whole collection can be shared to Telegram as a beautiful card. Experts
+can still switch to the full Atlas.
+
+---
+
+## 2. Target architecture
+
+```
+                 ┌──────────────────────── Browser (SPA, Persian-first) ───────────────────────┐
+                 │  Board renderer (WebGL 2D + SVG labels)   Journey / Explore / Atlas modes   │
+                 │  Static data bundle (registry, realms, verified facts, meanwhile)           │
+                 │  Local inventory (works offline, syncs when online)                         │
+                 └───────────────────────────────┬─────────────────────────────────────────────┘
+                                                 │  ONLY talks to its own origin (/api/*)
+                 ┌───────────────────────────────▼─────────────────────────────────────────────┐
+                 │  Vercel Functions (region close to Iran, e.g. fra1)                          │
+                 │  /api/ai/*   /api/facts/*   /api/me   /api/leaderboard   /f/:id (OG pages)   │
+                 └──────┬───────────────────────────┬───────────────────────────┬──────────────┘
+                        │                           │                           │
+                 OpenRouter (2 model        Postgres (facts, profiles,     Redis (rate limits,
+                 families: writer + checker)  inventory, reviews)          hot answer cache)
+```
+
+Build-time pipeline (`scripts/`, deterministic, committed outputs):
+`docs/historical_data` → **dynasty registry** → **realm snapshots** → **board geometry**;
+Wikidata (cached) → ruler birth/death → **computed facts**.
+
+**Principle:** the static core (map, timeline, registry, verified facts) must work with **no
+backend and no key**. The backend only adds live AI, sync, and leaderboard.
+
+---
+
+## 3. Global guardrails (apply to every slice)
+
+1. **Existing `docs/guardrails/GUARDRAILS.md` must keep passing.** Any item we intentionally retire
+   (e.g. "Who ruled here?" becoming optional) is changed in that file **only with explicit owner
+   approval**, in the same PR.
+2. **Persian-first.** Every new string ships with `en` + `fa`. Numbers/dates go through
+   `formatYear` / `formatDuration`. RTL is checked on every new screen. Never an empty `fa: ""`.
+3. **Iran network reality.** The browser talks only to our origin — no Google Fonts, no third-party
+   CDNs, no direct calls to AI providers from the client (BYOK excepted, as an opt-in).
+4. **Performance budgets (CI-enforced):** initial JS ≤ 250 KB gzip; the board renderer is
+   lazy-loaded; LCP < 2.5 s on simulated Slow 4G; INP < 200 ms at 4× CPU throttle; no layout
+   thrash during scrubbing.
+5. **Honesty of data.** Nothing AI-generated is shown as fact without an "AI · unverified" badge
+   until verified. Every verified fact has at least one source. Low-confidence data is *visibly*
+   uncertain (fog/hatching), never rendered as certain.
+6. **Privacy & safety of users (many are inside Iran).** No email, no phone, no location, no
+   country flag on leaderboards. IPs never stored raw (salted hash, rotated daily, used only for
+   rate limiting). Nickname is optional; default is "Explorer #NNNN". Users can delete their data.
+7. **Secrets never reach the bundle.** CI greps `dist/` for key patterns. `.env.example` contains
+   placeholders only.
+8. **Cost control.** Hard daily AI spend cap + a kill-switch env var that turns live AI off
+   without a deploy. Graceful UI when AI is off.
+9. **Feature flags.** Every slice ships dark (`?ff=<flag>` / env) and is flipped on only after its
+   DoD passes on a real phone.
+10. **Small PRs.** One slice = one or more PRs, each with green `tsc`, unit tests, build, smoke
+    tests, and a Vercel preview link tested on mobile.
+11. **Accessibility.** Tap targets ≥ 44 px; `prefers-reduced-motion` respected; colour is never the
+    only signal (labels, patterns, emblems carry identity too — there will be dozens of dynasty
+    colours).
+12. **Deterministic visuals.** Same year → same realms, same colours, same labels (existing
+    `dynastyColor` guardrail, extended to per-dynasty colours).
+
+---
+
+## 4. Tracks and slice order
+
+Two tracks can run in parallel once Slice 0 is done:
+
+```
+Track A (data + visuals):  S1 Registry → S2 Fragmentation quick win → S3 Board spike → S4 Board v1 → S10 Meanwhile → S11 Journey → S12 Games
+Track B (backend + facts): S5 API proxy → S6 Fact engine → S7 Discovery UX → S8 Profiles & leaderboard → S9 Share cards
+                                                   (S7 needs S4 for map sparkles; can start on the Leaflet map)
+```
+
+Sizes: **S** ≈ 1–2 days · **M** ≈ 3–5 days · **L** ≈ 1–2 weeks (one developer + agent).
+
+---
+
+## Slice 0 — Foundations & safety net
+
+**Goal:** Make change safe: automated guardrails, CI, budgets, flags, and clean-up.
+**Size:** M · **Depends on:** — · **Flag:** n/a
+
+**Scope**
+- Add **Vitest** for pure functions (year parsing, cache keys, formatters).
+- Add **Playwright smoke tests** automating the automatable items of `GUARDRAILS.md`: region click
+  opens detail, scrubbing changes region colours, language toggle flips RTL and labels, mobile
+  sheet opens, timeline always visible on mobile.
+- GitHub Actions CI: `tsc`, Vitest, `vite build`, Playwright smoke, **bundle-size budget check**,
+  **secret grep on `dist/`**.
+- Feature-flag helper (`src/lib/flags.ts`): URL `?ff=` + env defaults.
+- Clean-up: delete unused `src/components/Map.tsx` and `src/diagnostics/`; move one-off root
+  scripts (`add_rulers.ts`, `fix_*.ts/py`, `update_*.py`, `check*.ts`, `verify_map.html`) to
+  `scripts/legacy/`; remove `.git-old/` from the working copy.
+- Replace the real Thunderforest key in `.env.example` with a placeholder; rotate the key.
+
+**Out of scope:** any UI change.
+
+**Guardrails:** zero behaviour change; the deleted files must have no importers (verified by build).
+
+**DoD**
+- [ ] CI runs on every PR and is green on `main`.
+- [ ] ≥ 8 guardrail items covered by Playwright on a mobile and a desktop viewport.
+- [ ] Budget check fails the build if initial JS > 250 KB gzip.
+- [ ] Secret grep fails the build if a key pattern appears in `dist/`.
+- [ ] `.env.example` has no real keys; old Thunderforest key rotated.
+- [ ] App behaves identically on a Vercel preview (manual pass of `GUARDRAILS.md`).
+
+---
+
+## Slice 1 — Canonical dynasty registry & realm snapshots (data)
+
+**Goal:** One trustworthy source of "who ruled what, when" that the map, counter, facts and games
+all read.
+**Size:** L · **Depends on:** S0 · **Flag:** n/a (data only)
+
+**Scope**
+- `scripts/build-registry.ts` reads `docs/historical_data/*.json` and produces
+  `src/data/generated/dynasties.json`:
+  `{ id, name{en,fa}, aliases[], family, color, emblemSeed, overlordId?, start, end, wikidataId? }`.
+- `data/registry/overrides.json` (hand-edited): merges ("Justanids" = "Justanid Dynasty"),
+  Persian names, colours, overlord links. The script prints **every unresolved name**.
+- Per-dynasty colour generator: hue band per family (Persian = violets, Turkic = ambers…), distinct
+  lightness/saturation per dynasty, deterministic from id, contrast-checked against the board.
+- `src/data/generated/realms.json`: **change-point snapshots** — only years where the set of
+  polities changes. Each entry: `{ dynastyId, regionId, status, overlordId?, capital{lat,lng}?,
+  confidence, sourceFile }`. Capitals resolved via `regions.ts` anchor cities.
+- `scripts/enrich-wikidata.ts`: ruler birth/death years and Persian labels from Wikidata (CC0),
+  **responses cached in the repo** so builds are offline and reproducible.
+- Selector API: `getRealmsAt(year)`, `countDynastiesAt(year)`, `getReach(dynastyId|rulerId, year)`.
+
+**Out of scope:** UI.
+
+**Guardrails**
+- Curated JSON files are **never edited by scripts** — only read. Corrections go into `overrides.json`.
+- Every override has a comment/source.
+- No name is silently dropped: unresolved names fail the script.
+
+**DoD**
+- [ ] 100% of curated entries map to exactly one registry dynasty (unit test).
+- [ ] Every dynasty has `en` + `fa` name and a colour; no two share an id; colours are stable
+      across runs (snapshot test).
+- [ ] `countDynastiesAt(1000)` and `countDynastiesAt(1750)` hand-checked against a reference
+      list, and the reasoning is written in `data/registry/VALIDATION.md`.
+- [ ] Wikidata cache covers all rulers in `rulers.ts`; missing dates are listed, not guessed.
+- [ ] Bundle impact of generated data measured and within budget (lazy-load per era if needed).
+
+---
+
+## Slice 2 — Fragmentation, quick win on the current map
+
+**Goal:** Ship goal #1 early, before the new renderer: people *see* that many dynasties ruled at once.
+**Size:** M · **Depends on:** S1 · **Flag:** `ff_fragmentation`
+
+**Scope**
+- Map colours **per dynasty** from the registry (replaces family colouring).
+- Regions with several concurrent realms show them all: split hatching or a stacked banner chip per
+  region listing each dynasty (tap → detail).
+- HUD counter: **"In 1000 AD · 14 dynasties"** (fa: Persian numerals), animated on change.
+- **Reach lens:** tapping a ruler/dynasty dims everything outside its control, with a caption
+  ("Mahmud held 5 of 12 regions — the Buyids held Rey, the Ziyarids Tabaristan…").
+- Legend becomes contextual (only dynasties visible now), not a fixed key.
+
+**Guardrails**
+- `MapLeaflet` `Props` interface unchanged (1:1 swap guardrail).
+- Same year → same colours (snapshot test on 5 sample years).
+- Scrubbing INP budget holds with the counter and chips.
+
+**DoD**
+- [ ] At 1000 AD the map shows ≥ 10 distinct, labelled dynasties.
+- [ ] Counter correct for 10 sampled years (unit test against `countDynastiesAt`).
+- [ ] Reach lens works on mobile and desktop; works for the 26 static rulers.
+- [ ] `fa` mode: labels, counter, captions fully Persian; RTL correct.
+- [ ] Playwright guardrail suite green; manual phone test on a mid-range Android.
+
+---
+
+## Slice 3 — Board renderer spike & art direction (decision slice)
+
+**Goal:** Choose the rendering tech and the visual identity with evidence, not taste alone.
+**Size:** M · **Depends on:** S1 · **Flag:** `ff_board_spike` (preview only)
+
+**Scope**
+- **Art direction board** (moodboard + 3 static mockups). Two directions to compare:
+  - *A — "Grand strategy, modern":* Paradox / Total War campaign feel. Dark relief terrain, glowing
+    realm borders, large curved realm names written across territory, map modes.
+  - *B — "Living manuscript":* a Persian-miniature / illuminated-manuscript cartography — painted
+    terrain, gold-leaf borders, calligraphic (Nastaliq) realm names in fa. Distinctive; no other
+    history map looks like this. *(Recommended to explore seriously.)*
+- **Build-time projection:** `scripts/board/project.ts` projects region and neighbour GeoJSON into
+  board coordinates (conic equal-area centred on Iran) — no tiles, no runtime projection.
+- **Realm geometry:** capital-based cells clipped to region polygons (d3-delaunay + turf), merged
+  per dynasty → one shape per realm per snapshot. Output per era, lazy-loadable.
+- **Terrain base:** stylised from public-domain Natural Earth shaded relief → WebP at 2 levels.
+- **Prototype both renderers on the same 3 eras** (Achaemenid, 1000 AD, 1750):
+  - SVG + motion (lightest).
+  - PixiJS WebGL 2D layers (glow, fog shader, particles) + SVG overlay for labels (browser shapes
+    Persian correctly; `textPath` for curved names).
+- Measure on throttled mobile: FPS while panning, INP while scrubbing, memory, chunk size.
+
+**Out of scope:** replacing the production map.
+
+**Guardrails:** three.js is **not** used for the core map (bundle, battery, Persian text). A
+three.js "hero" moment can be proposed later as a lazy, capable-device-only extra.
+
+**DoD**
+- [ ] Owner picks art direction A or B (or a blend) from the mockups.
+- [ ] Decision record `docs/adr/001-board-renderer.md` with measured numbers for both renderers.
+- [ ] Chosen renderer meets: ≥ 50 fps pan on 4× CPU throttle, scrub INP < 200 ms, renderer chunk
+      ≤ 150 KB gzip (lazy), terrain first view ≤ 250 KB.
+- [ ] Persian curved labels render correctly (screenshot in the ADR).
+
+---
+
+## Slice 4 — Board v1 (replaces Leaflet)
+
+**Goal:** The strategy-game map in production.
+**Size:** L · **Depends on:** S2, S3 · **Flag:** `ff_board`
+
+**Scope**
+- Layers: terrain → realm territories → borders (thick between realms, faint within) → fog
+  (no data / low confidence) → capitals & emblems → event/figure/vazir tokens → labels.
+- **Map modes** (game-style toggle): Political · Fragmentation (count heat) · Family · Terrain.
+- **Zoom tiers:** strategic (realms + big names) → regional (sub-territories, cities, tokens).
+- **Camera:** pinch/pan/zoom, `flyTo(regionId|bbox)`, eased; respects reduced motion.
+- **Transitions:** realm morph on change (flubber), border "burn" on conquest, capital pulse.
+- **Procedural emblems** per dynasty (banner shape + colour + symbol from `emblemSeed`).
+- Neighbours drawn and named for the current year.
+- No-WebGL fallback: static SVG of the same data.
+- Remove Thunderforest tiles and the tile service worker once the flag defaults on.
+
+**Guardrails**
+- Same `Props` as `MapLeaflet` (drop-in swap); all MAP items of `GUARDRAILS.md` pass.
+- Budgets from S3 hold in CI (Playwright perf run).
+- Labels never overlap illegibly: collision handling or hide-by-priority.
+
+**DoD**
+- [ ] Every MAP and TIMELINE guardrail passes on the board (automated where possible).
+- [ ] All three device classes tested: low Android, iPhone, desktop.
+- [ ] Fog appears exactly where confidence is low/no data (unit test on snapshot → fog mask).
+- [ ] `fa` labels correct, including curved names; `en`/`fa` toggle swaps labels instantly.
+- [ ] Leaflet, react-leaflet, Thunderforest, tile SW removed from the bundle; budget improves.
+
+---
+
+## Slice 5 — Backend foundation: AI proxy (no forced BYOK)
+
+**Goal:** Live AI for everyone, safely and cheaply, reachable from Iran.
+**Size:** M · **Depends on:** S0 · **Flag:** `ff_server_ai`
+
+**Scope**
+- Vercel Functions (region `fra1` or nearest to Iran): `/api/ai/ask` with typed tasks
+  (`ruler_detail`, `dig_deeper`, `meanwhile`, `quiz`) — **no free-form prompt passthrough**.
+- OpenRouter client server-side; model per task from config; max tokens per task.
+- Redis: per-IP-hash and per-device rate limits; global **daily spend cap**; kill switch
+  `AI_ENABLED=false`.
+- **Shared answer cache:** key = task + entity + year bucket + lang. First user pays, everyone else
+  gets it instantly.
+- Client: `geminiService` gets a transport layer → server by default, BYOK direct as opt-in.
+- CSP `connect-src` reduced to `'self'` (+ Google only if BYOK enabled).
+
+**Guardrails**
+- Keys live only in Vercel env. CI secret grep stays green.
+- Logs contain no raw IPs and no user keys.
+- Provider terms reviewed for serving users in Iran; documented in `docs/adr/002-ai-provider.md`.
+
+**DoD**
+- [ ] From an Iranian network (or VPN-off test via a tester), "Who ruled here?" works with no key.
+- [ ] Rate limit and spend cap verified by an automated test; kill switch tested.
+- [ ] Cache hit rate visible in logs; repeated request returns < 300 ms.
+- [ ] BYOK path still works for users who prefer it.
+
+---
+
+## Slice 6 — Fact engine: computed facts, AI facts, fact-checking
+
+**Goal:** A pipeline that produces *surprising and correct* facts, and stores every fact users find.
+**Size:** L · **Depends on:** S1, S5 · **Flag:** `ff_facts`
+
+**Fact model (Postgres)**
+```
+facts(id, entity_type, entity_id, year, kind[computed|ai|curated], hook{en,fa}, claim{en,fa},
+      context{en,fa}, sources[], confidence, status, hash, first_discoverer_id, created_at)
+status: unverified → ai_checked → verified | disputed | rejected
+fact_reviews(fact_id, reviewer, verdict, notes, at)   fact_reports(fact_id, profile_id, reason, at)
+```
+
+**Scope**
+1. **Computed facts (zero AI):** generated at build time from registry + Wikidata — ages at
+   accession/death, reign lengths, youngest/oldest/shortest, "N dynasties ruled at once",
+   "X ruled while Y ruled in Z". Shipped as static `verified` facts.
+2. **AI facts (live, "dig deeper"):** writer model returns 1–3 candidates in a strict JSON schema
+   with sources and confidence.
+3. **Automatic checks before anyone sees a fact:**
+   - deterministic: any number/date in the claim is checked against the registry/Wikidata
+     (e.g. an age must match computed age ±1);
+   - **second model from a different family** judges each claim → supported / unsupported /
+     uncertain;
+   - dedupe: same entity + normalized text hash + trigram similarity.
+4. **Human review queue:** protected `/admin/review` page, sorted by how many users found the fact.
+   Approve / edit / reject. Approved facts are exported to `data/facts/verified/*.json` (git-auditable,
+   matching "claims need a source").
+5. **User reports** ("this is wrong") send a fact back to review; a rejection after verification
+   revokes its points.
+
+**Guardrails**
+- `unsupported` or `rejected` facts are **never shown**. `ai_checked` facts show an
+  "AI · checked, not yet reviewed" badge. Only `verified` facts carry no badge.
+- A fact without at least one source cannot reach `verified`.
+- Politically sensitive eras (20th century onward) require human review before display.
+
+**DoD**
+- [ ] ≥ 200 computed facts generated, spot-checked (20 random, documented).
+- [ ] The Yazdgerd III example is produced as a *computed* fact from dates, not from AI.
+- [ ] Deterministic checker rejects a planted wrong age in a test.
+- [ ] Review queue works end-to-end; export produces valid JSON; verified facts load with no backend.
+
+---
+
+## Slice 7 — Discovery UX: hidden facts on the map
+
+**Goal:** Free exploration that rewards curiosity.
+**Size:** M · **Depends on:** S6 (S4 for board polish; can start on Leaflet) · **Flag:** `ff_discovery`
+
+**Scope**
+- Sparkles hidden on the map/timeline at entities that have undiscovered facts; revealed by
+  exploring (tapping a realm at a year, zooming into a city, dwelling on an era).
+- **Fact card:** hook in big type ("He was 27."), two sentences of context, source line,
+  verification badge, *Dig deeper*, *Share*, *Report*.
+- *Dig deeper* calls S6 live (with cost-aware limits per device per day).
+- **Local inventory** first (works offline / without backend): found facts stored on device.
+- Progress: "34 / 500 facts found", per-era completion rings.
+
+**Guardrails**
+- No sparkle spam: max N visible at once, prioritized by rarity and relevance.
+- Discovery never blocks map interaction (no modal storms on mobile).
+
+**DoD**
+- [ ] A new user finds their first fact within 60 seconds without instructions (5-person hallway test).
+- [ ] Inventory survives reload and offline mode.
+- [ ] Full flow works in `fa` and `en` on phone.
+
+---
+
+## Slice 8 — Profiles (optional nickname), synced inventory, leaderboard
+
+**Goal:** Collections and competition without accounts or personal data.
+**Size:** L · **Depends on:** S6, S7 · **Flag:** `ff_leaderboard`
+
+**Scope**
+- `POST /api/me` creates an anonymous profile → `{ profileId, secret }` stored on device.
+- Optional nickname: length/charset rules, fa+en profanity list, reserved names, uniqueness.
+- **Recovery code** (shows the secret as words) to move to another device — no email.
+- Inventory sync: local → server merge, idempotent.
+- **Anti-cheat:** a fact can only be claimed if the server served it to that device; daily caps;
+  anomaly flags.
+- **Points:** +1 per fact found; +5 first discoverer of a new AI fact *when it becomes verified*;
+  rarity bonus. Points from rejected facts are revoked.
+- Leaderboards: all-time, weekly, per era. Public profile page `/u/:nickname` (inventory showcase).
+- `DELETE /api/me` removes everything.
+
+**Guardrails** — Global guardrail 6 in full. Leaderboard shows nickname + points only.
+
+**DoD**
+- [ ] Profile, nickname, recovery and deletion tested end-to-end.
+- [ ] Claiming an unserved fact is rejected (automated test).
+- [ ] Weekly board resets correctly (time-travel test).
+- [ ] No raw IP or user key in any table or log (audit query in the PR).
+
+---
+
+## Slice 9 — Share cards
+
+**Goal:** Every fact and every collection is a beautiful, shareable card, Telegram-first.
+**Size:** M · **Depends on:** S7 (S8 for collection cards) · **Flag:** `ff_share`
+
+**Scope**
+- **Image card rendered in the browser** (canvas): correct Persian shaping guaranteed. Shared via the
+  Web Share API with the image file (mobile), download fallback (desktop).
+- **Link unfurls:** `/f/:factId` and `/u/:nickname` return small HTML with OG/Twitter tags, then
+  open the app at that fact/profile.
+- OG image generation server-side: **spike first** — check Persian shaping in Satori (`@vercel/og`).
+  If it fails: generate the OG image once at verification time, or use the era banner + English
+  title for OG while the in-app image card stays fully Persian.
+- Card designs: Fact card, "My collection" card (count, rank, rarest fact), weekly rank card.
+
+**Guardrails** — No personal data on cards beyond the chosen nickname. Card text stays inside the
+safe area for Telegram/X/WhatsApp crops.
+
+**DoD**
+- [ ] Sharing a fact to Telegram from Android and iPhone shows image + correct Persian text.
+- [ ] Pasting `/f/:id` into Telegram unfurls with title, description and image.
+- [ ] Cards checked in both languages and in dark/light Telegram themes.
+
+---
+
+## Slice 10 — Meanwhile: neighbours at the same time
+
+**Goal:** Show how other nations were doing in the same era.
+**Size:** M · **Depends on:** S4 (S5 optional) · **Flag:** `ff_meanwhile`
+
+**Scope**
+- Static dataset `data/meanwhile/*.json`: one snapshot per 25-year bucket for Rome/Byzantium,
+  China, India, Egypt/Arabia, Europe — one line each + one metric. AI-drafted, human-reviewed,
+  sourced.
+- Board: neighbours named for the year; **edge arrows** ("→ Tang China") for off-map civilizations.
+- **Versus bars** (game stat-card style): empire size, largest city, notable firsts. Datasets:
+  Taagepera empire sizes, Seshat, Chandler / Reba et al. city populations — **licenses checked and
+  recorded** in `data/meanwhile/SOURCES.md`.
+
+**DoD**
+- [ ] Coverage for every 25-year bucket from 700 BC to 1979.
+- [ ] Every metric has a source; licence notes complete.
+- [ ] Works with no backend.
+
+---
+
+## Slice 11 — Journey mode (story chapters)
+
+**Goal:** The guided, game-like path for casual users (from our earlier discussion).
+**Size:** L · **Depends on:** S4, S6 · **Flag:** `ff_journey`
+
+**Scope**
+- Chapters = the 16 `historianCards` eras on a level path. Each chapter = 5–7 story beats tapped
+  through like Stories; each beat scripts the board camera (fly, highlight, morph, pulse).
+- Beat schema `data/journey/<eraId>.json`: `{ text{en,fa}, camera, highlights[], realmsAt, image? }`.
+  AI-drafted, human-edited, sourced.
+- End-of-chapter quiz (myth vs reality, 3 questions) → stars, unlock next chapter, reward card into
+  the inventory.
+- Deep links `/journey/:eraId/:beat`. Journey becomes the default mode; Atlas stays one tap away.
+- The Joyride tour is retired (chapter 1 teaches the app).
+
+**DoD**
+- [ ] All 16 chapters authored in en + fa; each ≤ 90 s.
+- [ ] Hallway test: 4 of 5 non-history people finish chapter 1 and start chapter 2 unprompted.
+- [ ] Deep links open the exact beat; shared from Telegram.
+
+---
+
+## Slice 12 — Games & progression
+
+**Goal:** Replayable mechanics that teach the "many dynasties" truth.
+**Size:** M · **Depends on:** S4, S8 · **Flag:** `ff_games`
+
+**Scope**
+- **Paint the empire:** paint what you think a famous ruler controlled → reveal → score.
+- Achievements (e.g. "Found 10 facts from the Seljuk era", "Painted 5 empires perfectly").
+- Light XP / streaks feeding the leaderboard.
+- Sound and haptics (Android vibration; iOS gets visual feedback only).
+
+**DoD**
+- [ ] Paint mode works by touch on a phone; scores match `getReach()` (unit tests).
+- [ ] Achievements sync to profile; appear on share cards.
+
+---
+
+## 5. Explicitly NOT doing (for now)
+
+- three.js / 3D for the core map.
+- Accounts with email/phone, social login.
+- User-written facts (users *discover* facts; they don't author them) — avoids moderation of free text.
+- Free-form chat through the server proxy (only typed tasks).
+
+---
+
+## 6. Decisions needed before Slice 0 starts
+
+| # | Decision | Recommended default |
+|---|---|---|
+| D1 | Add a backend (changes the README's "no server, no database" stance) | **Yes** — Vercel Functions + Postgres (e.g. Neon) + Redis (e.g. Upstash); static core still works without it |
+| D2 | AI provider and monthly budget | OpenRouter, a cheap writer model + a different-family checker model; set a monthly cap (you choose the amount) |
+| D3 | Who reviews facts | You (owner) via `/admin/review`, with export to git; add trusted reviewers later |
+| D4 | Art direction | Mock up both in S3; I recommend seriously exploring **B — Living manuscript** |
+| D5 | Leaderboard visibility | Public, nickname-only, opt-in to appear (default hidden until a nickname is set) |
+| D6 | Thunderforest key | Rotate now (S0); tiles removed entirely in S4 |
+| D7 | Journey vs Explore as default landing | Journey default once S11 ships; until then, Explore with the counter + discovery |
