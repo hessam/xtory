@@ -12,7 +12,10 @@
     "test": "vitest run",
     "test:e2e": "playwright test",
     "check:budget": "node scripts/ci/check-budget.mjs",
-    "check:secrets": "node scripts/ci/check-secrets.mjs"
+    "check:secrets": "node scripts/ci/check-secrets.mjs",
+    "registry:build": "tsx scripts/registry/build-registry.ts --strict",
+    "registry:check": "npm run registry:build && git diff --exit-code -- src/data/generated",
+    "registry:wikidata": "tsx scripts/registry/enrich-wikidata.ts"
   },
   "dependencies": {
     "@google/genai": "^1.29.0",

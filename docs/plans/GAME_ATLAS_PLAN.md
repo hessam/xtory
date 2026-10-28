@@ -193,6 +193,17 @@ all read.
 - [ ] Wikidata cache covers all rulers in `rulers.ts`; missing dates are listed, not guessed.
 - [ ] Bundle impact of generated data measured and within budget (lazy-load per era if needed).
 
+**S1 status (2026-10-28): implemented, 2 items blocked/open**
+- [x] `scripts/registry/build-registry.ts` → `src/data/generated/{dynasties,realms,dynasties.audit}.json`; `npm run registry:build` (strict) and `registry:check` (CI fails if generated files drift).
+- [x] 459 raw names → 238 dynasties, merges each with a written reason; one undated entry skipped with a reason.
+- [x] Per-dynasty colours: disjoint hue bands per family, pairwise distinct, contrast ≥ 3:1 on the board background; snapshot-tested.
+- [x] Selector API `src/data/registry.ts`: `getRealmsAt`, `countDynastiesAt`, `getActiveDynastyIds`, `getReach`, `changePoints`.
+- [x] Shared robust year parser (`src/lib/yearRange.ts`) — fixed 23 mixed BC/AD entries read backwards by the old parser.
+- [x] `data/registry/VALIDATION.md`: counts + hand check of 1000 AD + known gaps.
+- [ ] **Wikidata ruler dates not fetched** — `www.wikidata.org` is blocked in this sandbox. Script is written but untested; needs (a) host allowed in the environment's Network settings, (b) curated QIDs in `data/registry/ruler_qids.json`. Needed for the computed facts in S6 (e.g. Yazdgerd III's age).
+- [ ] **Owner/native review of the 238 Persian names** (AI-drafted).
+- Deviations: realms are stored as per-entry spans (compact) instead of change-point snapshots — `changePoints()` derives them; capitals/overlord links are deferred (no source data; capitals arrive with the board in S3/S4).
+
 ---
 
 ## Slice 2 — Fragmentation, quick win on the current map
