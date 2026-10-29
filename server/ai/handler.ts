@@ -118,9 +118,10 @@ export async function handleAsk(req: Request, deps: Deps): Promise<Response> {
     return json(200, { ok: true, data: out.data, meta: { cache: 'miss', task: body.task, model: out.model } });
   } catch (e: any) {
     if (e instanceof UpstreamError) {
+      log({ evt: 'ai_upstream_error', task: body.task, kind: e.kind, status: e.status, detail: e.detail });
       await record('miss', 0, 0, false, `upstream_${e.kind}`);
       // 429/402 from the provider is OUR capacity problem, not the user's: tell the client to back off / fall back to BYOK.
-      return e.kind === 'rate_limited' || e.kind === 'payment' ? fail(503, 'ai_busy', {}, { 'Retry-After': '30' }) : fail(502, 'upstream_error', { kind: e.kind });
+      return e.kind === 'rate_limited' || e.kind === 'payment' ? fail(503, 'ai_busy', {}, { 'Retry-After': '30' }) : fail(502, 'upstream_error', { kind: e.kind, ...(e.detail ? { detail: e.detail } : {}) });
     }
     if (e instanceof InvalidOutputError) {
       await record('miss', e.tokensIn ?? 0, e.tokensOut ?? 0, false, 'invalid_output');

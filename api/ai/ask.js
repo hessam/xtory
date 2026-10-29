@@ -759,7 +759,7 @@ function describe(schema, required = true) {
 var wrapRoot = (schema) => schema.type === "array" ? { type: "object", properties: { items: schema }, required: ["items"] } : schema;
 
 // src/ai/tasks.ts
-var TASK_IDS = ["year_dynasties", "ruler_detail", "events", "figures", "artifacts", "quiz", "dig_deeper"];
+var TASK_IDS = ["year_dynasties", "ruler_detail", "events", "figures", "artifacts", "quiz", "dig_deeper", "lineage", "search", "biography", "what_if_ruler", "what_if_event", "chat"];
 var PROMPT_VERSION = "p1";
 var REGION_IDS = regions.map((r) => r.id);
 var BBOX = { minLat: 10, maxLat: 45, minLng: 24, maxLng: 77 };
@@ -1056,6 +1056,135 @@ If you are not confident of any fact, return {"facts": []}. Never invent a sourc
   post: (d) => ({ facts: (d.facts ?? []).filter((f) => f.sources && f.sources.length > 0) })
   // a fact without a source is dropped
 };
+var L = (lang) => lang === "en" ? "English" : "Persian (Farsi)";
+var relative = {
+  type: "object",
+  properties: { nameEn: S, nameFa: S, relationEn: S, relationFa: S, noteEn: { type: "string", maxLength: 200 }, noteFa: { type: "string", maxLength: 300 } },
+  required: ["nameEn", "nameFa", "relationEn", "relationFa"]
+};
+var lineageSchema = {
+  type: "object",
+  properties: { parents: { type: "array", items: relative, maxItems: 6 }, spouses: { type: "array", items: relative, maxItems: 12 }, children: { type: "array", items: relative, maxItems: 30 }, notableRelatives: { type: "array", items: relative, maxItems: 12 } },
+  required: ["parents", "spouses", "children", "notableRelatives"]
+};
+var lineage = {
+  id: "lineage",
+  parse: (raw) => {
+    const p = obj(raw, ["name", "context"]);
+    return { name: str(p.name, "name", 120), context: p.context === void 0 ? "" : str(p.context, "context", 400, 0) };
+  },
+  cacheKey: (p, lang) => `${PROMPT_VERSION}|lineage|${p.name.toLowerCase()}|${lang}`,
+  maxTokens: 1800,
+  build: (p) => ({
+    system: SYSTEM(lineageSchema),
+    schema: lineageSchema,
+    prompt: `Provide the known family lineage and notable relatives of the historical figure "${p.name}".${p.context ? `
+Context to make sure we mean the right person: ${p.context}` : ""}
+Include parents, spouses, children and any historically significant relatives (grandparents, siblings). Give each name in English (\u2026En) and Persian (\u2026Fa). Use an empty array where a category is empty or unknown. Never invent relatives.`
+  })
+};
+var searchSchema = {
+  type: "object",
+  properties: {
+    found: { type: "boolean" },
+    year: IN,
+    type: { type: "string", enum: ["event", "figure", "ruler", "dynasty", "region"], nullable: true },
+    nameEn: SN,
+    nameFa: SN,
+    descriptionEn: { type: "string", nullable: true, maxLength: 300 },
+    descriptionFa: { type: "string", nullable: true, maxLength: 450 }
+  },
+  required: ["found"]
+};
+var search = {
+  id: "search",
+  parse: (raw) => ({ query: str(obj(raw, ["query"]).query, "query", 120, 2) }),
+  cacheKey: (p) => `${PROMPT_VERSION}|search|${p.query.toLowerCase()}`,
+  maxTokens: 400,
+  build: (p) => ({
+    system: SYSTEM(searchSchema),
+    schema: searchSchema,
+    prompt: `The user is searching for a historical element (event, figure, ruler, dynasty or region). If it relates to Greater Iran, prefer that meaning.
+Query: "${p.query}"
+If you can identify it: found=true, "year" = the most representative year (negative for BC), "type", names in English and Persian, and a short description in both. If not: {"found": false}.`
+  }),
+  post: (d) => d.found && typeof d.year === "number" && d.type && d.nameEn ? d : { found: false }
+};
+var proseSchema = {
+  type: "object",
+  properties: { text: { type: "string", maxLength: 4e3 }, sources: { type: "array", items: S, maxItems: 4 }, certainty: { type: "string", enum: ["HIGH", "MEDIUM", "LOW"] } },
+  required: ["text", "sources", "certainty"]
+};
+var periodSources = (y) => y < -550 ? "Elamite/Mesopotamian texts & archaeology (Susa); Cambridge History of Iran Vol. 2" : y < -247 ? "Behistun Inscription; Persepolis Fortification Tablets; Pierre Briant, From Cyrus to Alexander" : y < 651 ? "Coins & rock inscriptions; Cambridge History of Iran Vol. 3; Roman/Chinese sources" : y < 1501 ? "al-Tabari's Tarikh; al-Biruni; Cambridge History of Iran Vol. 4/5" : y < 1925 ? "Persian court chronicles; European traveller accounts; Cambridge History of Iran Vol. 6" : "Ervand Abrahamian, Modern Iran; Encyclopaedia Iranica";
+var PROSE_RULES = 'Put the prose in "text" (paragraphs separated by a blank line, no headers, no markdown lists, no quotation marks). Put 2\u20133 real sources you are sure exist in "sources". "certainty": HIGH if well documented, MEDIUM if partly, LOW if sparse. Express uncertainty inline in natural words.';
+var biography = {
+  id: "biography",
+  parse: (raw) => {
+    const p = obj(raw, ["name", "title", "dynasty", "year"]);
+    return { name: str(p.name, "name", 120), title: str(p.title, "title", 120, 0), dynasty: str(p.dynasty, "dynasty", 120, 0), year: p.year === void 0 ? 0 : year(p.year) };
+  },
+  cacheKey: (p, lang) => `${PROMPT_VERSION}|bio|${p.name.toLowerCase()}|${p.dynasty.toLowerCase()}|${bucket(p.year, 100)}|${lang}`,
+  maxTokens: 1400,
+  build: (p, lang) => ({
+    system: SYSTEM(proseSchema),
+    schema: proseSchema,
+    prompt: `Write in ${L(lang)}, as a historian speaking to a general audience. Biography of ${p.name}${p.title || p.dynasty ? ` (${[p.title, p.dynasty].filter(Boolean).join(", ")})` : ""}. Exactly 3 paragraphs: 1 \u2013 a vivid opening scene or decision; 2 \u2013 the reign's arc and central tension; 3 \u2013 the legacy and one open historical question. Likely sources: ${periodSources(p.year)}.
+${PROSE_RULES}`
+  })
+};
+var whatIfRuler = {
+  id: "what_if_ruler",
+  parse: (raw) => {
+    const p = obj(raw, ["ruler", "region", "year", "custom"]);
+    return { ruler: str(p.ruler, "ruler", 120), region: str(p.region, "region", 120), year: year(p.year), custom: p.custom === void 0 || p.custom === "" ? void 0 : str(p.custom, "custom", 300) };
+  },
+  cacheKey: (p, lang) => p.custom ? null : `${PROMPT_VERSION}|wir|${p.ruler.toLowerCase()}|${p.region.toLowerCase()}|${p.year}|${lang}`,
+  maxTokens: 1e3,
+  build: (p, lang) => ({
+    system: SYSTEM(proseSchema),
+    schema: proseSchema,
+    prompt: `Write in ${L(lang)}, historian voice. Context: ${p.ruler} in ${p.region} around ${yearLabel(p.year)}. ${p.custom ? `The reader asks this "What if": "${p.custom}".` : "Invent ONE alternative path for a major event (diplomacy, succession, disaster) and explore it."} Explain the changes to the region and the ripple effects. Plausible cause and effect; acknowledge uncertainty; no definitively false claims. Exactly 2 paragraphs. Likely sources: ${periodSources(p.year)}.
+${PROSE_RULES}`
+  })
+};
+var whatIfEvent = {
+  id: "what_if_event",
+  parse: (raw) => {
+    const p = obj(raw, ["title", "description", "year", "custom"]);
+    return { title: str(p.title, "title", 160), description: str(p.description, "description", 500, 0), year: year(p.year), custom: p.custom === void 0 || p.custom === "" ? void 0 : str(p.custom, "custom", 300) };
+  },
+  cacheKey: (p, lang) => p.custom ? null : `${PROMPT_VERSION}|wie|${p.title.toLowerCase()}|${p.year}|${lang}`,
+  maxTokens: 1e3,
+  build: (p, lang) => ({
+    system: SYSTEM(proseSchema),
+    schema: proseSchema,
+    prompt: `Write in ${L(lang)}, historian voice. Event "${p.title}"${p.description ? ` (${p.description})` : ""} in ${yearLabel(p.year)}. ${p.custom ? `The reader asks this "What if": "${p.custom}".` : "Explore ONE divergence path (diplomacy, succession, disaster)."} Describe the changes to the region and the world. Logical cause and effect; acknowledge uncertainty; defensible claims. Exactly 2 paragraphs. Likely sources: ${periodSources(p.year)}.
+${PROSE_RULES}`
+  })
+};
+var chatSchema = { type: "object", properties: { text: { type: "string", maxLength: 3e3 } }, required: ["text"] };
+var chat = {
+  id: "chat",
+  parse: (raw) => {
+    const p = obj(raw, ["history", "message"]);
+    const h = p.history === void 0 ? [] : p.history;
+    if (!Array.isArray(h) || h.length > 8) throw new ParamError("history must be an array of at most 8 turns");
+    return {
+      message: str(p.message, "message", 800),
+      history: h.map((t, i) => {
+        const o = obj(t, ["role", "text"]);
+        return { role: oneOf(o.role, `history[${i}].role`, ["user", "model"]), text: str(o.text, `history[${i}].text`, 1500) };
+      })
+    };
+  },
+  cacheKey: () => null,
+  maxTokens: 900,
+  build: (p, lang) => ({
+    system: `You are a knowledgeable, honest Historical Assistant specialising in the history of Greater Iran, its dynasties, rulers, regions and neighbours. Give accurate, engaging, concise answers in ${L(lang)}. If a question is unrelated to history, politely steer back to history. If unsure, say so. Respond with ONLY a JSON object {"text": "<your answer>"}.`,
+    schema: chatSchema,
+    prompt: `${p.history.length ? "Previous conversation:\n" + p.history.map((h) => `${h.role}: ${h.text}`).join("\n") + "\n\n" : ""}User: ${p.message}`
+  })
+};
 var TASKS = {
   year_dynasties: yearDynasties,
   ruler_detail: rulerDetail,
@@ -1063,7 +1192,13 @@ var TASKS = {
   figures,
   artifacts,
   quiz,
-  dig_deeper: digDeeper
+  dig_deeper: digDeeper,
+  lineage,
+  search,
+  biography,
+  what_if_ruler: whatIfRuler,
+  what_if_event: whatIfEvent,
+  chat
 };
 var isTaskId = (v) => typeof v === "string" && TASK_IDS.includes(v);
 
@@ -1141,10 +1276,12 @@ async function checkBudget(store, limits, now) {
 
 // server/ai/openrouter.ts
 var UpstreamError = class extends Error {
-  constructor(kind, status) {
+  /** `detail` says what the provider actually returned (no secrets, no prompt text): surfaced in logs and the error JSON. */
+  constructor(kind, status, detail) {
     super(`upstream_${kind}`);
     this.kind = kind;
     this.status = status;
+    this.detail = detail;
   }
 };
 var approxTokens = (s) => Math.ceil(s.length / 3.5);
@@ -1161,15 +1298,21 @@ async function chatJson(opts) {
         temperature: opts.temperature,
         max_tokens: opts.maxTokens,
         response_format: { type: "json_object" },
+        ...opts.reasoningOff ? { reasoning: { enabled: false } } : {},
         messages: [{ role: "system", content: opts.system }, { role: "user", content: opts.prompt }]
       })
     });
     if (res.status === 429) throw new UpstreamError("rate_limited", 429);
     if (res.status === 402) throw new UpstreamError("payment", 402);
-    if (!res.ok) throw new UpstreamError("http", res.status);
-    const body = await res.json();
-    const raw = body?.choices?.[0]?.message?.content;
-    if (!raw || typeof raw !== "string") throw new UpstreamError("empty");
+    const body = await res.json().catch(() => null);
+    if (!res.ok) throw new UpstreamError("http", res.status, String(body?.error?.message ?? "").slice(0, 160) || void 0);
+    if (body?.error) throw new UpstreamError(body.error.code === 429 ? "rate_limited" : "http", res.status, `provider error: ${String(body.error.message ?? body.error.code).slice(0, 160)}`);
+    const choice = body?.choices?.[0], msg = choice?.message;
+    let raw = msg?.content;
+    if (Array.isArray(raw)) raw = raw.map((p) => typeof p === "string" ? p : p?.text ?? "").join("");
+    if (typeof raw !== "string" || !raw.trim()) {
+      throw new UpstreamError("empty", res.status, `finish_reason=${choice?.finish_reason ?? "none"}; reasoning=${msg?.reasoning || msg?.reasoning_content ? "present" : "absent"}; completion_tokens=${body?.usage?.completion_tokens ?? "?"}; model=${body?.model ?? opts.model}`);
+    }
     const text = raw.replace(/^\s*```(?:json)?/i, "").replace(/```\s*$/, "").trim();
     return {
       text,
@@ -1199,7 +1342,15 @@ async function runStructured(cfg, built, opts) {
   const wire = wrapRoot(built.schema);
   let tokensIn = 0, tokensOut = 0, problems = [], prompt = built.prompt;
   for (let attempt = 0; attempt < 2; attempt++) {
-    const r = await chatJson({ apiKey: cfg.apiKey, model: opts.model, system: built.system, prompt, maxTokens: opts.maxTokens, temperature: cfg.temperature, timeoutMs: cfg.timeoutMs, referer: cfg.referer, fetchImpl: opts.fetchImpl });
+    const call = (maxTokens, reasoningOff) => chatJson({ apiKey: cfg.apiKey, model: opts.model, system: built.system, prompt, maxTokens, temperature: cfg.temperature, timeoutMs: cfg.timeoutMs, referer: cfg.referer, fetchImpl: opts.fetchImpl, reasoningOff });
+    let r;
+    try {
+      r = await call(opts.maxTokens, true);
+    } catch (e) {
+      if (e instanceof UpstreamError && e.kind === "http" && e.status === 400) r = await call(opts.maxTokens, false);
+      else if (e instanceof UpstreamError && e.kind === "empty") r = await call(Math.min(8e3, opts.maxTokens * 2), true);
+      else throw e;
+    }
     tokensIn += r.tokensIn;
     tokensOut += r.tokensOut;
     let parsed;
@@ -1502,8 +1653,9 @@ async function handleAsk(req, deps) {
     return json(200, { ok: true, data: out.data, meta: { cache: "miss", task: body.task, model: out.model } });
   } catch (e) {
     if (e instanceof UpstreamError) {
+      log({ evt: "ai_upstream_error", task: body.task, kind: e.kind, status: e.status, detail: e.detail });
       await record("miss", 0, 0, false, `upstream_${e.kind}`);
-      return e.kind === "rate_limited" || e.kind === "payment" ? fail(503, "ai_busy", {}, { "Retry-After": "30" }) : fail(502, "upstream_error", { kind: e.kind });
+      return e.kind === "rate_limited" || e.kind === "payment" ? fail(503, "ai_busy", {}, { "Retry-After": "30" }) : fail(502, "upstream_error", { kind: e.kind, ...e.detail ? { detail: e.detail } : {} });
     }
     if (e instanceof InvalidOutputError) {
       await record("miss", e.tokensIn ?? 0, e.tokensOut ?? 0, false, "invalid_output");

@@ -452,6 +452,13 @@ fact_reviews(fact_id, reviewer, verdict, notes, at)   fact_reports(fact_id, prof
 - [ ] Inventory survives reload and offline mode.
 - [ ] Full flow works in `fa` and `en` on phone.
 
+**Status (done, behind `?ff=discovery`):**
+- [x] `✦ Discover` pill (progress "N / total found" + completion ring) always hands out the nearest unfound fact; tapping a hidden sparkle on the board (max 3, one per region, nearest in time first, stable while scrubbing) opens the same card.
+- [x] Fact card: hook in big type, claim, context, sources, "AI · checked" badge for non-verified facts, *Dig deeper* (only when the shared AI is on; calls `/api/facts/dig`), *Share* (native share sheet or copy), *Report* (`/api/facts/report`). Not modal; on phones it hangs from the top because the bottom sheet covers the lower map.
+- [x] Local inventory in `localStorage` (`xtory_found`), survives reload and works offline (static facts need no backend).
+- [ ] Sparkles exist on the board only (Leaflet map has the Discover button but no sparkles); per-era completion rings and the 5-person hallway test are still open.
+- Try it: `/?ff=board,discovery` (add `,server_ai` for Dig deeper).
+
 ---
 
 ## Slice 8 — Profiles (optional nickname), synced inventory, leaderboard

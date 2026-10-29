@@ -21,6 +21,7 @@ import { ByokGate } from './components/ByokGate';
 import { Vazir } from './data/vazirs';
 import { pushToDataLayer, markAIUsed } from './services/tagManager';
 import { isFlagOn } from './lib/flags';
+import { DiscoveryLayer } from './discovery/DiscoveryLayer';
 
 // Heavy components — lazy loaded so they never block first paint
 // ff_board swaps the Leaflet map for the strategy-game board (same props)
@@ -90,6 +91,7 @@ export default function App() {
     mq.addEventListener('change', on);
     return () => mq.removeEventListener('change', on);
   }, []);
+  const discoveryOn = useMemo(() => isFlagOn('discovery'), []);
   const fragOn = useMemo(() => isFlagOn('fragmentation') || isFlagOn('board'), []);
 
   // Auto-dismiss AI error after 6 seconds
@@ -516,6 +518,7 @@ export default function App() {
             onArtifactClick={handleArtifactClick}
             onVazirClick={(vazir) => setSelectedVazir(vazir)}
           />
+            {discoveryOn && <DiscoveryLayer year={mapYear} lang={lang} serverAi={serverAi} />}
         </div>
 
         {/* Timeline ─ always highest z-index in the mobile stack */}
@@ -798,6 +801,7 @@ export default function App() {
               onArtifactClick={handleArtifactClick}
               onVazirClick={(vazir) => setSelectedVazir(vazir)}
             />
+            {discoveryOn && <DiscoveryLayer year={mapYear} lang={lang} serverAi={serverAi} />}
 
             {/* Control Extent Academic Tooltip — bottom-left of map */}
             <div className="absolute bottom-4 left-4 z-50 pointer-events-auto max-w-xs">

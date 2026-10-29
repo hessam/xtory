@@ -27,7 +27,8 @@ export function isFlagOn(
   opts: { search?: string; stored?: string | null; envValue?: string } = {}
 ): boolean {
   const search = opts.search ?? (typeof window !== 'undefined' ? window.location.search : '');
-  const fromUrl = parseFlagList(new URLSearchParams(search).get('ff'));
+  // ?ff=board,server_ai  and  ?ff=board&ff=server_ai  both work
+  const fromUrl = parseFlagList(new URLSearchParams(search).getAll('ff').join(','));
   if (fromUrl.has(`-${name}`)) return false;
   if (fromUrl.has(name)) return true;
 

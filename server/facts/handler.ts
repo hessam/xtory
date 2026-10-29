@@ -68,7 +68,7 @@ export async function handleDig(req: Request, deps: Deps): Promise<Response> {
     if (!out.usage.length) await recordUsage(store, { day, hour, task: 'dig_deeper', cache: 'hit', tokensIn: 0, tokensOut: 0, ok: true, deviceHash: id.deviceHash }).catch(() => {});
     return json(200, { ok: true, facts: out.facts, pending: out.pending, meta: { fromStore: out.fromStore, checker: out.checker } });
   } catch (e: any) {
-    if (e instanceof UpstreamError) return e.kind === 'rate_limited' || e.kind === 'payment' ? fail(503, 'ai_busy', {}, { 'Retry-After': '30' }) : fail(502, 'upstream_error', { kind: e.kind });
+    if (e instanceof UpstreamError) return e.kind === 'rate_limited' || e.kind === 'payment' ? fail(503, 'ai_busy', {}, { 'Retry-After': '30' }) : fail(502, 'upstream_error', { kind: e.kind, ...(e.detail ? { detail: e.detail } : {}) });
     if (e instanceof InvalidOutputError) return fail(422, 'invalid_model_output');
     (deps.log ?? console.log)({ evt: 'facts_internal_error', message: String(e?.message ?? e).slice(0, 200) });
     return fail(500, 'internal_error');

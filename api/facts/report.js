@@ -411,7 +411,7 @@ var realms = realms_default.rows.map(
 );
 
 // src/ai/tasks.ts
-var TASK_IDS = ["year_dynasties", "ruler_detail", "events", "figures", "artifacts", "quiz", "dig_deeper"];
+var TASK_IDS = ["year_dynasties", "ruler_detail", "events", "figures", "artifacts", "quiz", "dig_deeper", "lineage", "search", "biography", "what_if_ruler", "what_if_event", "chat"];
 var REGION_IDS = regions.map((r) => r.id);
 var S = { type: "string" };
 var I = { type: "integer" };
