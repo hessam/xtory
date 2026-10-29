@@ -1,0 +1,154 @@
+{
+ "id": "steppe",
+ "name": {
+  "en": "Central Asian Steppe · Russia",
+  "fa": "دشت‌های آسیای مرکزی · روسیه"
+ },
+ "dir": "N",
+ "periods": [
+  {
+   "from": -700,
+   "to": -209,
+   "title": {
+    "en": "Scythians and Saka",
+    "fa": "سکاها"
+   },
+   "line": {
+    "en": "Horse-riding nomads on Iran's northern frontier.",
+    "fa": "کوچ‌نشینان اسب‌سوار در مرز شمالی ایران."
+   },
+   "sizeMkm2": null,
+   "sources": [
+    "Cambridge Histories (Ancient / Medieval / Early Modern) for the period"
+   ]
+  },
+  {
+   "from": -209,
+   "to": 93,
+   "title": {
+    "en": "Xiongnu confederation",
+    "fa": "کنفدراسیون سیونگ‌نو"
+   },
+   "line": {
+    "en": "The first steppe empire, rival of Han China.",
+    "fa": "نخستین امپراتوری دشت، رقیب هان چین."
+   },
+   "sizeMkm2": 9.0,
+   "sources": [
+    "Taagepera 1997, Expansion and contraction patterns of large polities (Int. Studies Q. 41)"
+   ]
+  },
+  {
+   "from": 93,
+   "to": 552,
+   "title": {
+    "en": "Huns, Kidarites, Hephthalites",
+    "fa": "هون‌ها، کیداریان، هیاطله"
+   },
+   "line": {
+    "en": "Nomads press on the Sasanian eastern frontier.",
+    "fa": "کوچ‌نشینان بر مرز شرقی ساسانیان فشار می‌آورند."
+   },
+   "sizeMkm2": null,
+   "sources": [
+    "Cambridge Histories (Ancient / Medieval / Early Modern) for the period"
+   ]
+  },
+  {
+   "from": 552,
+   "to": 744,
+   "title": {
+    "en": "Göktürk Khaganate",
+    "fa": "خاقانات گوک‌ترک"
+   },
+   "line": {
+    "en": "Turks ally with Sasanians to destroy the Hephthalites.",
+    "fa": "ترکان با ساسانیان برای نابودی هیاطله هم‌پیمان می‌شوند."
+   },
+   "sizeMkm2": 6.0,
+   "sources": [
+    "Taagepera 1997, Expansion and contraction patterns of large polities (Int. Studies Q. 41)"
+   ]
+  },
+  {
+   "from": 744,
+   "to": 1206,
+   "title": {
+    "en": "Uyghurs, Khitans, Qarluqs, Oghuz",
+    "fa": "اویغورها، ختائیان، قارلوق‌ها، غزها"
+   },
+   "line": {
+    "en": "Turkic peoples move west into Iran and become Seljuks and Ghaznavids.",
+    "fa": "ترکان به غرب می‌آیند و سلجوقی و غزنوی می‌شوند."
+   },
+   "sizeMkm2": null,
+   "sources": [
+    "Cambridge Histories (Ancient / Medieval / Early Modern) for the period"
+   ]
+  },
+  {
+   "from": 1206,
+   "to": 1368,
+   "title": {
+    "en": "Mongol Empire",
+    "fa": "امپراتوری مغول"
+   },
+   "line": {
+    "en": "The largest land empire in history; Iran is conquered and then ruled by the Ilkhans.",
+    "fa": "بزرگ‌ترین امپراتوری خشکی تاریخ؛ ایران فتح و سپس زیر ایلخانان اداره می‌شود."
+   },
+   "sizeMkm2": 24.0,
+   "sources": [
+    "Taagepera 1997, Expansion and contraction patterns of large polities (Int. Studies Q. 41)"
+   ]
+  },
+  {
+   "from": 1368,
+   "to": 1552,
+   "title": {
+    "en": "Timurids, Golden Horde successors",
+    "fa": "تیموریان و جانشینان اردوی زرین"
+   },
+   "line": {
+    "en": "Timur rebuilds a steppe empire; Muscovy grows.",
+    "fa": "تیمور امپراتوری دشت را بازمی‌سازد؛ مسکو رشد می‌کند."
+   },
+   "sizeMkm2": 4.4,
+   "sources": [
+    "Taagepera 1997, Expansion and contraction patterns of large polities (Int. Studies Q. 41)"
+   ]
+  },
+  {
+   "from": 1552,
+   "to": 1917,
+   "title": {
+    "en": "Russian Empire",
+    "fa": "امپراتوری روسیه"
+   },
+   "line": {
+    "en": "Russia expands to the Caspian and the Caucasus, taking Iranian lands (1813, 1828).",
+    "fa": "روسیه تا خزر و قفقاز پیش می‌آید و سرزمین‌های ایران را می‌گیرد (۱۸۱۳، ۱۸۲۸)."
+   },
+   "sizeMkm2": 17.0,
+   "sources": [
+    "Taagepera 1997, Expansion and contraction patterns of large polities (Int. Studies Q. 41)"
+   ]
+  },
+  {
+   "from": 1917,
+   "to": 1980,
+   "title": {
+    "en": "Soviet Union",
+    "fa": "اتحاد شوروی"
+   },
+   "line": {
+    "en": "A superpower on Iran's northern border.",
+    "fa": "ابرقدرتی در مرز شمالی ایران."
+   },
+   "sizeMkm2": 22.4,
+   "sources": [
+    "Cambridge Histories (Ancient / Medieval / Early Modern) for the period"
+   ]
+  }
+ ]
+}

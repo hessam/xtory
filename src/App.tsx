@@ -26,6 +26,7 @@ import { DiscoveryLayer } from './discovery/DiscoveryLayer';
 // Heavy components — lazy loaded so they never block first paint
 // ff_board swaps the Leaflet map for the strategy-game board (same props)
 const Map        = lazy(() => isFlagOn('board') ? import('./board/MapBoard') : import('./components/MapLeaflet'));
+const MeanwhileLayer = lazy(() => import('./meanwhile/MeanwhileLayer'));
 const Timeline   = lazy(() => import('./components/Timeline').then(m => ({ default: m.Timeline })));
 const EventsPanel = lazy(() => import('./components/EventsPanel').then(m => ({ default: m.EventsPanel })));
 const BottomSheet = lazy(() => import('./components/BottomSheet').then(m => ({ default: m.BottomSheet })));
@@ -92,6 +93,7 @@ export default function App() {
     return () => mq.removeEventListener('change', on);
   }, []);
   const discoveryOn = useMemo(() => isFlagOn('discovery'), []);
+  const meanwhileOn = useMemo(() => isFlagOn('meanwhile'), []);
   const fragOn = useMemo(() => isFlagOn('fragmentation') || isFlagOn('board'), []);
 
   // Auto-dismiss AI error after 6 seconds
@@ -519,6 +521,7 @@ export default function App() {
             onVazirClick={(vazir) => setSelectedVazir(vazir)}
           />
             {discoveryOn && <DiscoveryLayer year={mapYear} lang={lang} serverAi={serverAi} />}
+            {meanwhileOn && <Suspense fallback={null}><MeanwhileLayer year={mapYear} lang={lang} /></Suspense>}
         </div>
 
         {/* Timeline ─ always highest z-index in the mobile stack */}
@@ -802,6 +805,7 @@ export default function App() {
               onVazirClick={(vazir) => setSelectedVazir(vazir)}
             />
             {discoveryOn && <DiscoveryLayer year={mapYear} lang={lang} serverAi={serverAi} />}
+            {meanwhileOn && <Suspense fallback={null}><MeanwhileLayer year={mapYear} lang={lang} /></Suspense>}
 
             {/* Control Extent Academic Tooltip — bottom-left of map */}
             <div className="absolute bottom-4 left-4 z-50 pointer-events-auto max-w-xs">

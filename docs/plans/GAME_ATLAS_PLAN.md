@@ -543,10 +543,16 @@ safe area for Telegram/X/WhatsApp crops.
   Taagepera empire sizes, Seshat, Chandler / Reba et al. city populations — **licenses checked and
   recorded** in `data/meanwhile/SOURCES.md`.
 
+**Status (done, behind `?ff=meanwhile`, e.g. `/?ff=board,meanwhile`; no backend needed):**
+- [x] Dataset `data/meanwhile/*.json`: six neighbours (Rome→Byzantium→Ottomans, China, India, Egypt/Arabia, Europe, plus the Steppe/Russia because the Mongols and Turks shaped Iran), an Iran series, and a largest-city series. Stored as contiguous **periods** (each with bilingual title + line, size in million km², sources) that cover every 25-year bucket from 700 BC to 1979; `snapshotAt(year)` looks the bucket up.
+- [x] Edge arrows for each neighbour (compass direction from Iran) and a **Meanwhile** panel with versus bars (Iran highlighted), the neighbours' one-liners and the world's largest city. fa + en, RTL, Persian digits; lazy-loaded chunk.
+- [x] `data/meanwhile/SOURCES.md` lists every reference and licence note.
+- [ ] **Not human-reviewed**: all figures are AI-drafted rounded estimates (the panel says so). Licences still to be confirmed by the owner (Reba et al.; Seshat deliberately not used, it is non-commercial). Arrows are screen-edge pills, not anchored to the map camera; "notable firsts" are inside the one-liners rather than a separate stat.
+
 **DoD**
-- [ ] Coverage for every 25-year bucket from 700 BC to 1979.
-- [ ] Every metric has a source; licence notes complete.
-- [ ] Works with no backend.
+- [x] Coverage for every 25-year bucket from 700 BC to 1979 (unit test).
+- [~] Every metric has a source (unit test); licence notes written but unconfirmed.
+- [x] Works with no backend (e2e fails on any /api call).
 
 ---
 

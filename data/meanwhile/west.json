@@ -1,0 +1,218 @@
+{
+ "id": "west",
+ "name": {
+  "en": "Rome · Byzantium · Ottomans",
+  "fa": "روم · بیزانس · عثمانی"
+ },
+ "dir": "W",
+ "periods": [
+  {
+   "from": -700,
+   "to": -509,
+   "title": {
+    "en": "Early Rome",
+    "fa": "روم آغازین"
+   },
+   "line": {
+    "en": "A small Latin city-state on the Tiber, ruled by kings.",
+    "fa": "دولت‌شهری کوچک لاتینی کنار رود تیبر که پادشاهان بر آن حکم می‌راندند."
+   },
+   "sizeMkm2": 0.01,
+   "sources": [
+    "Cambridge Histories (Ancient / Medieval / Early Modern) for the period"
+   ]
+  },
+  {
+   "from": -509,
+   "to": -264,
+   "title": {
+    "en": "Roman Republic",
+    "fa": "جمهوری روم"
+   },
+   "line": {
+    "en": "The Republic unites Italy through wars and alliances.",
+    "fa": "جمهوری روم با جنگ و پیمان، ایتالیا را یکپارچه می‌کند."
+   },
+   "sizeMkm2": 0.1,
+   "sources": [
+    "Cambridge Histories (Ancient / Medieval / Early Modern) for the period"
+   ]
+  },
+  {
+   "from": -264,
+   "to": -27,
+   "title": {
+    "en": "Republic conquers the Mediterranean",
+    "fa": "جمهوری و فتح مدیترانه"
+   },
+   "line": {
+    "en": "Rome defeats Carthage and Greece, and rules the whole Mediterranean coast.",
+    "fa": "روم کارتاژ و یونان را شکست می‌دهد و بر کرانه‌های مدیترانه فرمان می‌راند."
+   },
+   "sizeMkm2": 2.0,
+   "sources": [
+    "Taagepera 1979, Size and duration of empires (Soc. Sci. Hist. 3)"
+   ]
+  },
+  {
+   "from": -27,
+   "to": 284,
+   "title": {
+    "en": "Roman Empire",
+    "fa": "امپراتوری روم"
+   },
+   "line": {
+    "en": "Peak Rome: from Britain to Syria, with Iran's Parthians as its eastern rival.",
+    "fa": "اوج روم: از بریتانیا تا سوریه؛ رقیب شرقی آن پارتیان ایران‌اند."
+   },
+   "sizeMkm2": 5.0,
+   "sources": [
+    "Taagepera 1979, Size and duration of empires (Soc. Sci. Hist. 3)"
+   ]
+  },
+  {
+   "from": 284,
+   "to": 476,
+   "title": {
+    "en": "Late Roman Empire",
+    "fa": "روم متأخر"
+   },
+   "line": {
+    "en": "The empire splits in two; the West collapses in 476.",
+    "fa": "امپراتوری دو نیم می‌شود و غرب در ۴۷۶ فرومی‌پاشد."
+   },
+   "sizeMkm2": 3.0,
+   "sources": [
+    "Taagepera 1979, Size and duration of empires (Soc. Sci. Hist. 3)"
+   ]
+  },
+  {
+   "from": 476,
+   "to": 632,
+   "title": {
+    "en": "Eastern Rome under Justinian",
+    "fa": "روم شرقی در عصر ژوستینین"
+   },
+   "line": {
+    "en": "Constantinople survives, reconquers parts of the West, and fights the Sasanians for decades.",
+    "fa": "قسطنطنیه پابرجاست، بخش‌هایی از غرب را بازپس می‌گیرد و دهه‌ها با ساسانیان می‌جنگد."
+   },
+   "sizeMkm2": 2.7,
+   "sources": [
+    "Taagepera 1997, Expansion and contraction patterns of large polities (Int. Studies Q. 41)"
+   ]
+  },
+  {
+   "from": 632,
+   "to": 867,
+   "title": {
+    "en": "Byzantium shrinks",
+    "fa": "کوچک‌شدن بیزانس"
+   },
+   "line": {
+    "en": "Arab conquests take Syria and Egypt; Byzantium survives around Anatolia.",
+    "fa": "فتوحات عرب سوریه و مصر را می‌گیرد؛ بیزانس در پیرامون آناتولی می‌ماند."
+   },
+   "sizeMkm2": 0.9,
+   "sources": [
+    "Taagepera 1997, Expansion and contraction patterns of large polities (Int. Studies Q. 41)"
+   ]
+  },
+  {
+   "from": 867,
+   "to": 1071,
+   "title": {
+    "en": "Byzantine revival",
+    "fa": "احیای بیزانس"
+   },
+   "line": {
+    "en": "A golden age of recovery under the Macedonian emperors.",
+    "fa": "دوران بازیابی و شکوفایی در عصر امپراتوران مقدونی."
+   },
+   "sizeMkm2": 1.4,
+   "sources": [
+    "Taagepera 1997, Expansion and contraction patterns of large polities (Int. Studies Q. 41)"
+   ]
+  },
+  {
+   "from": 1071,
+   "to": 1204,
+   "title": {
+    "en": "After Manzikert",
+    "fa": "پس از ملازگرد"
+   },
+   "line": {
+    "en": "Seljuk Turks take most of Anatolia; the Crusades begin.",
+    "fa": "ترکان سلجوقی بیشتر آناتولی را می‌گیرند و جنگ‌های صلیبی آغاز می‌شود."
+   },
+   "sizeMkm2": 0.8,
+   "sources": [
+    "Taagepera 1997, Expansion and contraction patterns of large polities (Int. Studies Q. 41)"
+   ]
+  },
+  {
+   "from": 1204,
+   "to": 1453,
+   "title": {
+    "en": "Fragmented Byzantium",
+    "fa": "بیزانس پاره‌پاره"
+   },
+   "line": {
+    "en": "Crusaders sack Constantinople in 1204; a shrinking empire survives until 1453.",
+    "fa": "صلیبیان در ۱۲۰۴ قسطنطنیه را غارت می‌کنند؛ امپراتوری کوچک‌شده تا ۱۴۵۳ می‌ماند."
+   },
+   "sizeMkm2": 0.2,
+   "sources": [
+    "Taagepera 1997, Expansion and contraction patterns of large polities (Int. Studies Q. 41)"
+   ]
+  },
+  {
+   "from": 1453,
+   "to": 1700,
+   "title": {
+    "en": "Ottoman Empire rises",
+    "fa": "برآمدن عثمانی"
+   },
+   "line": {
+    "en": "The Ottomans take Constantinople and rule the Balkans, Anatolia, Arab lands; Safavid Iran is their rival.",
+    "fa": "عثمانی‌ها قسطنطنیه را می‌گیرند و بر بالکان، آناتولی و سرزمین‌های عرب حکم می‌رانند؛ ایران صفوی رقیب آنان است."
+   },
+   "sizeMkm2": 5.2,
+   "sources": [
+    "Taagepera 1997, Expansion and contraction patterns of large polities (Int. Studies Q. 41)"
+   ]
+  },
+  {
+   "from": 1700,
+   "to": 1922,
+   "title": {
+    "en": "Ottoman decline",
+    "fa": "افول عثمانی"
+   },
+   "line": {
+    "en": "The \"sick man of Europe\" loses land to Russia and Europe.",
+    "fa": "«مرد بیمار اروپا» سرزمین‌هایش را به روسیه و اروپا از دست می‌دهد."
+   },
+   "sizeMkm2": 3.0,
+   "sources": [
+    "Cambridge Histories (Ancient / Medieval / Early Modern) for the period"
+   ]
+  },
+  {
+   "from": 1922,
+   "to": 1980,
+   "title": {
+    "en": "Republic of Turkey",
+    "fa": "جمهوری ترکیه"
+   },
+   "line": {
+    "en": "A secular republic founded by Atatürk.",
+    "fa": "جمهوری سکولار بنیان‌گذاشته‌شده توسط آتاتورک."
+   },
+   "sizeMkm2": 0.8,
+   "sources": [
+    "Cambridge Histories (Ancient / Medieval / Early Modern) for the period"
+   ]
+  }
+ ]
+}

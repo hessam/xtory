@@ -1,0 +1,217 @@
+{
+ "id": "iran",
+ "name": {
+  "en": "Greater Iran (largest plateau realm)",
+  "fa": "ایران بزرگ (بزرگ‌ترین قلمرو فلات)"
+ },
+ "periods": [
+  {
+   "from": -700,
+   "to": -550,
+   "title": {
+    "en": "Medes and Elam",
+    "fa": "ماد و عیلام"
+   },
+   "sizeMkm2": 2.8,
+   "sources": [
+    "Taagepera 1997, Expansion and contraction patterns of large polities (Int. Studies Q. 41)",
+    "Cambridge History of Iran, relevant volumes"
+   ]
+  },
+  {
+   "from": -550,
+   "to": -330,
+   "title": {
+    "en": "Achaemenid Empire",
+    "fa": "شاهنشاهی هخامنشی"
+   },
+   "sizeMkm2": 5.5,
+   "sources": [
+    "Taagepera 1997, Expansion and contraction patterns of large polities (Int. Studies Q. 41)",
+    "Cambridge History of Iran, relevant volumes"
+   ]
+  },
+  {
+   "from": -330,
+   "to": -247,
+   "title": {
+    "en": "Seleucid Empire",
+    "fa": "سلوکیان"
+   },
+   "sizeMkm2": 3.0,
+   "sources": [
+    "Taagepera 1997, Expansion and contraction patterns of large polities (Int. Studies Q. 41)",
+    "Cambridge History of Iran, relevant volumes"
+   ]
+  },
+  {
+   "from": -247,
+   "to": 224,
+   "title": {
+    "en": "Parthian Empire",
+    "fa": "اشکانیان"
+   },
+   "sizeMkm2": 2.8,
+   "sources": [
+    "Taagepera 1997, Expansion and contraction patterns of large polities (Int. Studies Q. 41)",
+    "Cambridge History of Iran, relevant volumes"
+   ]
+  },
+  {
+   "from": 224,
+   "to": 651,
+   "title": {
+    "en": "Sasanian Empire",
+    "fa": "ساسانیان"
+   },
+   "sizeMkm2": 3.5,
+   "sources": [
+    "Taagepera 1997, Expansion and contraction patterns of large polities (Int. Studies Q. 41)",
+    "Cambridge History of Iran, relevant volumes"
+   ]
+  },
+  {
+   "from": 651,
+   "to": 821,
+   "title": {
+    "en": "Province of the Caliphate",
+    "fa": "ایالتی از خلافت"
+   },
+   "sizeMkm2": null,
+   "sources": [
+    "Taagepera 1997, Expansion and contraction patterns of large polities (Int. Studies Q. 41)",
+    "Cambridge History of Iran, relevant volumes"
+   ]
+  },
+  {
+   "from": 821,
+   "to": 1037,
+   "title": {
+    "en": "Tahirids, Saffarids, Samanids, Buyids",
+    "fa": "طاهریان، صفاریان، سامانیان، آل‌بویه"
+   },
+   "sizeMkm2": 1.2,
+   "sources": [
+    "Taagepera 1997, Expansion and contraction patterns of large polities (Int. Studies Q. 41)",
+    "Cambridge History of Iran, relevant volumes"
+   ]
+  },
+  {
+   "from": 1037,
+   "to": 1220,
+   "title": {
+    "en": "Seljuk Empire",
+    "fa": "سلجوقیان"
+   },
+   "sizeMkm2": 3.9,
+   "sources": [
+    "Taagepera 1997, Expansion and contraction patterns of large polities (Int. Studies Q. 41)",
+    "Cambridge History of Iran, relevant volumes"
+   ]
+  },
+  {
+   "from": 1220,
+   "to": 1256,
+   "title": {
+    "en": "Khwarazmians, then Mongol conquest",
+    "fa": "خوارزمشاهیان و سپس حمله مغول"
+   },
+   "sizeMkm2": 2.3,
+   "sources": [
+    "Taagepera 1997, Expansion and contraction patterns of large polities (Int. Studies Q. 41)",
+    "Cambridge History of Iran, relevant volumes"
+   ]
+  },
+  {
+   "from": 1256,
+   "to": 1335,
+   "title": {
+    "en": "Ilkhanate",
+    "fa": "ایلخانان"
+   },
+   "sizeMkm2": 3.5,
+   "sources": [
+    "Taagepera 1997, Expansion and contraction patterns of large polities (Int. Studies Q. 41)",
+    "Cambridge History of Iran, relevant volumes"
+   ]
+  },
+  {
+   "from": 1335,
+   "to": 1370,
+   "title": {
+    "en": "Fragments: Jalayirids, Muzaffarids",
+    "fa": "پراکندگی: جلایریان، آل‌مظفر"
+   },
+   "sizeMkm2": 0.8,
+   "sources": [
+    "Taagepera 1997, Expansion and contraction patterns of large polities (Int. Studies Q. 41)",
+    "Cambridge History of Iran, relevant volumes"
+   ]
+  },
+  {
+   "from": 1370,
+   "to": 1501,
+   "title": {
+    "en": "Timurids and Turkmen dynasties",
+    "fa": "تیموریان و ترکمانان"
+   },
+   "sizeMkm2": 4.4,
+   "sources": [
+    "Taagepera 1997, Expansion and contraction patterns of large polities (Int. Studies Q. 41)",
+    "Cambridge History of Iran, relevant volumes"
+   ]
+  },
+  {
+   "from": 1501,
+   "to": 1736,
+   "title": {
+    "en": "Safavid Empire",
+    "fa": "صفویان"
+   },
+   "sizeMkm2": 2.0,
+   "sources": [
+    "Taagepera 1997, Expansion and contraction patterns of large polities (Int. Studies Q. 41)",
+    "Cambridge History of Iran, relevant volumes"
+   ]
+  },
+  {
+   "from": 1736,
+   "to": 1796,
+   "title": {
+    "en": "Afsharids and Zands",
+    "fa": "افشاریان و زندیان"
+   },
+   "sizeMkm2": 2.5,
+   "sources": [
+    "Taagepera 1997, Expansion and contraction patterns of large polities (Int. Studies Q. 41)",
+    "Cambridge History of Iran, relevant volumes"
+   ]
+  },
+  {
+   "from": 1796,
+   "to": 1925,
+   "title": {
+    "en": "Qajar Dynasty",
+    "fa": "قاجاریان"
+   },
+   "sizeMkm2": 1.6,
+   "sources": [
+    "Taagepera 1997, Expansion and contraction patterns of large polities (Int. Studies Q. 41)",
+    "Cambridge History of Iran, relevant volumes"
+   ]
+  },
+  {
+   "from": 1925,
+   "to": 1980,
+   "title": {
+    "en": "Pahlavi Iran",
+    "fa": "ایران پهلوی"
+   },
+   "sizeMkm2": 1.65,
+   "sources": [
+    "Taagepera 1997, Expansion and contraction patterns of large polities (Int. Studies Q. 41)",
+    "Cambridge History of Iran, relevant volumes"
+   ]
+  }
+ ]
+}

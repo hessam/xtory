@@ -1,0 +1,186 @@
+{
+ "id": "india",
+ "name": {
+  "en": "India",
+  "fa": "هند"
+ },
+ "dir": "SE",
+ "periods": [
+  {
+   "from": -700,
+   "to": -321,
+   "title": {
+    "en": "Magadha and the Mahajanapadas",
+    "fa": "ماگادا و مهاجنپدها"
+   },
+   "line": {
+    "en": "Sixteen kingdoms; Buddha and Mahavira teach. Darius I takes the Indus.",
+    "fa": "شانزده پادشاهی؛ بودا و مهاویرا می‌آموزند. داریوش یکم دره سند را می‌گیرد."
+   },
+   "sizeMkm2": 0.5,
+   "sources": [
+    "Cambridge Histories (Ancient / Medieval / Early Modern) for the period"
+   ]
+  },
+  {
+   "from": -321,
+   "to": -185,
+   "title": {
+    "en": "Maurya Empire",
+    "fa": "امپراتوری موریا"
+   },
+   "line": {
+    "en": "Ashoka rules almost all of the subcontinent.",
+    "fa": "آشوکا بر تقریباً همه شبه‌قاره فرمان می‌راند."
+   },
+   "sizeMkm2": 3.4,
+   "sources": [
+    "Taagepera 1979, Size and duration of empires (Soc. Sci. Hist. 3)"
+   ]
+  },
+  {
+   "from": -185,
+   "to": 319,
+   "title": {
+    "en": "Shunga, Satavahana, Kushan",
+    "fa": "شونگا، ساتاواهانا، کوشان"
+   },
+   "line": {
+    "en": "Rival kingdoms; the Kushans link India, Central Asia and Parthian Iran.",
+    "fa": "پادشاهی‌های رقیب؛ کوشانیان هند، آسیای میانه و ایران اشکانی را پیوند می‌دهند."
+   },
+   "sizeMkm2": 2.5,
+   "sources": [
+    "Turchin, Adams & Hall 2006, East-West orientation of historical empires (J. World-Systems Res. 12)"
+   ]
+  },
+  {
+   "from": 319,
+   "to": 550,
+   "title": {
+    "en": "Gupta Empire",
+    "fa": "امپراتوری گوپتا"
+   },
+   "line": {
+    "en": "A golden age of mathematics: zero and the decimal system.",
+    "fa": "عصر زرین ریاضیات: صفر و دستگاه ده‌دهی."
+   },
+   "sizeMkm2": 3.5,
+   "sources": [
+    "Taagepera 1997, Expansion and contraction patterns of large polities (Int. Studies Q. 41)"
+   ]
+  },
+  {
+   "from": 550,
+   "to": 750,
+   "title": {
+    "en": "Harsha and regional kingdoms",
+    "fa": "هرشا و پادشاهی‌های محلی"
+   },
+   "line": {
+    "en": "North India fragments after the Gupta; Persian refugees (Parsis) later arrive.",
+    "fa": "شمال هند پس از گوپتا پاره‌پاره می‌شود؛ بعدها پارسیان مهاجر می‌رسند."
+   },
+   "sizeMkm2": 1.0,
+   "sources": [
+    "Cambridge Histories (Ancient / Medieval / Early Modern) for the period"
+   ]
+  },
+  {
+   "from": 750,
+   "to": 1206,
+   "title": {
+    "en": "Pala, Rashtrakuta, Chola",
+    "fa": "پالا، راشتراکوتا، چولا"
+   },
+   "line": {
+    "en": "Great southern naval powers; Ghaznavids raid from Iran's east.",
+    "fa": "قدرت‌های دریایی بزرگ جنوب؛ غزنویان از شرق ایران یورش می‌آورند."
+   },
+   "sizeMkm2": 1.5,
+   "sources": [
+    "Cambridge Histories (Ancient / Medieval / Early Modern) for the period"
+   ]
+  },
+  {
+   "from": 1206,
+   "to": 1526,
+   "title": {
+    "en": "Delhi Sultanate",
+    "fa": "سلطنت دهلی"
+   },
+   "line": {
+    "en": "Turkic and Persianate sultans rule from Delhi; Persian becomes the court language.",
+    "fa": "سلاطین ترک و ایرانی‌مآب از دهلی حکم می‌رانند؛ فارسی زبان دربار می‌شود."
+   },
+   "sizeMkm2": 3.2,
+   "sources": [
+    "Taagepera 1997, Expansion and contraction patterns of large polities (Int. Studies Q. 41)"
+   ]
+  },
+  {
+   "from": 1526,
+   "to": 1707,
+   "title": {
+    "en": "Mughal Empire",
+    "fa": "امپراتوری مغول هند"
+   },
+   "line": {
+    "en": "A Persian-speaking empire at its height: Taj Mahal, rich courts.",
+    "fa": "امپراتوری فارسی‌زبان در اوج: تاج‌محل و دربارهای پرشکوه."
+   },
+   "sizeMkm2": 4.0,
+   "sources": [
+    "Taagepera 1997, Expansion and contraction patterns of large polities (Int. Studies Q. 41)"
+   ]
+  },
+  {
+   "from": 1707,
+   "to": 1858,
+   "title": {
+    "en": "Marathas and the Company",
+    "fa": "مراتها و کمپانی"
+   },
+   "line": {
+    "en": "Mughal power fades; Nader Shah sacks Delhi (1739); the East India Company rises.",
+    "fa": "قدرت مغولان کم‌رنگ می‌شود؛ نادرشاه دهلی را می‌گیرد (۱۷۳۹) و کمپانی هند شرقی برمی‌آید."
+   },
+   "sizeMkm2": 2.5,
+   "sources": [
+    "Cambridge Histories (Ancient / Medieval / Early Modern) for the period"
+   ]
+  },
+  {
+   "from": 1858,
+   "to": 1947,
+   "title": {
+    "en": "British Raj",
+    "fa": "راج بریتانیا"
+   },
+   "line": {
+    "en": "Direct British rule over South Asia.",
+    "fa": "حکومت مستقیم بریتانیا بر جنوب آسیا."
+   },
+   "sizeMkm2": 4.5,
+   "sources": [
+    "Cambridge Histories (Ancient / Medieval / Early Modern) for the period"
+   ]
+  },
+  {
+   "from": 1947,
+   "to": 1980,
+   "title": {
+    "en": "India and Pakistan",
+    "fa": "هند و پاکستان"
+   },
+   "line": {
+    "en": "Independence and partition in 1947.",
+    "fa": "استقلال و تجزیه در ۱۹۴۷."
+   },
+   "sizeMkm2": 3.3,
+   "sources": [
+    "Cambridge Histories (Ancient / Medieval / Early Modern) for the period"
+   ]
+  }
+ ]
+}
