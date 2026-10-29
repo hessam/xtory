@@ -27,6 +27,8 @@ export default defineConfig(({ mode }) => {
       },
     },
     server: {
+      // `npm run dev:api` serves /api/* locally (AI proxy + fact engine)
+      proxy: { '/api': 'http://localhost:8787' },
       // HMR is disabled in AI Studio via DISABLE_HMR env var.
       // Do not modify—file watching is disabled to prevent flickering during agent edits.
       hmr: process.env.DISABLE_HMR !== 'true',

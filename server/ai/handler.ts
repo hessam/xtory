@@ -134,8 +134,9 @@ export async function handleAsk(req: Request, deps: Deps): Promise<Response> {
 /** GET /api/ai/status — lets the UI know whether to enable AI buttons without a user key. No secrets, no counters. */
 export async function handleStatus(deps: Deps): Promise<Response> {
   const c = deps.config;
-  const ready = c.enabled && !!c.apiKey && !!c.hashSalt && (!c.isProduction || deps.store.durable);
-  return json(200, { ok: true, enabled: ready }, { 'Cache-Control': 'public, max-age=60' });
+  // `reason` only says which switch is off (no values, no secrets): it turns "AI does nothing" into a one-line diagnosis.
+  const reason = !c.enabled ? 'disabled' : !c.apiKey ? 'missing_key' : !c.hashSalt ? 'missing_salt' : c.isProduction && !deps.store.durable ? 'store_unavailable' : undefined;
+  return json(200, reason ? { ok: true, enabled: false, reason } : { ok: true, enabled: true }, { 'Cache-Control': 'public, max-age=60' });
 }
 
 const safeEq = (a: string, b: string) => { const x = Buffer.from(a), y = Buffer.from(b); return x.length === y.length && timingSafeEqual(x, y); };

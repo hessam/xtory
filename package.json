@@ -21,7 +21,8 @@
     "facts:build": "tsx scripts/facts/build-computed.ts",
     "facts:check": "npm run facts:build && git diff --exit-code -- src/data/generated/facts.computed.json",
     "facts:export": "tsx scripts/facts/export-verified.ts",
-    "facts:spotcheck": "tsx scripts/facts/spot-check.ts"
+    "facts:spotcheck": "tsx scripts/facts/spot-check.ts",
+    "dev:api": "tsx scripts/dev-api.ts"
   },
   "dependencies": {
     "@google/genai": "^1.29.0",

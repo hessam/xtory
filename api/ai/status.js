@@ -590,8 +590,8 @@ var CACHE_TTL = 30 * 86400;
 var json = (status, body, extra = {}) => new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store", ...extra } });
 async function handleStatus(deps) {
   const c = deps.config;
-  const ready = c.enabled && !!c.apiKey && !!c.hashSalt && (!c.isProduction || deps.store.durable);
-  return json(200, { ok: true, enabled: ready }, { "Cache-Control": "public, max-age=60" });
+  const reason = !c.enabled ? "disabled" : !c.apiKey ? "missing_key" : !c.hashSalt ? "missing_salt" : c.isProduction && !deps.store.durable ? "store_unavailable" : void 0;
+  return json(200, reason ? { ok: true, enabled: false, reason } : { ok: true, enabled: true }, { "Cache-Control": "public, max-age=60" });
 }
 var singleton;
 function depsFromEnv(env = process.env) {
@@ -605,19 +605,26 @@ function depsFromEnv(env = process.env) {
 // server/entry/node.ts
 function nodeAdapter(handler) {
   return async (req, res) => {
-    const chunks = [];
-    let size = 0;
-    for await (const c of req) {
-      size += c.length;
-      if (size > 65536) break;
-      chunks.push(c);
+    let body;
+    const pre = req.body;
+    if (pre !== void 0 && pre !== null) {
+      body = Buffer.isBuffer(pre) ? pre : Buffer.from(typeof pre === "string" ? pre : JSON.stringify(pre));
+    } else {
+      const chunks = [];
+      let size = 0;
+      for await (const c of req) {
+        size += c.length;
+        if (size > 65536) break;
+        chunks.push(c);
+      }
+      body = Buffer.concat(chunks);
     }
     const proto = req.headers["x-forwarded-proto"] || "https";
     const url = `${proto}://${req.headers.host ?? "localhost"}${req.url ?? "/"}`;
     const headers = new Headers();
     for (const [k, v] of Object.entries(req.headers)) if (v !== void 0) headers.set(k, Array.isArray(v) ? v.join(", ") : v);
     const hasBody = req.method !== "GET" && req.method !== "HEAD";
-    const response = await handler(new Request(url, { method: req.method, headers, body: hasBody ? Buffer.concat(chunks) : void 0 }));
+    const response = await handler(new Request(url, { method: req.method, headers, body: hasBody ? body : void 0 }));
     res.statusCode = response.status;
     response.headers.forEach((value, key) => res.setHeader(key, value));
     res.end(Buffer.from(await response.arrayBuffer()));
