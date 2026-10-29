@@ -53,5 +53,15 @@
     "api/**/*.js": {
       "maxDuration": 30
     }
-  }
+  },
+  "rewrites": [
+    {
+      "source": "/f/:fact",
+      "destination": "/api/unfurl?fact=:fact"
+    },
+    {
+      "source": "/u/:nick",
+      "destination": "/api/unfurl?nick=:nick"
+    }
+  ]
 }

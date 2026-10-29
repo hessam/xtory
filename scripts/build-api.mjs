@@ -6,7 +6,7 @@ import { build } from 'esbuild';
 const entries = {
   'ai/ask': 'server/entry/ask.ts', 'ai/status': 'server/entry/status.ts', 'ai/usage': 'server/entry/usage.ts',
   'facts/dig': 'server/entry/facts-dig.ts', 'facts/report': 'server/entry/facts-report.ts', 'facts/admin': 'server/entry/facts-admin.ts',
-  'me': 'server/entry/me.ts', 'leaderboard': 'server/entry/leaderboard.ts',
+  'me': 'server/entry/me.ts', 'unfurl': 'server/entry/unfurl.ts', 'leaderboard': 'server/entry/leaderboard.ts',
 };
 
 await build({

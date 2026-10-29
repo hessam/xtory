@@ -5,7 +5,7 @@ import { badgeOf, type Fact } from '../facts/model';
 import { nextFact, pickSparkles } from './pick';
 import { markFound, openFact, progress, setSparkles, useDiscovery } from './store';
 import { getDeviceId } from '../services/aiTransport';
-import { toPersianDigits } from '../utils/format';
+import { formatYear, toPersianDigits } from '../utils/format';
 import { isFlagOn } from '../lib/flags';
 import { ProfileButton, ProfileSheet } from '../profile/ProfilePanel';
 
@@ -50,6 +50,11 @@ export const DiscoveryLayer: React.FC<Props> = ({ year, lang, serverAi }) => {
   useEffect(() => { setExtra([]); setDigState('idle'); setNote(''); }, [openId]);
   useEffect(() => { setEmpty(false); }, [year]);
 
+  useEffect(() => {
+    const id = new URLSearchParams(window.location.search).get('fact');
+    if (id && factById(id)) openFact(id);   // arriving from a shared link
+  }, []);
+
   const open = openId ? (factById(openId) ?? null) : null;
   const dir = lang === 'fa' ? 'rtl' : 'ltr';
 
@@ -75,9 +80,19 @@ export const DiscoveryLayer: React.FC<Props> = ({ year, lang, serverAi }) => {
     } catch { setDigState('failed'); }
   };
 
+  const shareOn = useMemo(() => isFlagOn('share'), []);
   const share = async (f: Fact) => {
+    if (shareOn) {
+      try {
+        const { renderCard, shareCard } = await import('../share/card');
+        const blob = await renderCard({ lang, eyebrow: `${lang === 'fa' ? 'واقعیت پنهان' : 'Hidden fact'}${f.year != null ? ' · ' + formatYear(f.year, lang) : ''}`, title: f.hook[lang], body: f.claim[lang], footer: 'xtory.sbs' });
+        const r = await shareCard(blob, `xtory-${f.id}`, f.hook[lang], `${location.origin}/f/${f.id}`);
+        if (r === 'downloaded') setNote('copied');
+        return;
+      } catch { /* fall through to the plain text share */ }
+    }
     const text = `${f.hook[lang]} — Xtory`;
-    const url = typeof location !== 'undefined' ? location.origin : '';
+    const url = typeof location !== 'undefined' ? (shareOn ? `${location.origin}/f/${f.id}` : location.origin) : '';
     try {
       if (navigator.share) { await navigator.share({ text, url }); return; }
       await navigator.clipboard.writeText(`${text} ${url}`);

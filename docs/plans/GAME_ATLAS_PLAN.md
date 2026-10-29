@@ -516,6 +516,12 @@ fact_reviews(fact_id, reviewer, verdict, notes, at)   fact_reports(fact_id, prof
 **Guardrails** — No personal data on cards beyond the chosen nickname. Card text stays inside the
 safe area for Telegram/X/WhatsApp crops.
 
+**Status (done, behind `?ff=share`; full try-out URL `/?ff=board,discovery,leaderboard,share`):**
+- [x] Image cards drawn on a canvas in the browser (`src/share/card.ts`, lazy-loaded): 1080×1350, 96px safe area, Persian shaping by the browser, Vazirmatn/Inter. Shared as a file via Web Share (mobile), PNG download otherwise. Cards: **fact** (Share button on the fact card) and **my collection** (count, points, weekly rank when the weekly tab is open, a found fact as flavour) from the profile sheet.
+- [x] Link unfurls: `/f/:factId` and `/u/:nickname` (rewrites in `vercel.json` → `api/unfurl.js`) return OG/Twitter tags (fa/en by `?lang=` or Accept-Language; HTML-escaped; 404 for unknown/hidden facts and for players without a nickname) and send visitors on to `/?ff=…&fact=<id>` / `#/u/<nick>`. `?fact=` opens that fact card.
+- [x] **Satori spike decision:** not used. Persian shaping in server-side renderers cannot be verified from CI, so OG uses the static brand image (`og-preview.png`) with the Persian/English hook as title/description text; the fully shaped image card is the in-app one.
+- [ ] Open (needs a real phone): Telegram from Android + iPhone, unfurl in Telegram, dark/light Telegram theme check. Per-fact OG images and a weekly-rank-only card are not built.
+
 **DoD**
 - [ ] Sharing a fact to Telegram from Android and iPhone shows image + correct Persian text.
 - [ ] Pasting `/f/:id` into Telegram unfurls with title, description and image.

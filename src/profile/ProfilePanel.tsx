@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Trophy, X, Copy, Check, Trash2, LogOut, KeyRound } from 'lucide-react';
 import { ERAS } from '../data/eras';
 import { factById } from '../data/facts';
+import { getState as discoveryState } from '../discovery/store';
 import { toPersianDigits } from '../utils/format';
+import { isFlagOn } from '../lib/flags';
 import { autoSync, fetchBoard, fetchShowcase, join, ProfileError, recover, remove, setNickname, signOut, sync, useMe, type Row } from './store';
 
 type Lang = 'en' | 'fa';
@@ -25,6 +27,8 @@ const T = {
   all: { en: 'All time', fa: 'کل' },
   week: { en: 'This week', fa: 'این هفته' },
   empty: { en: 'Nobody here yet — be the first.', fa: 'هنوز کسی نیست — اولین نفر باشید.' },
+  shareMine: { en: 'Share my collection', fa: 'اشتراک مجموعه من' },
+  rank: { en: 'weekly rank', fa: 'رتبه هفته' },
   signOut: { en: 'Sign out of this device', fa: 'خروج از این دستگاه' },
   del: { en: 'Delete my data', fa: 'حذف اطلاعات من' },
   delSure: { en: 'This erases your profile, nickname and leaderboard rows from our server. Your finds stay on this device. Delete?', fa: 'پروفایل، نام مستعار و ردیف‌های شما از سرور پاک می‌شود. یافته‌های شما روی این دستگاه می‌ماند. حذف شود؟' },
@@ -115,6 +119,17 @@ const Mine: React.FC<{ lang: Lang; me: ReturnType<typeof useMe> }> = ({ lang, me
   useEffect(() => { setRows(null); fetchBoard(board).then(setRows).catch(() => setRows([])); }, [board, me?.points]);
   useEffect(() => { if (me) sync().catch(() => {}); }, [me?.profileId]);
 
+  const shareMine = async () => {
+    if (!me) return;
+    try {
+      const { renderCard, shareCard } = await import('../share/card');
+      const myRank = rows && board === 'week' ? rows.find(r => r.name === me.name)?.rank : undefined;
+      const rarest = [...Object.keys(discoveryState().found)].map(id => factById(id)).find(Boolean);
+      const blob = await renderCard({ lang, eyebrow: lang === 'fa' ? 'مجموعه من' : 'My collection', title: me.name, body: rarest?.hook[lang],
+        stats: [{ value: num(me.count, lang), label: t('facts', lang) }, { value: num(me.points, lang), label: t('points', lang) }, ...(myRank ? [{ value: '#' + num(myRank, lang), label: t('rank', lang) }] : [])], footer: 'xtory.sbs' });
+      await shareCard(blob, 'xtory-collection', me.name, me.nickname ? `${location.origin}/u/${encodeURIComponent(me.nickname)}` : location.origin);
+    } catch { setErr(t('fail', lang)); }
+  };
   const run = async (fn: () => Promise<void>) => { setBusy(true); setErr(''); try { await fn(); } catch (e) { setErr(errText(e, lang)); } finally { setBusy(false); } };
   const btn = `min-h-[44px] px-3 rounded-xl text-xs font-semibold active:scale-95 disabled:opacity-60 ${fa(lang)}`;
 
@@ -171,6 +186,7 @@ const Mine: React.FC<{ lang: Lang; me: ReturnType<typeof useMe> }> = ({ lang, me
 
       {me && (
         <div className="mt-4 flex flex-wrap gap-2">
+          {isFlagOn('share') && <button type="button" onClick={shareMine} data-testid="profile-share" className={`${btn} bg-amber-400 text-slate-900`}>{t('shareMine', lang)}</button>}
           <button type="button" onClick={signOut} className={`${btn} text-slate-400 hover:text-white flex items-center gap-1.5`}><LogOut className="w-3.5 h-3.5" />{t('signOut', lang)}</button>
           <button type="button" disabled={busy} data-testid="profile-delete" onClick={() => { if (window.confirm(t('delSure', lang))) run(remove); }} className={`${btn} text-rose-300 hover:text-rose-200 flex items-center gap-1.5`}><Trash2 className="w-3.5 h-3.5" />{t('del', lang)}</button>
         </div>
