@@ -555,4 +555,6 @@
 @keyframes board-burn { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
 .board-cell-in { animation: board-fade-in .5s ease both; }
 .board-burn { stroke-dasharray: 1; animation: board-burn .9s ease-out both; }
-@media (prefers-reduced-motion: reduce) { .board-cell-in, .board-burn { animation: none; } .board-burn { stroke-dasharray: none; } }
+@keyframes xtory-pulse { 0%,100% { transform: scale(1); opacity: .9 } 50% { transform: scale(1.8); opacity: .15 } }
+.xtory-pulse { transform-box: fill-box; transform-origin: center; animation: xtory-pulse 2.2s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .xtory-pulse { animation: none; } .board-cell-in, .board-burn { animation: none; } .board-burn { stroke-dasharray: none; } }

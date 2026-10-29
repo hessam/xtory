@@ -19,6 +19,7 @@ import { toggleLens, useLens } from '../lib/lensStore';
 import { toPersianDigits } from '../utils/format';
 import { pushToDataLayer } from '../services/tagManager';
 import { FragmentationHud } from '../components/fragmentation/FragmentationHud';
+import { openFact, useDiscovery } from '../discovery/store';
 
 type Mode = 'political' | 'family' | 'fragmentation' | 'terrain';
 const W = geometry.width, H = geometry.height;
@@ -120,7 +121,7 @@ const RealmsLayer = memo(({ cells, mode, lens, counts }: RealmsProps) => {
 RealmsLayer.displayName = 'RealmsLayer';
 
 interface View { k: number; s: number }
-interface Token { id: string; kind: 'event' | 'artifact' | 'vazir'; x: number; y: number; color: string; title: string }
+interface Token { id: string; kind: 'event' | 'artifact' | 'vazir' | 'sparkle'; x: number; y: number; color: string; title: string }
 
 const CityDots = memo(({ lang, view, mode }: { lang: 'en' | 'fa'; view: View; mode: Mode }) => {
   const scale = view.s * view.k;
@@ -191,7 +192,14 @@ const OverlayLayer = memo(({ cells, mode, lens, lang, view, tokens, counts }: Ov
         return <Emblem key={c.key + 'e'} x={c.capital.x} y={c.capital.y} size={9 / scale} color={mode === 'family' ? FAMILY_HEX[c.family] : c.color} seed={d.emblemSeed} dyn={c.dynastyId} active={lens === c.dynastyId} />;
       })}
 
-      {tokens.map(t => (
+      {tokens.map(t => t.kind === 'sparkle' ? (
+        <g key={'sp' + t.id} data-kind="sparkle" data-id={t.id} data-testid="board-sparkle" pointerEvents="all" style={{ cursor: 'pointer' }}>
+          <circle cx={t.x} cy={t.y} r={26 / scale} fill="transparent" />
+          <circle cx={t.x} cy={t.y} r={9 / scale} fill="#fde047" fillOpacity="0.25" className="xtory-pulse" />
+          <path transform={`translate(${t.x} ${t.y}) scale(${1 / scale})`} d="M0-9 L2.6-2.6 L9 0 L2.6 2.6 L0 9 L-2.6 2.6 L-9 0 L-2.6-2.6Z" fill="#fde047" stroke="#7c5e2a" strokeWidth="1" />
+          <title>{t.title}</title>
+        </g>
+      ) : (
         <g key={t.kind + t.id} data-kind={t.kind} data-id={t.id} data-testid={`board-token-${t.kind}`} pointerEvents="all" style={{ cursor: 'pointer' }}>
           <circle cx={t.x} cy={t.y} r={22 / scale} fill="transparent" />
           <circle cx={t.x} cy={t.y} r={7 / scale} fill={t.color} fillOpacity="0.9" stroke="#fff" strokeWidth={1.4 / scale} />
@@ -224,6 +232,7 @@ export default function MapBoard(props: MapProps) {
   const counts = useMemo(() => new Map([...getRealmsByRegion(year)].map(([id, l]) => [id, l.length])), [year]);
 
   const vazirList = vazirs ?? allVazirs;
+  const { sparkles } = useDiscovery();
   const tokens = useMemo<Token[]>(() => {
     const out: Token[] = [];
     for (const e of historicalEvents) {
@@ -241,8 +250,12 @@ export default function MapBoard(props: MapProps) {
       const c = geometry.regions[v.regionId]?.centroid; if (!c) continue;
       out.push({ id: v.id, kind: 'vazir', x: c[0] + 14, y: c[1] + 26, color: '#c9a96e', title: v.name[lang] });
     }
+    sparkles.forEach((sp, i) => {
+      const c = geometry.regions[sp.regionId]?.centroid; if (!c) return;
+      out.push({ id: sp.factId, kind: 'sparkle', x: c[0] - 18 + i * 9, y: c[1] - 30, color: '#fde047', title: lang === 'fa' ? 'یک واقعیت پنهان' : 'A hidden fact' });
+    });
     return out;
-  }, [historicalEvents, artifacts, vazirList, year, lang]);
+  }, [historicalEvents, artifacts, vazirList, year, lang, sparkles]);
 
   const byId = useRef({ events: new Map<string, HistoricalEvent>(), artifacts: new Map<string, Artifact>(), vazirs: new Map<string, Vazir>() });
   byId.current = { events: new Map(historicalEvents.map(e => [e.id, e])), artifacts: new Map(artifacts.map(a => [a.id, a])), vazirs: new Map(vazirList.map(v => [v.id, v])) };
@@ -258,6 +271,7 @@ export default function MapBoard(props: MapProps) {
       pushToDataLayer('map_region_click', { region_id: regionId, current_year: year, renderer: 'board' });
     } else if (kind === 'event') { const e = byId.current.events.get(el.getAttribute('data-id')!); if (e) onHistoricalEventClick?.(e); }
     else if (kind === 'artifact') { const a = byId.current.artifacts.get(el.getAttribute('data-id')!); if (a) onArtifactClick?.(a); }
+    else if (kind === 'sparkle') openFact(el.getAttribute('data-id')!);
     else if (kind === 'vazir') { const v = byId.current.vazirs.get(el.getAttribute('data-id')!); if (v) onVazirClick?.(v); }
   }, [onRegionClick, onHistoricalEventClick, onArtifactClick, onVazirClick, year]);
 
