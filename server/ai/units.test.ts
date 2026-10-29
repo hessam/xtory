@@ -81,6 +81,20 @@ describe('openrouter client', () => {
     const r = await chatJson({ apiKey: 'k', model: 'm', system: 's', prompt: 'p', maxTokens: 10, temperature: 0, timeoutMs: 1000, referer: 'r', fetchImpl: f });
     expect(JSON.parse(r.text)).toEqual({ a: 1 }); expect([r.tokensIn, r.tokensOut]).toEqual([5, 7]);
   });
+  const base = { apiKey: 'k', model: 'm', system: 's', prompt: 'p', maxTokens: 10, temperature: 0, timeoutMs: 1000, referer: 'r' };
+  const reply = (b: unknown, status = 200) => (async () => new Response(JSON.stringify(b), { status })) as typeof fetch;
+  it('explains an empty reply (reasoning ate the budget)', async () => {
+    const e = await chatJson({ ...base, fetchImpl: reply({ model: 'x/y', choices: [{ finish_reason: 'length', message: { content: null, reasoning: 'hmm' } }] }) }).catch((x) => x);
+    expect(e).toBeInstanceOf(UpstreamError); expect(e.kind).toBe('empty'); expect(e.detail).toContain('finish_reason=length'); expect(e.detail).toContain('reasoning=present');
+  });
+  it('reports a 200 response that carries an error object', async () => {
+    const e = await chatJson({ ...base, fetchImpl: reply({ error: { code: 404, message: 'No endpoints found for m' } }) }).catch((x) => x);
+    expect(e.kind).toBe('http'); expect(e.detail).toContain('No endpoints found');
+  });
+  it('joins content parts', async () => {
+    const r = await chatJson({ ...base, fetchImpl: reply({ choices: [{ message: { content: [{ text: '{"a"' }, { text: ':1}' }] } }] }) });
+    expect(JSON.parse(r.text)).toEqual({ a: 1 });
+  });
   it('times out', async () => {
     const f = ((_u: any, init: any) => new Promise((_res, rej) => init.signal.addEventListener('abort', () => { const e = new Error('x'); e.name = 'AbortError'; rej(e); }))) as typeof fetch;
     await expect(chatJson({ apiKey: 'k', model: 'm', system: 's', prompt: 'p', maxTokens: 10, temperature: 0, timeoutMs: 20, referer: 'r', fetchImpl: f })).rejects.toBeInstanceOf(UpstreamError);

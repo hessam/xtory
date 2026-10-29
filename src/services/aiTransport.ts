@@ -21,7 +21,7 @@ export function getDeviceId(): string {
 }
 
 export class AiServerError extends Error {
-  constructor(public code: string, public status: number, public retryAfterSec?: number, public scope?: string) { super(`ai_server_${code}`); }
+  constructor(public code: string, public status: number, public retryAfterSec?: number, public scope?: string, public detail?: string) { super(`ai_server_${code}`); }
 }
 
 export async function askServer<T = unknown>(task: TaskId, params: Record<string, unknown>, lang: 'en' | 'fa', signal?: AbortSignal): Promise<T> {
@@ -37,7 +37,10 @@ export async function askServer<T = unknown>(task: TaskId, params: Record<string
   }
   let body: any = null;
   try { body = await res.json(); } catch { /* non-JSON error page */ }
-  if (!res.ok || !body?.ok) throw new AiServerError(body?.error ?? 'http_' + res.status, res.status, body?.retryAfterSec, body?.scope);
+  if (!res.ok || !body?.ok) {
+    if (body?.detail || body?.kind) console.warn('[Xtory] AI server error:', body.error, body.kind ?? '', body.detail ?? '');
+    throw new AiServerError(body?.error ?? 'http_' + res.status, res.status, body?.retryAfterSec, body?.scope, body?.detail);
+  }
   return body.data as T;
 }
 

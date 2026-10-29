@@ -1,6 +1,6 @@
 import { validate, wrapRoot } from '../../src/ai/schema.js';
 import type { BuiltTask } from '../../src/ai/tasks.js';
-import { chatJson } from './openrouter.js';
+import { chatJson, UpstreamError } from './openrouter.js';
 import type { AiConfig } from './config.js';
 
 export class InvalidOutputError extends Error {
@@ -17,7 +17,17 @@ export async function runStructured(cfg: AiConfig, built: BuiltTask, opts: { mod
   const wire = wrapRoot(built.schema);
   let tokensIn = 0, tokensOut = 0, problems: string[] = [], prompt = built.prompt;
   for (let attempt = 0; attempt < 2; attempt++) {
-    const r = await chatJson({ apiKey: cfg.apiKey!, model: opts.model, system: built.system, prompt, maxTokens: opts.maxTokens, temperature: cfg.temperature, timeoutMs: cfg.timeoutMs, referer: cfg.referer, fetchImpl: opts.fetchImpl });
+    const call = (maxTokens: number, reasoningOff: boolean) => chatJson({ apiKey: cfg.apiKey!, model: opts.model, system: built.system, prompt, maxTokens, temperature: cfg.temperature, timeoutMs: cfg.timeoutMs, referer: cfg.referer, fetchImpl: opts.fetchImpl, reasoningOff });
+    let r;
+    try { r = await call(opts.maxTokens, true); }
+    catch (e) {
+      // Two known provider quirks, each worth exactly one retry:
+      //  - HTTP 400: the model/provider rejects the "reasoning off" switch → ask again without it;
+      //  - empty content: hidden reasoning ate the whole budget → ask again with twice the budget.
+      if (e instanceof UpstreamError && e.kind === 'http' && e.status === 400) r = await call(opts.maxTokens, false);
+      else if (e instanceof UpstreamError && e.kind === 'empty') r = await call(Math.min(8000, opts.maxTokens * 2), true);
+      else throw e;
+    }
     tokensIn += r.tokensIn; tokensOut += r.tokensOut;
     let parsed: any;
     try { parsed = JSON.parse(r.text); } catch { problems = ['output was not valid JSON']; parsed = undefined; }

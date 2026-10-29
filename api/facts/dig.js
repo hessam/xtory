@@ -1150,10 +1150,12 @@ function isNearDuplicate(a, b) {
 
 // server/ai/openrouter.ts
 var UpstreamError = class extends Error {
-  constructor(kind, status) {
+  /** `detail` says what the provider actually returned (no secrets, no prompt text): surfaced in logs and the error JSON. */
+  constructor(kind, status, detail) {
     super(`upstream_${kind}`);
     this.kind = kind;
     this.status = status;
+    this.detail = detail;
   }
 };
 var approxTokens = (s) => Math.ceil(s.length / 3.5);
@@ -1170,15 +1172,21 @@ async function chatJson(opts) {
         temperature: opts.temperature,
         max_tokens: opts.maxTokens,
         response_format: { type: "json_object" },
+        ...opts.reasoningOff ? { reasoning: { enabled: false } } : {},
         messages: [{ role: "system", content: opts.system }, { role: "user", content: opts.prompt }]
       })
     });
     if (res.status === 429) throw new UpstreamError("rate_limited", 429);
     if (res.status === 402) throw new UpstreamError("payment", 402);
-    if (!res.ok) throw new UpstreamError("http", res.status);
-    const body = await res.json();
-    const raw = body?.choices?.[0]?.message?.content;
-    if (!raw || typeof raw !== "string") throw new UpstreamError("empty");
+    const body = await res.json().catch(() => null);
+    if (!res.ok) throw new UpstreamError("http", res.status, String(body?.error?.message ?? "").slice(0, 160) || void 0);
+    if (body?.error) throw new UpstreamError(body.error.code === 429 ? "rate_limited" : "http", res.status, `provider error: ${String(body.error.message ?? body.error.code).slice(0, 160)}`);
+    const choice = body?.choices?.[0], msg = choice?.message;
+    let raw = msg?.content;
+    if (Array.isArray(raw)) raw = raw.map((p) => typeof p === "string" ? p : p?.text ?? "").join("");
+    if (typeof raw !== "string" || !raw.trim()) {
+      throw new UpstreamError("empty", res.status, `finish_reason=${choice?.finish_reason ?? "none"}; reasoning=${msg?.reasoning || msg?.reasoning_content ? "present" : "absent"}; completion_tokens=${body?.usage?.completion_tokens ?? "?"}; model=${body?.model ?? opts.model}`);
+    }
     const text = raw.replace(/^\s*```(?:json)?/i, "").replace(/```\s*$/, "").trim();
     return {
       text,
@@ -1208,7 +1216,15 @@ async function runStructured(cfg, built, opts) {
   const wire = wrapRoot(built.schema);
   let tokensIn = 0, tokensOut = 0, problems = [], prompt = built.prompt;
   for (let attempt = 0; attempt < 2; attempt++) {
-    const r = await chatJson({ apiKey: cfg.apiKey, model: opts.model, system: built.system, prompt, maxTokens: opts.maxTokens, temperature: cfg.temperature, timeoutMs: cfg.timeoutMs, referer: cfg.referer, fetchImpl: opts.fetchImpl });
+    const call = (maxTokens, reasoningOff) => chatJson({ apiKey: cfg.apiKey, model: opts.model, system: built.system, prompt, maxTokens, temperature: cfg.temperature, timeoutMs: cfg.timeoutMs, referer: cfg.referer, fetchImpl: opts.fetchImpl, reasoningOff });
+    let r;
+    try {
+      r = await call(opts.maxTokens, true);
+    } catch (e) {
+      if (e instanceof UpstreamError && e.kind === "http" && e.status === 400) r = await call(opts.maxTokens, false);
+      else if (e instanceof UpstreamError && e.kind === "empty") r = await call(Math.min(8e3, opts.maxTokens * 2), true);
+      else throw e;
+    }
     tokensIn += r.tokensIn;
     tokensOut += r.tokensOut;
     let parsed;
@@ -2111,7 +2127,7 @@ async function handleDig(req, deps) {
     });
     return json(200, { ok: true, facts: out.facts, pending: out.pending, meta: { fromStore: out.fromStore, checker: out.checker } });
   } catch (e) {
-    if (e instanceof UpstreamError) return e.kind === "rate_limited" || e.kind === "payment" ? fail(503, "ai_busy", {}, { "Retry-After": "30" }) : fail(502, "upstream_error", { kind: e.kind });
+    if (e instanceof UpstreamError) return e.kind === "rate_limited" || e.kind === "payment" ? fail(503, "ai_busy", {}, { "Retry-After": "30" }) : fail(502, "upstream_error", { kind: e.kind, ...e.detail ? { detail: e.detail } : {} });
     if (e instanceof InvalidOutputError) return fail(422, "invalid_model_output");
     (deps.log ?? console.log)({ evt: "facts_internal_error", message: String(e?.message ?? e).slice(0, 200) });
     return fail(500, "internal_error");
