@@ -1,0 +1,84 @@
+{
+ "eraId": "iranian_renaissance",
+ "title": {
+  "en": "Iranian Renaissance",
+  "fa": "رنسانس ایرانی"
+ },
+ "sources": [
+  "Persian history: Cambridge History of Iran (relevant volumes); Encyclopaedia Iranica; Herodotus, Histories (for traditional accounts, marked as such)",
+  "Shahnameh (Ferdowsi); Encyclopaedia Iranica entries on Samanids and Buyids"
+ ],
+ "beats": [
+  {
+   "year": 820,
+   "text": {
+    "en": "Tahirids, then Saffarids and Samanids, rule the east as semi-independent dynasties.",
+    "fa": "طاهریان، سپس صفاریان و سامانیان، شرق را به‌عنوان دودمان‌های نیمه‌مستقل اداره می‌کنند."
+   }
+  },
+  {
+   "year": 940,
+   "text": {
+    "en": "Bukhara, the Samanid capital, becomes a centre of Persian poetry. Rudaki writes early classical verses.",
+    "fa": "بخارا، پایتخت سامانیان، مرکز شعر فارسی می‌شود. رودکی اشعار کلاسیک نخستین را می‌سراید."
+   }
+  },
+  {
+   "year": 945,
+   "text": {
+    "en": "The Buyids take Baghdad and rule Iraq and Iran. The Abbasid caliph becomes a figurehead.",
+    "fa": "آل‌بویه بغداد را می‌گیرند و بر عراق و ایران حکم می‌رانند. خلیفه عباسی نمادی می‌شود."
+   }
+  },
+  {
+   "year": 1010,
+   "text": {
+    "en": "Ferdowsi completes the Shahnameh, telling the story of Iran in Persian verse.",
+    "fa": "فردوسی شاهنامه را به پایان می‌برد؛ داستان ایران در شعر فارسی."
+   }
+  },
+  {
+   "year": 1030,
+   "text": {
+    "en": "Mahmud of Ghazni rules much of the east. Ferdowsi dedicated his epic to him.",
+    "fa": "محمود غزنوی بخش بزرگی از شرق را اداره می‌کند. فردوسی حماسه خود را به او تقدیم کرد."
+   }
+  }
+ ],
+ "quiz": [
+  {
+   "statement": {
+    "en": "Ferdowsi wrote the Shahnameh in Arabic.",
+    "fa": "فردوسی شاهنامه را به زبان عربی سرود."
+   },
+   "reality": false,
+   "why": {
+    "en": "It was written in Persian verse.",
+    "fa": "آن به شعر فارسی است."
+   }
+  },
+  {
+   "statement": {
+    "en": "Bukhara was a Samanid capital.",
+    "fa": "بخارا پایتخت سامانیان بود."
+   },
+   "reality": true,
+   "why": {
+    "en": "The Samanids ruled from Bukhara.",
+    "fa": "سامانیان از بخارا حکم می‌راندند."
+   }
+  },
+  {
+   "statement": {
+    "en": "The Buyids took Baghdad in the tenth century.",
+    "fa": "آل‌بویه در سده دهم بغداد را گرفتند."
+   },
+   "reality": true,
+   "why": {
+    "en": "They took Baghdad in 945.",
+    "fa": "آنان در ۹۴۵ بغداد را گرفتند."
+   }
+  }
+ ],
+ "status": "ai_drafted_unreviewed"
+}

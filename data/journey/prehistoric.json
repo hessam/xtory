@@ -1,0 +1,83 @@
+{
+ "eraId": "prehistoric",
+ "title": {
+  "en": "Before the Empires",
+  "fa": "پیش از امپراتوری‌ها"
+ },
+ "sources": [
+  "Persian history: Cambridge History of Iran (relevant volumes); Encyclopaedia Iranica; Herodotus, Histories (for traditional accounts, marked as such)"
+ ],
+ "beats": [
+  {
+   "year": -3000,
+   "text": {
+    "en": "Villages on the plateau grow for thousands of years. Sialk, near Kashan, is one of the oldest settled sites in Iran.",
+    "fa": "روستاهای فلات قرن‌ها رشد می‌کنند. سیلک نزدیک کاشان یکی از کهن‌ترین محل‌های سکونت در ایران است."
+   }
+  },
+  {
+   "year": -2900,
+   "text": {
+    "en": "In Elam, in the southwest, scribes at Susa write the earliest tablets of proto-Elamite script.",
+    "fa": "در عیلام، در جنوب‌غرب، کاتبان شوش نخستین لوح‌های خط پروتو-ایلامی را می‌نویسند."
+   }
+  },
+  {
+   "year": -2000,
+   "text": {
+    "en": "Bronze makes trade valuable. Lapis lazuli and tin travel from the east to Mesopotamia.",
+    "fa": "مفرغ تجارت را ارزشمند می‌کند. لاجورد و قلع از شرق به بین‌النهرین می‌رسند."
+   }
+  },
+  {
+   "year": -1200,
+   "text": {
+    "en": "Groups speaking early Iranian languages move onto the plateau. Their speech will grow into Persian.",
+    "fa": "گروه‌هایی که به زبان‌های ایرانی باستان سخن می‌گفتند به فلات می‌آیند. زبان آنان به فارسی تبدیل می‌شود."
+   }
+  },
+  {
+   "year": -1000,
+   "text": {
+    "en": "Iron spreads. Fortified villages and tribal chiefdoms become common in the Zagros mountains.",
+    "fa": "آهن رواج می‌یابد. روستاهای مستحکم و سرزمین‌های قبیله‌ای در زاگرس فراوان می‌شوند."
+   }
+  }
+ ],
+ "quiz": [
+  {
+   "statement": {
+    "en": "Iran had no cities before the Achaemenids.",
+    "fa": "ایران پیش از هخامنشیان شهری نداشت."
+   },
+   "reality": false,
+   "why": {
+    "en": "Sialk, Susa and other sites were towns for millennia.",
+    "fa": "سیلک، شوش و دیگر محل‌ها هزاران سال شهر بودند."
+   }
+  },
+  {
+   "statement": {
+    "en": "Elam developed writing before the Achaemenid Empire.",
+    "fa": "عیلام پیش از امپراتوری هخامنشی خط داشت."
+   },
+   "reality": true,
+   "why": {
+    "en": "Proto-Elamite tablets date to about 3000 BC.",
+    "fa": "لوح‌های پروتو-ایلامی به حدود ۳۰۰۰ پیش از میلاد برمی‌گردند."
+   }
+  },
+  {
+   "statement": {
+    "en": "Persian was spoken on the plateau from the first farmers onward.",
+    "fa": "فارسی از نخستین کشاورزان در فلات رایج بود."
+   },
+   "reality": false,
+   "why": {
+    "en": "Iranian languages arrived with later migrations.",
+    "fa": "زبان‌های ایرانی با مهاجرت‌های بعدی آمدند."
+   }
+  }
+ ],
+ "status": "ai_drafted_unreviewed"
+}

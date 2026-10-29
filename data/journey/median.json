@@ -1,0 +1,84 @@
+{
+ "eraId": "median",
+ "title": {
+  "en": "The Medes",
+  "fa": "مادها"
+ },
+ "sources": [
+  "Persian history: Cambridge History of Iran (relevant volumes); Encyclopaedia Iranica; Herodotus, Histories (for traditional accounts, marked as such)",
+  "Herodotus, Histories I (traditional account, dates uncertain)"
+ ],
+ "beats": [
+  {
+   "year": -700,
+   "text": {
+    "en": "Tribes of the Zagros unite. Herodotus says the first Median king was Deioces, who built a capital.",
+    "fa": "قبایل زاگرس متحد می‌شوند. هرودوت می‌گوید نخستین شاه ماد دیااکو بود که پایتخت ساخت."
+   }
+  },
+  {
+   "year": -612,
+   "text": {
+    "en": "With Babylon, the Medes destroy Nineveh, the Assyrian capital. The Assyrian empire ends.",
+    "fa": "مادها به همراه بابل، نینوا پایتخت آشور را ویران می‌کنند. امپراتوری آشور پایان می‌یابد."
+   }
+  },
+  {
+   "year": -600,
+   "text": {
+    "en": "Median kings build Ecbatana (Hamadan) on the Zagros foothills, a capital of palaces and walls.",
+    "fa": "شاهان ماد اکباتان (همدان) را در دامنه زاگرس می‌سازند؛ پایتختی با کاخ و باروها."
+   }
+  },
+  {
+   "year": -585,
+   "text": {
+    "en": "According to Herodotus, a battle with Lydia stops when an eclipse frightens both sides. The Halys River becomes the border.",
+    "fa": "بنا بر روایت هرودوت، جنگ با لیدی با خورشیدگرفتگی متوقف می‌شود. رود هالیس مرز می‌شود."
+   }
+  },
+  {
+   "year": -550,
+   "text": {
+    "en": "Cyrus, a Persian vassal of the Medes, revolts and takes Ecbatana. The Median kingdom passes to the Persians.",
+    "fa": "کوروش، سرداری پارسی در خدمت ماد، می‌شورد و اکباتان را می‌گیرد. پادشاهی ماد به پارسیان می‌رسد."
+   }
+  }
+ ],
+ "quiz": [
+  {
+   "statement": {
+    "en": "Medes and Babylonians destroyed Nineveh in 612 BC.",
+    "fa": "مادها و بابلی‌ها در ۶۱۲ پیش از میلاد نینوا را ویران کردند."
+   },
+   "reality": true,
+   "why": {
+    "en": "The fall of Nineveh is recorded in Babylonian chronicles.",
+    "fa": "سقوط نینوا در سالنامه‌های بابلی ثبت شده است."
+   }
+  },
+  {
+   "statement": {
+    "en": "The Median capital was Persepolis.",
+    "fa": "پایتخت ماد تخت جمشید بود."
+   },
+   "reality": false,
+   "why": {
+    "en": "Ecbatana was the Median capital; Persepolis was built later by the Achaemenids.",
+    "fa": "اکباتان پایتخت ماد بود؛ تخت جمشید را بعدها هخامنشیان ساختند."
+   }
+  },
+  {
+   "statement": {
+    "en": "The Medes left a large archive of their own written records.",
+    "fa": "مادها آرشیو بزرگی از اسناد نوشته‌شده خود بر جای گذاشتند."
+   },
+   "reality": false,
+   "why": {
+    "en": "Almost no Median texts survive; much of what we know comes from others.",
+    "fa": "تقریباً هیچ متن ماد باقی نمانده است؛ بیشتر آگاهی ما از منابع دیگر است."
+   }
+  }
+ ],
+ "status": "ai_drafted_unreviewed"
+}

@@ -571,8 +571,17 @@ safe area for Telegram/X/WhatsApp crops.
 - Deep links `/journey/:eraId/:beat`. Journey becomes the default mode; Atlas stays one tap away.
 - The Joyride tour is retired (chapter 1 teaches the app).
 
+**Status (built, behind `?ff=journey`; try `/?ff=board,journey`):**
+- [x] Chapters follow the `historianCards` eras in order. **The data has 15 eras, not the 16 this plan assumed**; the path shows 15.
+- [x] Each chapter has 5–7 beats (76 in total) in `data/journey/<eraId>.json`, bilingual, each with a year. Tapping a beat moves the timeline to that year. Sources and an AI-drafted, not-yet-reviewed marker are on each chapter.
+- [x] Myth-or-reality quiz (3 questions per chapter) gives 1–3 stars; a chapter unlocks when the previous one has a star. Stars are kept on the device.
+- [x] Deep links are hash routes: `#/journey/<eraId>/<beat>` or `…/quiz` (hash, not path, so static hosting needs no rewrite; this matches `#/u/` and `#/admin/`).
+- [x] Joyride tour is no longer started when journey is on.
+- [ ] Not built: camera choreography per beat (fly/highlight/morph), the 90 s time check per chapter, the reward card in the inventory (stars only), and the Atlas-as-default switch (kept off until the hallway test passes, per guardrail 9).
+- [ ] Hallway test with 5 people still to run.
+
 **DoD**
-- [ ] All 16 chapters authored in en + fa; each ≤ 90 s.
+- [~] All chapters authored in en + fa (15 eras, 76 beats; each ≤ 90 s not yet timed).
 - [ ] Hallway test: 4 of 5 non-history people finish chapter 1 and start chapter 2 unprompted.
 - [ ] Deep links open the exact beat; shared from Telegram.
 
