@@ -44,7 +44,10 @@ export async function askServer<T = unknown>(task: TaskId, params: Record<string
 let statusPromise: Promise<boolean> | null = null;
 /** Is the server AI switched on? (kill switch / misconfiguration → false). Cached for the page's lifetime. */
 export function fetchServerAiStatus(): Promise<boolean> {
-  statusPromise ??= fetch('/api/ai/status').then(r => (r.ok ? r.json() : { enabled: false })).then(j => !!j.enabled).catch(() => false);
+  statusPromise ??= fetch('/api/ai/status')
+    .then(r => (r.ok ? r.json() : { enabled: false, reason: 'http_' + r.status }))
+    .then(j => { if (!j.enabled) console.info(`[Xtory] shared AI is off: ${j.reason ?? 'unknown'}`); return !!j.enabled; })
+    .catch(() => { console.info('[Xtory] shared AI is off: status request failed'); return false; });
   return statusPromise;
 }
 

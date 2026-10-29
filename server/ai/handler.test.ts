@@ -248,6 +248,9 @@ describe('usage report (measure first)', () => {
   it('status endpoint reports readiness without exposing anything else', async () => {
     const on = await (await handleStatus(setup().deps)).json();
     expect(on).toEqual({ ok: true, enabled: true });
-    expect((await (await handleStatus(setup({ env: { AI_ENABLED: undefined } }).deps)).json()).enabled).toBe(false);
+    expect(await (await handleStatus(setup({ env: { AI_ENABLED: undefined } }).deps)).json()).toEqual({ ok: true, enabled: false, reason: 'disabled' });
+    expect((await (await handleStatus(setup({ env: { OPENROUTER_API_KEY: undefined } }).deps)).json()).reason).toBe('missing_key');
+    expect((await (await handleStatus(setup({ env: { AI_HASH_SALT: undefined } }).deps)).json()).reason).toBe('missing_salt');
+    expect((await (await handleStatus(setup({ env: { VERCEL_ENV: 'production' } }).deps)).json()).reason).toBe('store_unavailable');
   });
 });
