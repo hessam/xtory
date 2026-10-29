@@ -40,6 +40,10 @@ describe('task params', () => {
       year_dynasties: { year: 1000 }, events: { year: 1000 }, figures: { year: 1000 }, artifacts: { year: 1000 }, quiz: { year: 1000, angle: 2 },
       ruler_detail: { dynastyNameEn: 'Buyid Dynasty', dynastyNameFa: 'آل بویه', dynastyStart: 934, dynastyEnd: 1062, regionId: 'fars', year: 1000 },
       dig_deeper: { kind: 'ruler', name: 'Yazdgerd III', year: 651 },
+      lineage: { name: 'Shah Ismail I', context: 'Safavid founder' }, search: { query: 'Battle of Qadisiyya' },
+      biography: { name: 'Cyrus II', title: 'King', dynasty: 'Achaemenid', year: -559 },
+      what_if_ruler: { ruler: 'Cyrus II', region: 'Fars', year: -540 }, what_if_event: { title: 'Battle of Nahavand', description: '', year: 642 },
+      chat: { message: 'Who was Nader Shah and why did he invade India in 1739?', history: [] },
     };
     for (const [id, def] of Object.entries(TASKS)) {
       const p = def.parse(samples[id]);
@@ -47,6 +51,27 @@ describe('task params', () => {
       expect(b.prompt.length, id).toBeGreaterThan(50); expect(b.system, id).toContain('ONLY a JSON');
       expect(def.maxTokens, id).toBeLessThanOrEqual(3500);
     }
+  });
+});
+
+describe('detail-modal tasks', () => {
+  it('validate params and never share-cache free text', () => {
+    expect(() => TASKS.chat.parse({ message: 'hi', history: Array(9).fill({ role: 'user', text: 'x' }) })).toThrow(ParamError);
+    expect(() => TASKS.chat.parse({ message: 'hi', extra: 1 })).toThrow(ParamError);
+    expect(() => TASKS.chat.parse({ message: 'hi', history: [{ role: 'system', text: 'x' }] })).toThrow(ParamError);
+    expect(TASKS.chat.cacheKey(TASKS.chat.parse({ message: 'hi' }), 'en')).toBeNull();
+    const custom = TASKS.what_if_ruler.parse({ ruler: 'Cyrus', region: 'Fars', year: -540, custom: 'he lost?' });
+    expect(TASKS.what_if_ruler.cacheKey(custom, 'en')).toBeNull();
+    expect(TASKS.what_if_ruler.cacheKey(TASKS.what_if_ruler.parse({ ruler: 'Cyrus', region: 'Fars', year: -540 }), 'en')).toBeTruthy();
+    expect(() => TASKS.search.parse({ query: 'x' })).toThrow(ParamError);
+    expect(() => TASKS.biography.parse({ name: 'A', year: 99999 })).toThrow(ParamError);
+  });
+  it('search drops half-answers', () => {
+    expect(TASKS.search.post!({ found: true, year: 1, type: 'event' }, {})).toEqual({ found: false });
+  });
+  it('prompts are built from params only', () => {
+    const b = TASKS.lineage.build(TASKS.lineage.parse({ name: 'Yazdgerd III' }), 'en');
+    expect(b.prompt).toContain('Yazdgerd III');
   });
 });
 

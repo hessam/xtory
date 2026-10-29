@@ -272,6 +272,9 @@ let serverAiActive = false;
 export const setServerAiActive = (on: boolean) => { serverAiActive = on; };
 const useServerAi = () => !aiInstance && serverAiActive;
 
+const proseToUi = (d: any, lang: 'en' | 'fa'): string =>
+  d?.text ? formatAIResponseForUI({ body: String(d.text), sources: Array.isArray(d.sources) ? d.sources : [], certainty: ['HIGH', 'MEDIUM', 'LOW'].includes(d.certainty) ? d.certainty : 'MEDIUM' }, lang) : '';
+
 async function generateJson(task: TaskId, params: Record<string, unknown>, lang: 'en' | 'fa', viaGemini: () => Promise<string>): Promise<any> {
   if (useServerAi()) return askServer(task, params, lang);
   return JSON.parse(await viaGemini());
@@ -362,6 +365,7 @@ export async function generateLineage(personName: string, context: string, lang:
   Return ONLY valid JSON without any markdown formatting.`;
 
   try {
+    const data = (await generateJson('lineage', { name: personName, context: context.slice(0, 400) }, lang, async () => {
     const response = await (await getAiAsync()).models.generateContent({
       model: "gemini-3-flash-preview",
       contents: prompt,
@@ -371,8 +375,8 @@ export async function generateLineage(personName: string, context: string, lang:
     });
     
     let text = response.text || "{}";
-    text = text.replace(/```json/g, '').replace(/```/g, '').trim();
-    const data = JSON.parse(text) as LineageData;
+    return text.replace(/```json/g, '').replace(/```/g, '').trim();
+    })) as LineageData;
     setCache(cacheKey, data);
     return data;
   } catch (error) {
@@ -404,6 +408,10 @@ export async function searchHistoricalElement(query: string, lang: 'en' | 'fa'):
   Return ONLY valid JSON without any markdown formatting.`;
 
   try {
+    if (useServerAi()) {
+      const d: any = await askServer('search', { query }, lang);
+      return d?.found ? { year: d.year, type: d.type, nameEn: d.nameEn, nameFa: d.nameFa ?? d.nameEn, descriptionEn: d.descriptionEn ?? '', descriptionFa: d.descriptionFa ?? d.descriptionEn ?? '' } : null;
+    }
     const responsePromise = (await getAiAsync()).models.generateContent({
       model: "gemini-3-flash-preview",
       contents: prompt,
@@ -962,6 +970,11 @@ export async function generateBiography(name: string, title: string, dynasty: st
     : `لحن مورخ، مخاطب عام. بیوگرافی ${name} (${title}، دودمان ${dynasty}). دقیقاً ۳ پاراگراف: پ۱-صحنه آغازین واضح. پ۲-مسیر سلطنت و تنش اصلی. پ۳-میراث و یک سوال تاریخی بی‌پاسخ. بدون نقل قول، بدون تیتر، رزومه نباشد. منابع استفاده شده: ${sources}\n\nدر خطوط جدید اضافه کنید:\nSOURCES: [2-3 منبع محدود با کاما]\nCERTAINTY: [HIGH یا MEDIUM یا LOW]`;
 
   try {
+    if (useServerAi()) {
+      const ui = proseToUi(await askServer('biography', { name, title, dynasty, year }, lang), lang);
+      if (ui) setCache(cacheKey, ui);
+      return ui;
+    }
     const response = await (await getAiAsync()).models.generateContent({
       model: "gemini-3-flash-preview",
       contents: prompt,
@@ -998,6 +1011,11 @@ export async function generateAlternateHistory(eventDescription: string, rulerNa
   }
 
   try {
+    if (useServerAi()) {
+      const ui = proseToUi(await askServer('what_if_ruler', { ruler: rulerName, region: regionName, year, ...(customPrompt ? { custom: customPrompt } : {}) }, lang), lang);
+      if (ui) setCache(cacheKey, ui);
+      return ui;
+    }
     const response = await (await getAiAsync()).models.generateContent({
       model: "gemini-3-flash-preview",
       contents: prompt,
@@ -1033,6 +1051,11 @@ export async function generateHistoricalEventWhatIf(eventTitle: string, eventDes
   }
 
   try {
+    if (useServerAi()) {
+      const ui = proseToUi(await askServer('what_if_event', { title: eventTitle, description: eventDesc, year, ...(customPrompt ? { custom: customPrompt } : {}) }, lang), lang);
+      if (ui) setCache(cacheKey, ui);
+      return ui;
+    }
     const response = await (await getAiAsync()).models.generateContent({
       model: "gemini-3-flash-preview",
       contents: prompt,
@@ -1063,6 +1086,12 @@ export async function chatWithAssistant(history: { role: 'user' | 'model', text:
       if (cached) return cached;
     }
 
+    if (useServerAi()) {
+      const d: any = await askServer('chat', { history: history.slice(-8), message }, lang);
+      const t = String(d?.text ?? '');
+      if (isContextQuery && t) setCache(cacheKey, t);
+      return t;
+    }
     const chat = (await getAiAsync()).chats.create({
       model: "gemini-3-flash-preview",
       config: {
