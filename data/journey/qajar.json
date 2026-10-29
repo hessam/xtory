@@ -14,13 +14,37 @@
    "text": {
     "en": "Agha Mohammad Khan is crowned in Tehran, which becomes the Qajar capital.",
     "fa": "آقامحمدخان در تهران تاج‌گذاری می‌کند؛ تهران پایتخت قاجاریان می‌شود."
-   }
+   },
+   "lens": "qajar",
+   "pins": [
+    {
+     "lat": 35.69,
+     "lng": 51.39,
+     "label": {
+      "en": "Tehran",
+      "fa": "تهران"
+     }
+    }
+   ]
   },
   {
    "year": 1813,
    "text": {
     "en": "The Treaty of Gulistan gives Russia Georgia and much of the Caucasus.",
     "fa": "عهدنامه گلستان گرجستان و بخش بزرگی از قفقاز را به روسیه می‌دهد."
+   },
+   "lens": "russian",
+   "focus": [
+    "caucasus"
+   ],
+   "ask": {
+    "prompt": {
+     "en": "Which region did Iran lose to Russia? Tap it.",
+     "fa": "ایران کدام منطقه را به روسیه باخت؟ روی آن بزنید."
+    },
+    "regions": [
+     "caucasus"
+    ]
    }
   },
   {
@@ -28,56 +52,54 @@
    "text": {
     "en": "The Treaty of Turkmenchay gives Russia Erivan and Nakhchivan. Many Iranians and Armenians are displaced.",
     "fa": "عهدنامه ترکمانچای ایروان و نخجوان را به روسیه می‌دهد. بسیاری از ایرانیان و ارامنه آواره می‌شوند."
-   }
+   },
+   "lens": "russian",
+   "pins": [
+    {
+     "lat": 40.18,
+     "lng": 44.51,
+     "label": {
+      "en": "Erivan",
+      "fa": "ایروان"
+     }
+    }
+   ]
   },
   {
    "year": 1891,
    "text": {
     "en": "The Tobacco Protest: a national boycott forces the Shah to cancel a concession to a British company.",
     "fa": "اعتراض تنباکو: تحریم سراسری شاه را وادار به لغو امتیاز شرکت انگلیسی می‌کند."
-   }
+   },
+   "lens": "qajar",
+   "pins": [
+    {
+     "lat": 35.69,
+     "lng": 51.39,
+     "label": {
+      "en": "Tehran",
+      "fa": "تهران"
+     }
+    }
+   ]
   },
   {
    "year": 1906,
    "text": {
     "en": "The Constitutional Revolution opens the first Majles (parliament), and a constitution limits royal power.",
     "fa": "انقلاب مشروطه نخستین مجلس را می‌گشاید و قانون اساسی قدرت شاه را محدود می‌کند."
-   }
-  }
- ],
- "quiz": [
-  {
-   "statement": {
-    "en": "Russia gained the Caucasus from Iran in 1813.",
-    "fa": "روسیه در ۱۸۱۳ قفقاز را از ایران گرفت."
    },
-   "reality": true,
-   "why": {
-    "en": "The Treaty of Gulistan transferred these lands.",
-    "fa": "عهدنامه گلستان این سرزمین‌ها را واگذار کرد."
-   }
-  },
-  {
-   "statement": {
-    "en": "The Tobacco Protest succeeded.",
-    "fa": "اعتراض تنباکو موفق شد."
-   },
-   "reality": true,
-   "why": {
-    "en": "The concession was cancelled after a national boycott.",
-    "fa": "امتیاز پس از تحریم سراسری لغو شد."
-   }
-  },
-  {
-   "statement": {
-    "en": "The Qajar capital was Isfahan.",
-    "fa": "پایتخت قاجار اصفهان بود."
-   },
-   "reality": false,
-   "why": {
-    "en": "The Qajars ruled from Tehran.",
-    "fa": "قاجاریان از تهران حکم می‌راندند."
-   }
+   "lens": "qajar",
+   "pins": [
+    {
+     "lat": 35.69,
+     "lng": 51.39,
+     "label": {
+      "en": "Tehran",
+      "fa": "تهران"
+     }
+    }
+   ]
   }
  ],
  "status": "ai_drafted_unreviewed"

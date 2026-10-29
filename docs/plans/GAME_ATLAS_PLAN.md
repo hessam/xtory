@@ -571,14 +571,14 @@ safe area for Telegram/X/WhatsApp crops.
 - Deep links `/journey/:eraId/:beat`. Journey becomes the default mode; Atlas stays one tap away.
 - The Joyride tour is retired (chapter 1 teaches the app).
 
-**Status (built, behind `?ff=journey`; try `/?ff=board,journey`):**
-- [x] Chapters follow the `historianCards` eras in order. **The data has 15 eras, not the 16 this plan assumed**; the path shows 15.
-- [x] Each chapter has 5–7 beats (76 in total) in `data/journey/<eraId>.json`, bilingual, each with a year. Tapping a beat moves the timeline to that year. Sources and an AI-drafted, not-yet-reviewed marker are on each chapter.
-- [x] Myth-or-reality quiz (3 questions per chapter) gives 1–3 stars; a chapter unlocks when the previous one has a star. Stars are kept on the device.
-- [x] Deep links are hash routes: `#/journey/<eraId>/<beat>` or `…/quiz` (hash, not path, so static hosting needs no rewrite; this matches `#/u/` and `#/admin/`).
-- [x] Joyride tour is no longer started when journey is on.
-- [ ] Not built: camera choreography per beat (fly/highlight/morph), the 90 s time check per chapter, the reward card in the inventory (stars only), and the Atlas-as-default switch (kept off until the hallway test passes, per guardrail 9).
-- [ ] Hallway test with 5 people still to run.
+**Status (rebuilt on the board, behind `?ff=journey`; try `/?ff=journey` — it switches the board on by itself):**
+- First version was a card game beside the map; owner feedback: "a flash card game running in a void". Rebuilt so **the board is the stage**:
+- [x] Every beat is a scene: the timeline **sweeps** to the beat's year (realms change on the way), a realm is **spotlit** (reach lens, others dimmed), story places are **pinned** on the board, the camera **frames** realm + pins (`src/journey/stage.ts` → `MapBoard`). A unit test guarantees every beat does something on the map and every spotlit realm really holds land that year.
+- [x] **"Where?" beats** (one per chapter): the player answers by tapping a region; wrong = red flash + hint, right = green flash; "Show me" after two misses. Each answer is tested against the pin's real position on the board (point-in-polygon).
+- [x] **Map challenge** ends each chapter: three "tap a region ruled by X in year Y" questions **derived from the realm data**, so the answer is always what the board shows; after each answer the true realm lights up. First-try answers → 1–3 stars → next chapter unlocks.
+- [x] Caption is a slim subtitle bar on the map's lower edge (above the bottom sheet on phones); side panels collapse on desktop while a chapter plays; the lens caption is hidden during the journey; journey taps never open the region drawer.
+- [x] 15 chapters (the data has 15 eras, not 16), 76 beats, en + fa; hash deep links `#/journey/<era>/<beat|challenge>`; Joyride tour not started when journey is on.
+- [ ] Not yet: beat markers on the timeline itself, year-to-year border morphing, a reward card in the inventory, 90 s timing, hallway test; content is AI-drafted and unreviewed.
 
 **DoD**
 - [~] All chapters authored in en + fa (15 eras, 76 beats; each ≤ 90 s not yet timed).

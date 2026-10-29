@@ -14,69 +14,98 @@
    "text": {
     "en": "Alexander marries Roxana in Bactria and adopts some Persian dress and court customs.",
     "fa": "اسکندر در باختر با روشنک ازدواج می‌کند و برخی آداب و لباس ایرانی را می‌پذیرد."
-   }
+   },
+   "lens": "argead_macedonian",
+   "pins": [
+    {
+     "lat": 36.76,
+     "lng": 66.9,
+     "label": {
+      "en": "Bactra (Balkh)",
+      "fa": "باختر (بلخ)"
+     }
+    }
+   ]
   },
   {
    "year": -323,
    "text": {
     "en": "Alexander dies in Babylon. His generals divide the empire; Seleucus takes the East.",
     "fa": "اسکندر در بابل می‌میرد. سرداران امپراتوری را تقسیم می‌کنند؛ سلوکوس شرق را می‌گیرد."
-   }
+   },
+   "lens": "argead_macedonian",
+   "pins": [
+    {
+     "lat": 32.54,
+     "lng": 44.42,
+     "label": {
+      "en": "Babylon",
+      "fa": "بابل"
+     }
+    }
+   ]
   },
   {
    "year": -300,
    "text": {
     "en": "Seleucus founds a dynasty ruling from Syria to Central Asia. Seleucia on the Tigris becomes its capital.",
     "fa": "سلوکوس سلسله‌ای می‌سازد که از سوریه تا آسیای مرکزی حکم می‌راند. سلوکیه بر دجله پایتخت می‌شود."
-   }
+   },
+   "lens": "seleucid",
+   "pins": [
+    {
+     "lat": 33.09,
+     "lng": 44.52,
+     "label": {
+      "en": "Seleucia",
+      "fa": "سلوکیه"
+     }
+    }
+   ]
   },
   {
    "year": -280,
    "text": {
     "en": "Greek cities spread across the plateau. Greek and Iranian styles mix in art, coins and religion.",
     "fa": "شهرهای یونانی در فلات گسترش می‌یابند. سبک‌های یونانی و ایرانی در هنر، سکه و دین می‌آمیزند."
-   }
+   },
+   "lens": "seleucid",
+   "pins": [
+    {
+     "lat": 32.19,
+     "lng": 48.26,
+     "label": {
+      "en": "Susa",
+      "fa": "شوش"
+     }
+    }
+   ]
   },
   {
    "year": -247,
    "text": {
     "en": "Bactria and Parthia break away. Arsaces founds the Parthian kingdom around 247 BC.",
     "fa": "باختر و پارت جدا می‌شوند. آرشک حدود ۲۴۷ پیش از میلاد شاهنشاهی اشکانی را بنیان می‌گذارد."
-   }
-  }
- ],
- "quiz": [
-  {
-   "statement": {
-    "en": "Alexander adopted some Persian customs at his court.",
-    "fa": "اسکندر برخی آداب ایرانی را در دربارش پذیرفت."
    },
-   "reality": true,
-   "why": {
-    "en": "Sources describe Persian dress and court practice.",
-    "fa": "منابع از لباس و آداب ایرانی در دربار او یاد می‌کنند."
-   }
-  },
-  {
-   "statement": {
-    "en": "The Seleucid capital was Ecbatana.",
-    "fa": "پایتخت سلوکیان اکباتان بود."
-   },
-   "reality": false,
-   "why": {
-    "en": "The Seleucid capital on the Tigris was Seleucia.",
-    "fa": "پایتخت سلوکیان بر دجله، سلوکیه بود."
-   }
-  },
-  {
-   "statement": {
-    "en": "The Parthian kingdom was founded by Alexander's generals.",
-    "fa": "شاهنشاهی اشکانی را سرداران اسکندر بنیان گذاشتند."
-   },
-   "reality": false,
-   "why": {
-    "en": "The Arsacids came from nomadic Parni tribes of the northeast.",
-    "fa": "اشکانیان از قبایل کوچ‌نشین پارنی در شمال‌شرق بودند."
+   "lens": "parthian",
+   "pins": [
+    {
+     "lat": 37.98,
+     "lng": 58.2,
+     "label": {
+      "en": "Nisa",
+      "fa": "نسا"
+     }
+    }
+   ],
+   "ask": {
+    "prompt": {
+     "en": "Where did the Parthians begin? Tap the region.",
+     "fa": "اشکانیان از کجا برخاستند؟ روی منطقه بزنید."
+    },
+    "regions": [
+     "khorasan"
+    ]
    }
   }
  ],

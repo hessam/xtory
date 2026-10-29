@@ -4,6 +4,7 @@ import { X } from 'lucide-react';
 import { countDynastiesAt, getDynasty } from '../../data/registry';
 import { counterLabel, describeReach } from '../../lib/reachText';
 import { setLens, useLens } from '../../lib/lensStore';
+import { useStage } from '../../journey/stage';
 import { ActiveDynastyList } from './ActiveDynastyList';
 
 interface Props { year: number; lang: 'en' | 'fa' }
@@ -12,6 +13,7 @@ interface Props { year: number; lang: 'en' | 'fa' }
 export const FragmentationHud: React.FC<Props> = ({ year, lang }) => {
   const [open, setOpen] = useState(false);
   const lens = useLens();
+  const journey = useStage().active;   // the journey caption explains the spotlight itself
   const count = useMemo(() => countDynastiesAt(year), [year]);
   const label = counterLabel(count, year, lang);
 
@@ -67,7 +69,7 @@ export const FragmentationHud: React.FC<Props> = ({ year, lang }) => {
       </div>
 
       <AnimatePresence>
-        {lens && getDynasty(lens) && (
+        {lens && !journey && getDynasty(lens) && (
           <motion.div
             key={lens}
             initial={{ opacity: 0, y: 10 }}

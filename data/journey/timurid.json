@@ -14,69 +14,88 @@
    "text": {
     "en": "Timur rises in Transoxiana and makes Samarkand his capital.",
     "fa": "تیمور در ماوراءالنهر برمی‌خیزد و سمرقند را پایتخت خود می‌کند."
-   }
+   },
+   "lens": "timurid",
+   "pins": [
+    {
+     "lat": 39.65,
+     "lng": 66.96,
+     "label": {
+      "en": "Samarkand",
+      "fa": "سمرقند"
+     }
+    }
+   ]
   },
   {
    "year": 1387,
    "text": {
     "en": "Timur campaigns across Iran and Iraq. Isfahan revolts and suffers severe punishment.",
     "fa": "تیمور در ایران و عراق می‌تازد. اصفهان شورش می‌کند و کیفر سختی می‌بیند."
-   }
+   },
+   "lens": "timurid",
+   "pins": [
+    {
+     "lat": 32.65,
+     "lng": 51.67,
+     "label": {
+      "en": "Isfahan",
+      "fa": "اصفهان"
+     }
+    }
+   ]
   },
   {
    "year": 1398,
    "text": {
     "en": "Timur invades India and sacks Delhi.",
     "fa": "تیمور به هند یورش می‌برد و دهلی را غارت می‌کند."
-   }
+   },
+   "lens": "timurid"
   },
   {
    "year": 1405,
    "text": {
     "en": "Timur dies on his way to China. His sons and grandsons quarrel over the inheritance.",
     "fa": "تیمور در راه چین می‌میرد. پسران و نوادگانش بر سر میراث او می‌جنگند."
-   }
+   },
+   "lens": "timurid",
+   "pins": [
+    {
+     "lat": 39.65,
+     "lng": 66.96,
+     "label": {
+      "en": "Samarkand",
+      "fa": "سمرقند"
+     }
+    }
+   ]
   },
   {
    "year": 1480,
    "text": {
     "en": "Herat under Husayn Bayqara becomes a centre of Persian poetry and miniature painting.",
     "fa": "هرات در زمان حسین بایقرا مرکز شعر فارسی و نگارگری می‌شود."
-   }
-  }
- ],
- "quiz": [
-  {
-   "statement": {
-    "en": "Timur made Samarkand his capital.",
-    "fa": "تیمور سمرقند را پایتخت خود کرد."
    },
-   "reality": true,
-   "why": {
-    "en": "Samarkand was his capital.",
-    "fa": "سمرقند پایتخت او بود."
-   }
-  },
-  {
-   "statement": {
-    "en": "Timur died in India.",
-    "fa": "تیمور در هند درگذشت."
-   },
-   "reality": false,
-   "why": {
-    "en": "He died on the road toward China, in 1405.",
-    "fa": "او در ۱۴۰۵ در راه چین درگذشت."
-   }
-  },
-  {
-   "statement": {
-    "en": "Herat became a centre of art and poetry under the Timurids.",
-    "fa": "هرات زیر تیموریان مرکز هنر و شعر شد."
-   },
-   "reality": true,
-   "why": {
-    "en": "Herat flourished as a cultural centre in the late fifteenth century.",
-    "fa": "هرات در پایان سده پانزدهم مرکز فرهنگی شکوفایی بود."
+   "lens": "timurid",
+   "pins": [
+    {
+     "lat": 34.35,
+     "lng": 62.2,
+     "label": {
+      "en": "Herat",
+      "fa": "هرات"
+     }
+    }
+   ],
+   "ask": {
+    "prompt": {
+     "en": "Herat flourishes. Tap its region.",
+     "fa": "هرات شکوفا می‌شود. روی منطقه‌اش بزنید."
+    },
+    "regions": [
+     "khorasan"
+    ]
    }
   }
  ],

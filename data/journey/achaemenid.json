@@ -14,13 +14,44 @@
    "text": {
     "en": "Cyrus defeats Croesus of Lydia. The Greek cities of Asia Minor come under Persian rule.",
     "fa": "کوروش کروزوس، پادشاه لیدی را شکست می‌دهد. شهرهای یونانی آسیای صغیر زیر فرمان ایران می‌روند."
-   }
+   },
+   "lens": "achaemenid",
+   "pins": [
+    {
+     "lat": 30.2,
+     "lng": 53.18,
+     "label": {
+      "en": "Pasargadae",
+      "fa": "پاسارگاد"
+     }
+    }
+   ]
   },
   {
    "year": -539,
    "text": {
     "en": "Cyrus enters Babylon. The Cyrus Cylinder proclaims the return of exiled peoples and their gods.",
     "fa": "کوروش وارد بابل می‌شود. استوانه کوروش بازگشت تبعیدیان و خدایانشان را اعلام می‌کند."
+   },
+   "lens": "achaemenid",
+   "pins": [
+    {
+     "lat": 32.54,
+     "lng": 44.42,
+     "label": {
+      "en": "Babylon",
+      "fa": "بابل"
+     }
+    }
+   ],
+   "ask": {
+    "prompt": {
+     "en": "Cyrus enters Babylon. Tap the region it stood in.",
+     "fa": "کوروش وارد بابل می‌شود. روی منطقه آن بزنید."
+    },
+    "regions": [
+     "mesopotamia"
+    ]
    }
   },
   {
@@ -28,56 +59,52 @@
    "text": {
     "en": "Darius I builds Persepolis and a royal road, with provinces, a unified coinage and a tax system.",
     "fa": "داریوش یکم تخت جمشید و جاده شاهی را می‌سازد؛ با استان‌ها، سکه‌های یکسان و نظام مالیاتی."
-   }
+   },
+   "lens": "achaemenid",
+   "pins": [
+    {
+     "lat": 29.94,
+     "lng": 52.89,
+     "label": {
+      "en": "Persepolis",
+      "fa": "تخت جمشید"
+     }
+    },
+    {
+     "lat": 32.19,
+     "lng": 48.26,
+     "label": {
+      "en": "Susa",
+      "fa": "شوش"
+     }
+    }
+   ]
   },
   {
    "year": -490,
    "text": {
     "en": "Darius and Xerxes fail to conquer Greece. Marathon (490 BC) and Salamis (480 BC) are Persian defeats.",
     "fa": "داریوش و خشایارشا در فتح یونان ناکام می‌مانند. ماراتن (۴۹۰) و سالامیس (۴۸۰) شکست‌های ایران‌اند."
-   }
+   },
+   "lens": "achaemenid"
   },
   {
    "year": -330,
    "text": {
     "en": "Alexander burns Persepolis. The Achaemenid Empire ends after about two centuries.",
     "fa": "اسکندر تخت جمشید را می‌سوزاند. شاهنشاهی هخامنشی پس از حدود دو سده پایان می‌یابد."
-   }
-  }
- ],
- "quiz": [
-  {
-   "statement": {
-    "en": "The Cyrus Cylinder ordered the forced conversion of conquered peoples.",
-    "fa": "استوانه کوروش دستور به تغییر اجباری دین مردمان مفتوح داد."
    },
-   "reality": false,
-   "why": {
-    "en": "It proclaims return and restoration of cults, not forced conversion.",
-    "fa": "این استوانه بازگشت و احیای آیین‌ها را اعلام می‌کند، نه تغییر اجباری دین."
-   }
-  },
-  {
-   "statement": {
-    "en": "Darius I began building Persepolis.",
-    "fa": "داریوش یکم ساختن تخت جمشید را آغاز کرد."
-   },
-   "reality": true,
-   "why": {
-    "en": "Construction began under Darius around 518 BC.",
-    "fa": "ساخت آن حدود ۵۱۸ پیش از میلاد زیر نظر داریوش آغاز شد."
-   }
-  },
-  {
-   "statement": {
-    "en": "The Achaemenids conquered all of Greece.",
-    "fa": "هخامنشیان تمام یونان را فتح کردند."
-   },
-   "reality": false,
-   "why": {
-    "en": "The invasions of Greece failed at Marathon and Salamis.",
-    "fa": "لشکرکشی‌ها به یونان در ماراتن و سالامیس شکست خوردند."
-   }
+   "lens": "argead_macedonian",
+   "pins": [
+    {
+     "lat": 29.94,
+     "lng": 52.89,
+     "label": {
+      "en": "Persepolis",
+      "fa": "تخت جمشید"
+     }
+    }
+   ]
   }
  ],
  "status": "ai_drafted_unreviewed"

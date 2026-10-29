@@ -14,27 +14,80 @@
    "text": {
     "en": "Shapur I defeats the Roman emperor Valerian and captures him. The victory is carved at Naqsh-e Rustam.",
     "fa": "شاپور یکم والریانوس امپراتور روم را شکست می‌دهد و اسیر می‌کند. این پیروزی در نقش رستم حک شده است."
-   }
+   },
+   "lens": "sasanian",
+   "pins": [
+    {
+     "lat": 29.99,
+     "lng": 52.87,
+     "label": {
+      "en": "Naqsh-e Rustam",
+      "fa": "نقش رستم"
+     }
+    }
+   ]
   },
   {
    "year": 280,
    "text": {
     "en": "Zoroastrianism becomes a state church. The high priest Kartir records his power in inscriptions.",
     "fa": "زرتشتی‌گری دین رسمی می‌شود. کرتیر موبد بزرگ قدرت خود را در کتیبه‌ها ثبت می‌کند."
-   }
+   },
+   "lens": "sasanian",
+   "pins": [
+    {
+     "lat": 29.99,
+     "lng": 52.87,
+     "label": {
+      "en": "Naqsh-e Rustam",
+      "fa": "نقش رستم"
+     }
+    }
+   ]
   },
   {
    "year": 330,
    "text": {
     "en": "Shapur II fights long wars with Rome. Ctesiphon, on the Tigris, becomes the great capital.",
     "fa": "شاپور دوم جنگ‌های طولانی با روم می‌کند. تیسفون بر دجله پایتخت بزرگ می‌شود."
-   }
+   },
+   "lens": "sasanian",
+   "pins": [
+    {
+     "lat": 33.09,
+     "lng": 44.58,
+     "label": {
+      "en": "Ctesiphon",
+      "fa": "تیسفون"
+     }
+    }
+   ]
   },
   {
    "year": 540,
    "text": {
     "en": "Khosrow I reforms taxes and the army. Gundishapur becomes a centre of learning and medicine.",
     "fa": "خسرو یکم مالیات و ارتش را اصلاح می‌کند. جندی‌شاپور مرکز دانش و پزشکی می‌شود."
+   },
+   "lens": "sasanian",
+   "pins": [
+    {
+     "lat": 32.28,
+     "lng": 48.51,
+     "label": {
+      "en": "Gundishapur",
+      "fa": "جندی‌شاپور"
+     }
+    }
+   ],
+   "ask": {
+    "prompt": {
+     "en": "Gundishapur, centre of learning: tap its region.",
+     "fa": "جندی‌شاپور، مرکز دانش: روی منطقه‌اش بزنید."
+    },
+    "regions": [
+     "khuzestan"
+    ]
    }
   },
   {
@@ -42,49 +95,36 @@
    "text": {
     "en": "After decades of war with Byzantium, the Sasanian state is exhausted. Khosrow II is killed.",
     "fa": "پس از دهه‌ها جنگ با بیزانس، دولت ساسانی فرسوده می‌شود. خسرو دوم کشته می‌شود."
-   }
+   },
+   "lens": "sasanian",
+   "pins": [
+    {
+     "lat": 33.09,
+     "lng": 44.58,
+     "label": {
+      "en": "Ctesiphon",
+      "fa": "تیسفون"
+     }
+    }
+   ]
   },
   {
    "year": 651,
    "text": {
     "en": "Yazdgerd III, the last Sasanian king, is killed in Merv. The Arab conquest is complete.",
     "fa": "یزدگرد سوم، واپسین شاه ساسانی، در مرو کشته می‌شود. فتح عرب کامل می‌شود."
-   }
-  }
- ],
- "quiz": [
-  {
-   "statement": {
-    "en": "Shapur I captured a Roman emperor.",
-    "fa": "شاپور یکم یک امپراتور روم را اسیر کرد."
    },
-   "reality": true,
-   "why": {
-    "en": "Valerian was captured in 260 AD.",
-    "fa": "والریانوس در ۲۶۰ میلادی اسیر شد."
-   }
-  },
-  {
-   "statement": {
-    "en": "The Sasanians were a Turkic dynasty.",
-    "fa": "ساسانیان سلسله‌ای ترک‌تبار بودند."
-   },
-   "reality": false,
-   "why": {
-    "en": "They were a Persian dynasty from Persis (Fars).",
-    "fa": "آنان سلسله‌ای ایرانی از پارس بودند."
-   }
-  },
-  {
-   "statement": {
-    "en": "Yazdgerd III died in Ctesiphon.",
-    "fa": "یزدگرد سوم در تیسفون درگذشت."
-   },
-   "reality": false,
-   "why": {
-    "en": "He was killed in Merv, in eastern Iran.",
-    "fa": "او در مرو در شرق ایران کشته شد."
-   }
+   "lens": "rashidun",
+   "pins": [
+    {
+     "lat": 37.66,
+     "lng": 62.19,
+     "label": {
+      "en": "Merv",
+      "fa": "مرو"
+     }
+    }
+   ]
   }
  ],
  "status": "ai_drafted_unreviewed"

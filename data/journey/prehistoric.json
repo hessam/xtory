@@ -13,13 +13,42 @@
    "text": {
     "en": "Villages on the plateau grow for thousands of years. Sialk, near Kashan, is one of the oldest settled sites in Iran.",
     "fa": "روستاهای فلات قرن‌ها رشد می‌کنند. سیلک نزدیک کاشان یکی از کهن‌ترین محل‌های سکونت در ایران است."
-   }
+   },
+   "pins": [
+    {
+     "lat": 33.97,
+     "lng": 51.4,
+     "label": {
+      "en": "Sialk",
+      "fa": "سیلک"
+     }
+    }
+   ]
   },
   {
    "year": -2900,
    "text": {
     "en": "In Elam, in the southwest, scribes at Susa write the earliest tablets of proto-Elamite script.",
     "fa": "در عیلام، در جنوب‌غرب، کاتبان شوش نخستین لوح‌های خط پروتو-ایلامی را می‌نویسند."
+   },
+   "pins": [
+    {
+     "lat": 32.19,
+     "lng": 48.26,
+     "label": {
+      "en": "Susa",
+      "fa": "شوش"
+     }
+    }
+   ],
+   "ask": {
+    "prompt": {
+     "en": "Where is Susa? Tap its region.",
+     "fa": "شوش کجاست؟ روی منطقه‌اش بزنید."
+    },
+    "regions": [
+     "khuzestan"
+    ]
    }
   },
   {
@@ -27,56 +56,47 @@
    "text": {
     "en": "Bronze makes trade valuable. Lapis lazuli and tin travel from the east to Mesopotamia.",
     "fa": "مفرغ تجارت را ارزشمند می‌کند. لاجورد و قلع از شرق به بین‌النهرین می‌رسند."
-   }
+   },
+   "pins": [
+    {
+     "lat": 30.6,
+     "lng": 61.33,
+     "label": {
+      "en": "Shahr-e Sukhteh",
+      "fa": "شهر سوخته"
+     }
+    }
+   ]
   },
   {
    "year": -1200,
    "text": {
     "en": "Groups speaking early Iranian languages move onto the plateau. Their speech will grow into Persian.",
     "fa": "گروه‌هایی که به زبان‌های ایرانی باستان سخن می‌گفتند به فلات می‌آیند. زبان آنان به فارسی تبدیل می‌شود."
-   }
+   },
+   "focus": [
+    "khorasan",
+    "transoxiana",
+    "chorasmia"
+   ]
   },
   {
    "year": -1000,
    "text": {
     "en": "Iron spreads. Fortified villages and tribal chiefdoms become common in the Zagros mountains.",
     "fa": "آهن رواج می‌یابد. روستاهای مستحکم و سرزمین‌های قبیله‌ای در زاگرس فراوان می‌شوند."
-   }
-  }
- ],
- "quiz": [
-  {
-   "statement": {
-    "en": "Iran had no cities before the Achaemenids.",
-    "fa": "ایران پیش از هخامنشیان شهری نداشت."
    },
-   "reality": false,
-   "why": {
-    "en": "Sialk, Susa and other sites were towns for millennia.",
-    "fa": "سیلک، شوش و دیگر محل‌ها هزاران سال شهر بودند."
-   }
-  },
-  {
-   "statement": {
-    "en": "Elam developed writing before the Achaemenid Empire.",
-    "fa": "عیلام پیش از امپراتوری هخامنشی خط داشت."
-   },
-   "reality": true,
-   "why": {
-    "en": "Proto-Elamite tablets date to about 3000 BC.",
-    "fa": "لوح‌های پروتو-ایلامی به حدود ۳۰۰۰ پیش از میلاد برمی‌گردند."
-   }
-  },
-  {
-   "statement": {
-    "en": "Persian was spoken on the plateau from the first farmers onward.",
-    "fa": "فارسی از نخستین کشاورزان در فلات رایج بود."
-   },
-   "reality": false,
-   "why": {
-    "en": "Iranian languages arrived with later migrations.",
-    "fa": "زبان‌های ایرانی با مهاجرت‌های بعدی آمدند."
-   }
+   "lens": "mannaean",
+   "pins": [
+    {
+     "lat": 37.0,
+     "lng": 45.46,
+     "label": {
+      "en": "Hasanlu",
+      "fa": "حسنلو"
+     }
+    }
+   ]
   }
  ],
  "status": "ai_drafted_unreviewed"

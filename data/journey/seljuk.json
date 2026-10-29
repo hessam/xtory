@@ -14,27 +14,80 @@
    "text": {
     "en": "Seljuk Turks defeat the Ghaznavids at Dandanqan and take Nishapur.",
     "fa": "سلجوقیان در دندانقان غزنویان را شکست می‌دهند و نیشابور را می‌گیرند."
-   }
+   },
+   "lens": "great_seljuq",
+   "pins": [
+    {
+     "lat": 37.66,
+     "lng": 62.19,
+     "label": {
+      "en": "Merv",
+      "fa": "مرو"
+     }
+    }
+   ]
   },
   {
    "year": 1055,
    "text": {
     "en": "Tughril enters Baghdad. The Seljuk sultan becomes protector of the Abbasid caliph.",
     "fa": "طغرل به بغداد وارد می‌شود. سلطان سلجوقی حامی خلیفه عباسی می‌شود."
-   }
+   },
+   "lens": "great_seljuq",
+   "pins": [
+    {
+     "lat": 33.31,
+     "lng": 44.36,
+     "label": {
+      "en": "Baghdad",
+      "fa": "بغداد"
+     }
+    }
+   ]
   },
   {
    "year": 1071,
    "text": {
     "en": "At Manzikert, the Seljuks defeat the Byzantines. Anatolia begins to open to the Turks.",
     "fa": "در ملازگرد سلجوقیان بیزانس را شکست می‌دهند. آناتولی به روی ترکان باز می‌شود."
-   }
+   },
+   "lens": "great_seljuq",
+   "pins": [
+    {
+     "lat": 39.14,
+     "lng": 42.54,
+     "label": {
+      "en": "Manzikert",
+      "fa": "ملازگرد"
+     }
+    }
+   ]
   },
   {
    "year": 1090,
    "text": {
     "en": "Vizier Nizam al-Mulk founds the Nizamiyya colleges and writes the Siyasatnama, a manual of kingship.",
     "fa": "نظام‌الملک وزیر مدرسه‌های نظامیه را بنیان می‌گذارد و سیاست‌نامه را می‌نویسد."
+   },
+   "lens": "great_seljuq",
+   "pins": [
+    {
+     "lat": 32.65,
+     "lng": 51.67,
+     "label": {
+      "en": "Isfahan",
+      "fa": "اصفهان"
+     }
+    }
+   ],
+   "ask": {
+    "prompt": {
+     "en": "Isfahan, the Seljuk capital: tap its region.",
+     "fa": "اصفهان، پایتخت سلجوقیان: روی منطقه‌اش بزنید."
+    },
+    "regions": [
+     "jibal"
+    ]
    }
   },
   {
@@ -42,42 +95,8 @@
    "text": {
     "en": "After Nizam al-Mulk's murder in 1092, the empire splits among rival princes into smaller sultanates.",
     "fa": "پس از قتل نظام‌الملک در ۱۰۹۲، شاهنشاهی میان شاهزادگان رقیب به سلطنت‌های کوچک‌تر تقسیم می‌شود."
-   }
-  }
- ],
- "quiz": [
-  {
-   "statement": {
-    "en": "The Seljuks conquered much of Anatolia after Manzikert.",
-    "fa": "سلجوقیان پس از ملازگرد بخش بزرگی از آناتولی را فتح کردند."
    },
-   "reality": true,
-   "why": {
-    "en": "Manzikert opened Anatolia to Turkic settlement.",
-    "fa": "ملازگرد آناتولی را به روی اسکان ترکان گشود."
-   }
-  },
-  {
-   "statement": {
-    "en": "Nizam al-Mulk was a Mongol.",
-    "fa": "نظام‌الملک مغول بود."
-   },
-   "reality": false,
-   "why": {
-    "en": "He was a Persian vizier of the Seljuks.",
-    "fa": "او وزیر ایرانی سلجوقیان بود."
-   }
-  },
-  {
-   "statement": {
-    "en": "The Seljuk Empire stayed unified until the 1200s.",
-    "fa": "شاهنشاهی سلجوقی تا سده ۱۳ یکپارچه ماند."
-   },
-   "reality": false,
-   "why": {
-    "en": "It fragmented into sultanates in the early twelfth century.",
-    "fa": "در سده دوازدهم به سلطنت‌های جداگانه تجزیه شد."
-   }
+   "lens": "great_seljuq"
   }
  ],
  "status": "ai_drafted_unreviewed"

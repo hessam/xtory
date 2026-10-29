@@ -14,27 +14,60 @@
    "text": {
     "en": "Arab armies take Ctesiphon in 637, and the Sasanian state is gone by 651.",
     "fa": "سپاهیان عرب در ۶۳۷ تیسفون را می‌گیرند و دولت ساسانی تا ۶۵۱ از میان می‌رود."
-   }
+   },
+   "lens": "rashidun",
+   "pins": [
+    {
+     "lat": 33.09,
+     "lng": 44.58,
+     "label": {
+      "en": "Ctesiphon",
+      "fa": "تیسفون"
+     }
+    }
+   ]
   },
   {
    "year": 661,
    "text": {
     "en": "The Umayyads move the capital to Damascus. Governors rule Iran from afar.",
     "fa": "امویان پایتخت را به دمشق می‌برند. والیان از دور بر ایران حکم می‌رانند."
-   }
+   },
+   "lens": "umayyad"
   },
   {
    "year": 720,
    "text": {
     "en": "Persian stays the language of local administration, while Arabic becomes the language of religion.",
     "fa": "فارسی زبان اداره محلی می‌ماند؛ عربی زبان دین می‌شود."
-   }
+   },
+   "lens": "umayyad"
   },
   {
    "year": 747,
    "text": {
     "en": "Abu Muslim leads the revolt in Khorasan, with many Persian soldiers. The Abbasids take power.",
     "fa": "ابومسلم در خراسان قیام می‌کند و بسیاری از سربازان ایرانی همراه او هستند. عباسیان به قدرت می‌رسند."
+   },
+   "lens": "umayyad",
+   "pins": [
+    {
+     "lat": 37.66,
+     "lng": 62.19,
+     "label": {
+      "en": "Merv",
+      "fa": "مرو"
+     }
+    }
+   ],
+   "ask": {
+    "prompt": {
+     "en": "The revolt starts in Khorasan. Tap it.",
+     "fa": "قیام از خراسان آغاز می‌شود. روی آن بزنید."
+    },
+    "regions": [
+     "khorasan"
+    ]
    }
   },
   {
@@ -42,42 +75,18 @@
    "text": {
     "en": "Al-Mansur founds Baghdad, a round city built with Persian engineers and materials.",
     "fa": "منصور بغداد را بنیان می‌نهد؛ شهری گرد که با مهندسان و مصالح ایرانی ساخته می‌شود."
-   }
-  }
- ],
- "quiz": [
-  {
-   "statement": {
-    "en": "Baghdad was founded in 762.",
-    "fa": "بغداد در ۷۶۲ بنیان نهاده شد."
    },
-   "reality": true,
-   "why": {
-    "en": "Al-Mansur founded it in 762 AD.",
-    "fa": "منصور در ۷۶۲ میلادی آن را بنیان نهاد."
-   }
-  },
-  {
-   "statement": {
-    "en": "The Umayyads ruled from Damascus.",
-    "fa": "امویان از دمشق حکم می‌راندند."
-   },
-   "reality": true,
-   "why": {
-    "en": "Damascus was the Umayyad capital.",
-    "fa": "دمشق پایتخت امویان بود."
-   }
-  },
-  {
-   "statement": {
-    "en": "The Abbasid revolt in Khorasan was led only by Arabs.",
-    "fa": "قیام عباسیان در خراسان تنها به رهبری عرب‌ها بود."
-   },
-   "reality": false,
-   "why": {
-    "en": "Persian soldiers and supporters were central to it.",
-    "fa": "سربازان و حامیان ایرانی نقش اصلی داشتند."
-   }
+   "lens": "abbasid",
+   "pins": [
+    {
+     "lat": 33.31,
+     "lng": 44.36,
+     "label": {
+      "en": "Baghdad",
+      "fa": "بغداد"
+     }
+    }
+   ]
   }
  ],
  "status": "ai_drafted_unreviewed"

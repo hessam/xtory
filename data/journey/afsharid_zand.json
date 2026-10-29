@@ -14,27 +14,66 @@
    "text": {
     "en": "Nader Qoli becomes Nader Shah, a military ruler who wins back lost lands and pushes into India.",
     "fa": "نادرقلی نادرشاه می‌شود؛ فرمانروایی نظامی که سرزمین‌های از دست‌رفته را پس می‌گیرد."
-   }
+   },
+   "lens": "afsharid",
+   "pins": [
+    {
+     "lat": 36.3,
+     "lng": 59.6,
+     "label": {
+      "en": "Mashhad",
+      "fa": "مشهد"
+     }
+    }
+   ]
   },
   {
    "year": 1739,
    "text": {
     "en": "Nader Shah sacks Delhi and returns with great treasure.",
     "fa": "نادرشاه دهلی را غارت می‌کند و با گنجینه‌ای بزرگ بازمی‌گردد."
-   }
+   },
+   "lens": "afsharid"
   },
   {
    "year": 1747,
    "text": {
     "en": "After Nader is assassinated, Iran splits among rival claimants.",
     "fa": "پس از ترور نادر، ایران میان مدعیان رقیب تجزیه می‌شود."
-   }
+   },
+   "focus": [
+    "azerbaijan",
+    "caucasus",
+    "khorasan",
+    "fars",
+    "sistan"
+   ]
   },
   {
    "year": 1760,
    "text": {
     "en": "Karim Khan Zand makes Shiraz his capital and rules as vakil, the regent of the realm, not as shah.",
     "fa": "کریم‌خان زند شیراز را پایتخت می‌کند و به‌عنوان وکیل، نه شاه، حکم می‌راند."
+   },
+   "lens": "zand",
+   "pins": [
+    {
+     "lat": 29.61,
+     "lng": 52.53,
+     "label": {
+      "en": "Shiraz",
+      "fa": "شیراز"
+     }
+    }
+   ],
+   "ask": {
+    "prompt": {
+     "en": "Karim Khan rules from Shiraz. Tap its region.",
+     "fa": "کریم‌خان از شیراز حکم می‌راند. روی منطقه‌اش بزنید."
+    },
+    "regions": [
+     "fars"
+    ]
    }
   },
   {
@@ -42,42 +81,26 @@
    "text": {
     "en": "Agha Mohammad Khan Qajar takes Shiraz and unites Iran after the Zand civil wars.",
     "fa": "آقامحمدخان قاجار پس از جنگ‌های داخلی زندیه شیراز را می‌گیرد و ایران را یکپارچه می‌کند."
-   }
-  }
- ],
- "quiz": [
-  {
-   "statement": {
-    "en": "Nader Shah sacked Delhi.",
-    "fa": "نادرشاه دهلی را غارت کرد."
    },
-   "reality": true,
-   "why": {
-    "en": "Delhi was sacked in 1739.",
-    "fa": "دهلی در ۱۷۳۹ غارت شد."
-   }
-  },
-  {
-   "statement": {
-    "en": "Karim Khan Zand took the title of shah.",
-    "fa": "کریم‌خان زند لقب شاه گرفت."
-   },
-   "reality": false,
-   "why": {
-    "en": "He preferred the title vakil.",
-    "fa": "او لقب وکیل را ترجیح داد."
-   }
-  },
-  {
-   "statement": {
-    "en": "The Zands made Tehran their capital.",
-    "fa": "زندیان تهران را پایتخت کردند."
-   },
-   "reality": false,
-   "why": {
-    "en": "Shiraz was their capital.",
-    "fa": "شیراز پایتخت آنان بود."
-   }
+   "lens": "qajar",
+   "pins": [
+    {
+     "lat": 29.61,
+     "lng": 52.53,
+     "label": {
+      "en": "Shiraz",
+      "fa": "شیراز"
+     }
+    },
+    {
+     "lat": 30.28,
+     "lng": 57.08,
+     "label": {
+      "en": "Kerman",
+      "fa": "کرمان"
+     }
+    }
+   ]
   }
  ],
  "status": "ai_drafted_unreviewed"
