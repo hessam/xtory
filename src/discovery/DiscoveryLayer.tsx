@@ -6,6 +6,8 @@ import { nextFact, pickSparkles } from './pick';
 import { markFound, openFact, progress, setSparkles, useDiscovery } from './store';
 import { getDeviceId } from '../services/aiTransport';
 import { toPersianDigits } from '../utils/format';
+import { isFlagOn } from '../lib/flags';
+import { ProfileButton, ProfileSheet } from '../profile/ProfilePanel';
 
 interface Props { year: number; lang: 'en' | 'fa'; /** shared server AI is on → "Dig deeper" can run */ serverAi: boolean }
 const fa = (lang: string) => (lang === 'fa' ? 'font-vazirmatn' : '');
@@ -43,6 +45,8 @@ export const DiscoveryLayer: React.FC<Props> = ({ year, lang, serverAi }) => {
   const [digState, setDigState] = useState<'idle' | 'busy' | 'none' | 'failed'>('idle');
   const [note, setNote] = useState<'' | 'copied' | 'reported'>('');
   const [empty, setEmpty] = useState(false);
+  const boardOn = useMemo(() => isFlagOn('leaderboard'), []);
+  const [profileOpen, setProfileOpen] = useState(false);
   useEffect(() => { setExtra([]); setDigState('idle'); setNote(''); }, [openId]);
   useEffect(() => { setEmpty(false); }, [year]);
 
@@ -90,7 +94,8 @@ export const DiscoveryLayer: React.FC<Props> = ({ year, lang, serverAi }) => {
 
   return (
     <>
-      <div className="absolute left-3 top-3 z-[1000] pointer-events-auto" dir={dir} data-testid="discovery-hud">
+      <div className="absolute left-3 top-3 z-[1000] pointer-events-auto flex items-start gap-2" dir="ltr" data-testid="discovery-hud">
+        <div dir={dir}>
         <button type="button" onClick={discover} data-testid="discover-btn"
                 className="liquid-glass-heavy border border-amber-300/40 rounded-2xl ps-2.5 pe-3 py-1.5 flex items-center gap-2 shadow-xl active:scale-95 calm-transition min-h-[44px]">
           <Sparkles className="w-4 h-4 text-amber-300" aria-hidden />
@@ -103,7 +108,11 @@ export const DiscoveryLayer: React.FC<Props> = ({ year, lang, serverAi }) => {
           </span>
         </button>
         {empty && <p className={`mt-1.5 max-w-[14rem] text-[11px] text-slate-300 liquid-glass rounded-xl px-2.5 py-1.5 ${fa(lang)}`} role="status">{prog.found >= prog.total ? t('all', lang) : t('nothing', lang)}</p>}
+        </div>
+        {boardOn && <ProfileButton lang={lang} onClick={() => setProfileOpen(o => !o)} />}
       </div>
+
+      {boardOn && <ProfileSheet lang={lang} open={profileOpen} onClose={() => setProfileOpen(false)} />}
 
       {open && (
         // phones: the bottom sheet covers the lower map, so the card hangs from the top (clear of the right-hand controls)

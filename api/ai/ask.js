@@ -1436,6 +1436,10 @@ var MemoryStore = class {
   get size() {
     return this.m.size;
   }
+  /** test helper: every key and value currently held (privacy audits) */
+  dump() {
+    return { kv: [...this.m].map(([k, e]) => [k, e.v]), sets: [...this.sets].map(([k, v]) => [k, [...v]]), zsets: [...this.zsets].map(([k, v]) => [k, [...v]]) };
+  }
   async sadd(key, member) {
     const s = this.sets.get(key) ?? /* @__PURE__ */ new Set();
     this.sets.set(key, s);

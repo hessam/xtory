@@ -30,6 +30,8 @@ export class MemoryStore implements RichStore {
   async set(key: string, value: string, ttlSec: number) { this.m.set(key, { v: value, exp: this.now() + ttlSec * 1000 }); }
   /** test helper */
   get size() { return this.m.size; }
+  /** test helper: every key and value currently held (privacy audits) */
+  dump() { return { kv: [...this.m].map(([k, e]) => [k, e.v]), sets: [...this.sets].map(([k, v]) => [k, [...v]]), zsets: [...this.zsets].map(([k, v]) => [k, [...v]]) }; }
 
   private sets = new Map<string, Set<string>>();
   private zsets = new Map<string, Map<string, number>>();

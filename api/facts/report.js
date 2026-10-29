@@ -1029,13 +1029,14 @@ function sameOrigin(req, deps) {
     }
   }) || !c.isProduction && /^(localhost|127\.0\.0\.1)(:\d+)?$/.test(host);
 }
-async function gate(req, deps, maxBody = 2048) {
+async function gate(req, deps, maxBody = 2048, methods = ["POST"], needsAi = true) {
   const c = deps.config;
-  if (req.method !== "POST") return { res: fail(405, "method_not_allowed", {}, { Allow: "POST" }) };
-  if (!c.enabled) return { res: fail(503, "ai_disabled") };
-  if (!c.apiKey || !c.hashSalt) return { res: fail(503, "ai_misconfigured") };
+  if (!methods.includes(req.method)) return { res: fail(405, "method_not_allowed", {}, { Allow: methods.join(", ") }) };
+  if (needsAi && !c.enabled) return { res: fail(503, "ai_disabled") };
+  if (needsAi ? !c.apiKey || !c.hashSalt : !c.hashSalt) return { res: fail(503, "ai_misconfigured") };
   if (c.isProduction && !deps.store.durable) return { res: fail(503, "store_unavailable") };
   if (!sameOrigin(req, deps)) return { res: fail(403, "forbidden_origin") };
+  if (req.method === "GET") return { body: {} };
   const raw = await req.text();
   if (new TextEncoder().encode(raw).length > maxBody) return { res: fail(413, "body_too_large") };
   let body;
@@ -1105,6 +1106,10 @@ var MemoryStore = class {
   /** test helper */
   get size() {
     return this.m.size;
+  }
+  /** test helper: every key and value currently held (privacy audits) */
+  dump() {
+    return { kv: [...this.m].map(([k, e]) => [k, e.v]), sets: [...this.sets].map(([k, v]) => [k, [...v]]), zsets: [...this.zsets].map(([k, v]) => [k, [...v]]) };
   }
   async sadd(key, member) {
     const s = this.sets.get(key) ?? /* @__PURE__ */ new Set();

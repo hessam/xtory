@@ -11,9 +11,9 @@ import type { RichStore } from '../ai/store.js';
 import { digDeeper, needsWriter, storedFor } from './pipeline.js';
 import { FactStore, STATUSES } from './store.js';
 
-const json = (status: number, body: unknown, extra: Record<string, string> = {}) =>
+export const json = (status: number, body: unknown, extra: Record<string, string> = {}) =>
   new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', ...extra } });
-const fail = (status: number, error: string, extra: Record<string, unknown> = {}, headers: Record<string, string> = {}) => json(status, { ok: false, error, ...extra }, headers);
+export const fail = (status: number, error: string, extra: Record<string, unknown> = {}, headers: Record<string, string> = {}) => json(status, { ok: false, error, ...extra }, headers);
 
 const richStore = (deps: Deps): RichStore => deps.store as RichStore;
 const factStoreOf = (deps: Deps) => new FactStore(richStore(deps), deps.now ?? Date.now);
@@ -28,13 +28,14 @@ function sameOrigin(req: Request, deps: Deps): boolean {
 const denied = (d: LimitDenied) => fail(d.scope === 'daily_budget' ? 503 : 429, d.scope === 'daily_budget' ? 'budget_exhausted' : 'rate_limited', { scope: d.scope, retryAfterSec: d.retryAfterSec }, { 'Retry-After': String(d.retryAfterSec) });
 
 /** Shared front door for the two public endpoints. */
-async function gate(req: Request, deps: Deps, maxBody = 2048) {
+export async function gate(req: Request, deps: Deps, maxBody = 2048, methods: string[] = ['POST'], needsAi = true) {
   const c = deps.config;
-  if (req.method !== 'POST') return { res: fail(405, 'method_not_allowed', {}, { Allow: 'POST' }) };
-  if (!c.enabled) return { res: fail(503, 'ai_disabled') };
-  if (!c.apiKey || !c.hashSalt) return { res: fail(503, 'ai_misconfigured') };
+  if (!methods.includes(req.method)) return { res: fail(405, 'method_not_allowed', {}, { Allow: methods.join(', ') }) };
+  if (needsAi && !c.enabled) return { res: fail(503, 'ai_disabled') };
+  if (needsAi ? !c.apiKey || !c.hashSalt : !c.hashSalt) return { res: fail(503, 'ai_misconfigured') };
   if (c.isProduction && !deps.store.durable) return { res: fail(503, 'store_unavailable') };
   if (!sameOrigin(req, deps)) return { res: fail(403, 'forbidden_origin') };
+  if (req.method === 'GET') return { body: {} as Record<string, any> };
   const raw = await req.text();
   if (new TextEncoder().encode(raw).length > maxBody) return { res: fail(413, 'body_too_large') };
   let body: any; try { body = JSON.parse(raw); } catch { return { res: fail(400, 'invalid_request') }; }
@@ -66,6 +67,8 @@ export async function handleDig(req: Request, deps: Deps): Promise<Response> {
     const day = utcDay(now), hour = new Date(now).getUTCHours();
     for (const u of out.usage) await recordUsage(store, { day, hour, task: u.task, cache: 'miss', tokensIn: u.tokensIn, tokensOut: u.tokensOut, ok: u.ok, deviceHash: id.deviceHash }).catch(() => {});
     if (!out.usage.length) await recordUsage(store, { day, hour, task: 'dig_deeper', cache: 'hit', tokensIn: 0, tokensOut: 0, ok: true, deviceHash: id.deviceHash }).catch(() => {});
+    // anti-cheat for Slice 8: remember that THIS device was served these facts (a claim for an AI fact needs it)
+    for (const f of out.facts) await store.set(`sv:${id.deviceHash}:${f.id}`, '1', 2 * 86400).catch(() => {});
     return json(200, { ok: true, facts: out.facts, pending: out.pending, meta: { fromStore: out.fromStore, checker: out.checker } });
   } catch (e: any) {
     if (e instanceof UpstreamError) return e.kind === 'rate_limited' || e.kind === 'payment' ? fail(503, 'ai_busy', {}, { 'Retry-After': '30' }) : fail(502, 'upstream_error', { kind: e.kind, ...(e.detail ? { detail: e.detail } : {}) });

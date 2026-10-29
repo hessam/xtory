@@ -480,11 +480,21 @@ fact_reviews(fact_id, reviewer, verdict, notes, at)   fact_reports(fact_id, prof
 
 **Guardrails** — Global guardrail 6 in full. Leaderboard shows nickname + points only.
 
+**Status (done, behind `?ff=leaderboard`, needs `?ff=board,discovery,leaderboard`):**
+- [x] `POST /api/me` (`create` / `recover` / `sync` / `nickname` / `delete`, plus `DELETE /api/me`), `GET /api/leaderboard?board=all|week|<eraId>` and `?nick=` (public showcase, named players only). Code: `server/profile/`.
+- [x] Anonymous profile: random id + **8-word recovery code** (256-word list, 64 bits) which is the only credential; stored server-side only as a salted hash. Creation, recovery attempts and sync are rate limited per hashed IP.
+- [x] Nickname: 3–20 chars, letters/digits/`_`/`-`, reserved names, small fa+en profanity list with leet/ZWNJ normalisation (**starter list, extend `BANNED` in `server/profile/nickname.ts`**), unique case/separator-insensitive. Default public name "Explorer #NNNN".
+- [x] Sync is idempotent; points are **recomputed from the inventory on every sync**: +1 per fact, +1 rarity (first 3 claimants), +5 first claimant of an AI fact once it is verified; facts the owner later rejects/disputes stop counting at the next sync (revocation).
+- [x] Anti-cheat: unknown ids rejected; AI facts need the server to have served them to that device (`/api/facts/dig` records `sv:<deviceHash>:<id>`, 2 days); 80 new claims per profile per UTC day; rejects raise an anomaly counter.
+- [x] UI: trophy button beside Discover → profile sheet (join, nickname, show/copy code, restore, tabs All time / This week / per era, sign out, delete) and `#/u/<nickname>` showcase. fa + en, RTL.
+- [ ] Not yet: per-profile anomaly review screen (flags are counted, not shown); leaderboard caching; weekly board history; revocation is lazy (next sync), not pushed.
+- Audit: `server/profile/profile.test.ts › privacy audit` dumps every key/value and log line after a full session and asserts no raw IP, device id or recovery code is present.
+
 **DoD**
-- [ ] Profile, nickname, recovery and deletion tested end-to-end.
-- [ ] Claiming an unserved fact is rejected (automated test).
-- [ ] Weekly board resets correctly (time-travel test).
-- [ ] No raw IP or user key in any table or log (audit query in the PR).
+- [x] Profile, nickname, recovery and deletion tested end-to-end (unit + Playwright).
+- [x] Claiming an unserved fact is rejected (automated test).
+- [x] Weekly board resets correctly (time-travel test).
+- [x] No raw IP or user key in any table or log (audit test above).
 
 ---
 

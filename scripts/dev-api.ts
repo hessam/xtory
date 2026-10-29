@@ -11,6 +11,7 @@ dotenv.config({ quiet: true });
 
 const { handleAsk, handleStatus, handleUsage, depsFromEnv } = await import('../server/ai/handler.js');
 const { handleDig, handleReport, handleAdmin } = await import('../server/facts/handler.js');
+const { handleMe, handleBoard } = await import('../server/profile/handler.js');
 const { nodeAdapter } = await import('../server/entry/node.js');
 const { checkerUsable } = await import('../server/ai/config.js');
 
@@ -22,6 +23,8 @@ const routes: Record<string, (req: http.IncomingMessage, res: http.ServerRespons
   '/api/facts/dig': nodeAdapter(r => handleDig(r, deps)),
   '/api/facts/report': nodeAdapter(r => handleReport(r, deps)),
   '/api/facts/admin': nodeAdapter(r => handleAdmin(r, deps)),
+  '/api/me': nodeAdapter(r => handleMe(r, deps)),
+  '/api/leaderboard': nodeAdapter(r => handleBoard(r, deps)),
 };
 
 const server = http.createServer((req, res) => {
