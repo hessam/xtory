@@ -39,3 +39,30 @@ Review UI: open `https://xtory.sbs/#/admin/review`, enter the admin token, work 
 (or run `FACTS_URL=https://xtory.sbs AI_ADMIN_TOKEN=… npm run facts:export`). Details and rules: `docs/adr/003-fact-engine.md`.
 Static facts need nothing: `npm run facts:build` regenerates `src/data/generated/facts.computed.json` (CI fails on drift: `npm run facts:check`).
 Local note: the in-memory store is per function, so the review loop can only be tried end to end against a real Upstash database (unit tests cover it with fakes).
+
+## How to test it
+
+**1. Offline, no keys (always safe):** `npm test` (159 unit tests: limits, cache, kill switch, fact checks, review flow with a fake provider and store) and `npm run test:e2e`.
+
+**2. On your machine with your real key (no Vercel, no Redis):**
+1. Create `.env.local` in the repo root (git-ignored):
+   ```
+   AI_ENABLED=true
+   OPENROUTER_API_KEY=sk-or-...        # your OpenRouter key
+   AI_HASH_SALT=any-long-random-string
+   AI_ADMIN_TOKEN=pick-a-password      # for the review page and /api/ai/usage
+   AI_CHECKER_MODEL=vendor/model-id    # optional; a NON-DeepSeek model from openrouter.ai/models (needed to *show* AI facts)
+   ```
+2. Terminal A: `npm run dev:api` (prints a checklist of what is configured). Terminal B: `npm run dev`.
+3. Open `http://localhost:3000/?ff=server_ai` — with no personal key the AI buttons (e.g. "Who ruled here?") should now be enabled. Click one; click it again for the same year and it is instant (cache).
+4. Usage numbers: `curl -H "Authorization: Bearer pick-a-password" localhost:8787/api/ai/usage`.
+5. Review page: `http://localhost:3000/#/admin/review` (token = `AI_ADMIN_TOKEN`).
+6. Fact engine from the terminal:
+   ```
+   curl -s -XPOST localhost:8787/api/facts/dig -H 'content-type: application/json' \
+        -d '{"kind":"ruler","name":"Yazdgerd III","year":651}'
+   ```
+   Without `AI_CHECKER_MODEL` you get `"facts":[]` and `"pending":N` (written, stored, hidden until you approve them on the review page). With it, checked facts come back with `"badge":"ai_checked"`.
+The dev API keeps everything in memory (one process, so the whole loop works); data is lost when you stop it.
+
+**3. On a Vercel preview (the real thing):** set the env vars for the *Preview* environment (plus the two Upstash ones), redeploy, then repeat step 3-6 against the preview URL. Check `/api/ai/status` returns `{"enabled":true}` first.
