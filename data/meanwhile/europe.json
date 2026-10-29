@@ -1,0 +1,234 @@
+{
+ "id": "europe",
+ "name": {
+  "en": "Europe",
+  "fa": "اروپا"
+ },
+ "dir": "NW",
+ "periods": [
+  {
+   "from": -700,
+   "to": -500,
+   "title": {
+    "en": "Greek colonies and Etruscans",
+    "fa": "شهرکنشین‌های یونانی و اتروسک‌ها"
+   },
+   "line": {
+    "en": "Greek cities plant colonies around the Mediterranean and Black Sea.",
+    "fa": "شهرهای یونانی در مدیترانه و دریای سیاه مستعمره می‌سازند."
+   },
+   "sizeMkm2": null,
+   "sources": [
+    "Cambridge Histories (Ancient / Medieval / Early Modern) for the period"
+   ]
+  },
+  {
+   "from": -500,
+   "to": -336,
+   "title": {
+    "en": "Classical Greece",
+    "fa": "یونان کلاسیک"
+   },
+   "line": {
+    "en": "Athens and Sparta fight Persia, then each other.",
+    "fa": "آتن و اسپارت با ایران و سپس با هم می‌جنگند."
+   },
+   "sizeMkm2": null,
+   "sources": [
+    "Cambridge Histories (Ancient / Medieval / Early Modern) for the period"
+   ]
+  },
+  {
+   "from": -336,
+   "to": -146,
+   "title": {
+    "en": "Macedon and Hellenistic Greece",
+    "fa": "مقدونیه و یونان هلنی"
+   },
+   "line": {
+    "en": "Alexander's successors rule from Greece to India.",
+    "fa": "جانشینان اسکندر از یونان تا هند حکم می‌رانند."
+   },
+   "sizeMkm2": null,
+   "sources": [
+    "Cambridge Histories (Ancient / Medieval / Early Modern) for the period"
+   ]
+  },
+  {
+   "from": -146,
+   "to": 476,
+   "title": {
+    "en": "Europe under Rome",
+    "fa": "اروپا زیر روم"
+   },
+   "line": {
+    "en": "Most of Europe is Roman, behind the Rhine and Danube.",
+    "fa": "بیشتر اروپا رومی است، پشت رود راین و دانوب."
+   },
+   "sizeMkm2": null,
+   "sources": [
+    "Taagepera 1979, Size and duration of empires (Soc. Sci. Hist. 3)"
+   ]
+  },
+  {
+   "from": 476,
+   "to": 800,
+   "title": {
+    "en": "Post-Roman kingdoms",
+    "fa": "پادشاهی‌های پساروم"
+   },
+   "line": {
+    "en": "Franks, Visigoths and Lombards divide the West.",
+    "fa": "فرانک‌ها، ویزیگوت‌ها و لومبارد‌ها غرب را میان خود بخش می‌کنند."
+   },
+   "sizeMkm2": null,
+   "sources": [
+    "Cambridge Histories (Ancient / Medieval / Early Modern) for the period"
+   ]
+  },
+  {
+   "from": 800,
+   "to": 843,
+   "title": {
+    "en": "Carolingian Empire",
+    "fa": "امپراتوری کارولنژی"
+   },
+   "line": {
+    "en": "Charlemagne is crowned emperor in 800; Harun al-Rashid sends him an elephant.",
+    "fa": "شارلمانی در ۸۰۰ امپراتور می‌شود؛ هارون‌الرشید برایش فیلی می‌فرستد."
+   },
+   "sizeMkm2": 1.1,
+   "sources": [
+    "Taagepera 1997, Expansion and contraction patterns of large polities (Int. Studies Q. 41)"
+   ]
+  },
+  {
+   "from": 843,
+   "to": 1000,
+   "title": {
+    "en": "Divided Francia and the Vikings",
+    "fa": "فرانسیای تقسیم‌شده و وایکینگ‌ها"
+   },
+   "line": {
+    "en": "The empire splits; Vikings raid and trade — as far as the Caspian.",
+    "fa": "امپراتوری تقسیم می‌شود؛ وایکینگ‌ها تا دریای خزر یورش و داد و ستد می‌کنند."
+   },
+   "sizeMkm2": null,
+   "sources": [
+    "Cambridge Histories (Ancient / Medieval / Early Modern) for the period"
+   ]
+  },
+  {
+   "from": 1000,
+   "to": 1300,
+   "title": {
+    "en": "Holy Roman Empire and feudal Europe",
+    "fa": "امپراتوری مقدس روم و اروپای فئودال"
+   },
+   "line": {
+    "en": "Cathedrals, universities and the Crusades.",
+    "fa": "کلیساهای جامع، دانشگاه‌ها و جنگ‌های صلیبی."
+   },
+   "sizeMkm2": 0.9,
+   "sources": [
+    "Cambridge Histories (Ancient / Medieval / Early Modern) for the period"
+   ]
+  },
+  {
+   "from": 1300,
+   "to": 1500,
+   "title": {
+    "en": "Late Middle Ages",
+    "fa": "سده‌های میانی پایانی"
+   },
+   "line": {
+    "en": "The Black Death kills a third of Europe; the Renaissance begins.",
+    "fa": "مرگ سیاه یک‌سوم اروپا را می‌کشد؛ رنسانس آغاز می‌شود."
+   },
+   "sizeMkm2": null,
+   "sources": [
+    "Cambridge Histories (Ancient / Medieval / Early Modern) for the period"
+   ]
+  },
+  {
+   "from": 1500,
+   "to": 1648,
+   "title": {
+    "en": "Renaissance and Reformation",
+    "fa": "رنسانس و اصلاح دینی"
+   },
+   "line": {
+    "en": "Printing, Atlantic empires, religious wars; Safavid Iran trades with Europe.",
+    "fa": "چاپ، امپراتوری‌های آتلانتیک، جنگ‌های مذهبی؛ ایران صفوی با اروپا داد و ستد می‌کند."
+   },
+   "sizeMkm2": null,
+   "sources": [
+    "Cambridge Histories (Ancient / Medieval / Early Modern) for the period"
+   ]
+  },
+  {
+   "from": 1648,
+   "to": 1789,
+   "title": {
+    "en": "Absolutism and Enlightenment",
+    "fa": "استبداد و روشنگری"
+   },
+   "line": {
+    "en": "Louis XIV, Peter the Great, scientific revolution.",
+    "fa": "لویی چهاردهم، پطر کبیر، انقلاب علمی."
+   },
+   "sizeMkm2": null,
+   "sources": [
+    "Cambridge Histories (Ancient / Medieval / Early Modern) for the period"
+   ]
+  },
+  {
+   "from": 1789,
+   "to": 1914,
+   "title": {
+    "en": "Revolutions and industry",
+    "fa": "انقلاب‌ها و صنعت"
+   },
+   "line": {
+    "en": "French Revolution, railways, and European empires reach Iran's borders.",
+    "fa": "انقلاب فرانسه، راه‌آهن و رسیدن امپراتوری‌های اروپایی به مرزهای ایران."
+   },
+   "sizeMkm2": null,
+   "sources": [
+    "Cambridge Histories (Ancient / Medieval / Early Modern) for the period"
+   ]
+  },
+  {
+   "from": 1914,
+   "to": 1945,
+   "title": {
+    "en": "World Wars",
+    "fa": "جنگ‌های جهانی"
+   },
+   "line": {
+    "en": "Two world wars; Iran is occupied in 1941.",
+    "fa": "دو جنگ جهانی؛ ایران در ۱۹۴۱ اشغال می‌شود."
+   },
+   "sizeMkm2": null,
+   "sources": [
+    "Cambridge Histories (Ancient / Medieval / Early Modern) for the period"
+   ]
+  },
+  {
+   "from": 1945,
+   "to": 1980,
+   "title": {
+    "en": "Cold War and integration",
+    "fa": "جنگ سرد و همگرایی"
+   },
+   "line": {
+    "en": "A divided Europe; the Common Market begins.",
+    "fa": "اروپای دوپاره؛ بازار مشترک آغاز می‌شود."
+   },
+   "sizeMkm2": null,
+   "sources": [
+    "Cambridge Histories (Ancient / Medieval / Early Modern) for the period"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,103 @@
+{
+ "eraId": "modern",
+ "title": {
+  "en": "Modern Iran",
+  "fa": "ایران نوین"
+ },
+ "sources": [
+  "Persian history: Cambridge History of Iran (relevant volumes); Encyclopaedia Iranica; Herodotus, Histories (for traditional accounts, marked as such)",
+  "Abrahamian, A History of Modern Iran; Ervand Abrahamian (for 1953 and 1979)"
+ ],
+ "beats": [
+  {
+   "year": 1925,
+   "text": {
+    "en": "Reza Khan is crowned Reza Shah. The Pahlavi dynasty begins; the Trans-Iranian railway is built.",
+    "fa": "رضاخان به‌عنوان رضاشاه تاج می‌گیرد. دودمان پهلوی آغاز می‌شود و راه‌آهن سراسری ساخته می‌شود."
+   },
+   "lens": "pahlavi",
+   "pins": [
+    {
+     "lat": 35.69,
+     "lng": 51.39,
+     "label": {
+      "en": "Tehran",
+      "fa": "تهران"
+     }
+    }
+   ]
+  },
+  {
+   "year": 1935,
+   "text": {
+    "en": "Iran asks the world to use its name, Iran, instead of Persia.",
+    "fa": "ایران از جهان می‌خواهد نام ایران را به‌جای پرشیا به کار ببرد."
+   },
+   "lens": "pahlavi"
+  },
+  {
+   "year": 1941,
+   "text": {
+    "en": "Allied forces occupy Iran. Reza Shah abdicates in favour of his son, Mohammad Reza.",
+    "fa": "نیروهای متفقین ایران را اشغال می‌کنند. رضاشاه به نفع پسرش محمدرضا کناره می‌گیرد."
+   },
+   "lens": "soviet_union",
+   "pins": [
+    {
+     "lat": 35.69,
+     "lng": 51.39,
+     "label": {
+      "en": "Tehran",
+      "fa": "تهران"
+     }
+    }
+   ]
+  },
+  {
+   "year": 1953,
+   "text": {
+    "en": "Prime Minister Mosaddegh nationalises the oil industry. A coup backed by Britain and the United States removes him.",
+    "fa": "دکتر مصدق صنعت نفت را ملی می‌کند. کودتایی با پشتیبانی بریتانیا و آمریکا او را برکنار می‌کند."
+   },
+   "lens": "pahlavi",
+   "pins": [
+    {
+     "lat": 30.34,
+     "lng": 48.3,
+     "label": {
+      "en": "Abadan",
+      "fa": "آبادان"
+     }
+    }
+   ],
+   "ask": {
+    "prompt": {
+     "en": "Abadan, the oil city: tap its region.",
+     "fa": "آبادان، شهر نفت: روی منطقه‌اش بزنید."
+    },
+    "regions": [
+     "khuzestan"
+    ]
+   }
+  },
+  {
+   "year": 1979,
+   "text": {
+    "en": "The Islamic Revolution ends the monarchy. A referendum in April 1979 establishes the Islamic Republic.",
+    "fa": "انقلاب اسلامی سلطنت را پایان می‌دهد. همه‌پرسی فروردین ۱۳۵۸ جمهوری اسلامی را برقرار می‌کند."
+   },
+   "lens": "pahlavi",
+   "pins": [
+    {
+     "lat": 35.69,
+     "lng": 51.39,
+     "label": {
+      "en": "Tehran",
+      "fa": "تهران"
+     }
+    }
+   ]
+  }
+ ],
+ "status": "ai_drafted_unreviewed"
+}

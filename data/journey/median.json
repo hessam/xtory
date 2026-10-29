@@ -1,0 +1,114 @@
+{
+ "eraId": "median",
+ "title": {
+  "en": "The Medes",
+  "fa": "مادها"
+ },
+ "sources": [
+  "Persian history: Cambridge History of Iran (relevant volumes); Encyclopaedia Iranica; Herodotus, Histories (for traditional accounts, marked as such)",
+  "Herodotus, Histories I (traditional account, dates uncertain)"
+ ],
+ "beats": [
+  {
+   "year": -700,
+   "text": {
+    "en": "Tribes of the Zagros unite. Herodotus says the first Median king was Deioces, who built a capital.",
+    "fa": "قبایل زاگرس متحد می‌شوند. هرودوت می‌گوید نخستین شاه ماد دیااکو بود که پایتخت ساخت."
+   },
+   "pins": [
+    {
+     "lat": 34.8,
+     "lng": 48.52,
+     "label": {
+      "en": "Ecbatana (Hamadan)",
+      "fa": "اکباتان (همدان)"
+     }
+    }
+   ]
+  },
+  {
+   "year": -612,
+   "text": {
+    "en": "With Babylon, the Medes destroy Nineveh, the Assyrian capital. The Assyrian empire ends.",
+    "fa": "مادها به همراه بابل، نینوا پایتخت آشور را ویران می‌کنند. امپراتوری آشور پایان می‌یابد."
+   },
+   "lens": "median",
+   "pins": [
+    {
+     "lat": 36.36,
+     "lng": 43.15,
+     "label": {
+      "en": "Nineveh",
+      "fa": "نینوا"
+     }
+    }
+   ],
+   "ask": {
+    "prompt": {
+     "en": "Nineveh was the Assyrian capital. Tap its region.",
+     "fa": "نینوا پایتخت آشور بود. روی منطقه‌اش بزنید."
+    },
+    "regions": [
+     "mesopotamia"
+    ]
+   }
+  },
+  {
+   "year": -600,
+   "text": {
+    "en": "Median kings build Ecbatana (Hamadan) on the Zagros foothills, a capital of palaces and walls.",
+    "fa": "شاهان ماد اکباتان (همدان) را در دامنه زاگرس می‌سازند؛ پایتختی با کاخ و باروها."
+   },
+   "lens": "median",
+   "pins": [
+    {
+     "lat": 34.8,
+     "lng": 48.52,
+     "label": {
+      "en": "Ecbatana (Hamadan)",
+      "fa": "اکباتان (همدان)"
+     }
+    }
+   ]
+  },
+  {
+   "year": -585,
+   "text": {
+    "en": "According to Herodotus, a battle with Lydia stops when an eclipse frightens both sides. The Halys River becomes the border.",
+    "fa": "بنا بر روایت هرودوت، جنگ با لیدی با خورشیدگرفتگی متوقف می‌شود. رود هالیس مرز می‌شود."
+   },
+   "lens": "median",
+   "focus": [
+    "caucasus",
+    "azerbaijan"
+   ]
+  },
+  {
+   "year": -550,
+   "text": {
+    "en": "Cyrus, a Persian vassal of the Medes, revolts and takes Ecbatana. The Median kingdom passes to the Persians.",
+    "fa": "کوروش، سرداری پارسی در خدمت ماد، می‌شورد و اکباتان را می‌گیرد. پادشاهی ماد به پارسیان می‌رسد."
+   },
+   "lens": "achaemenid",
+   "pins": [
+    {
+     "lat": 34.8,
+     "lng": 48.52,
+     "label": {
+      "en": "Ecbatana (Hamadan)",
+      "fa": "اکباتان (همدان)"
+     }
+    },
+    {
+     "lat": 30.2,
+     "lng": 53.18,
+     "label": {
+      "en": "Pasargadae",
+      "fa": "پاسارگاد"
+     }
+    }
+   ]
+  }
+ ],
+ "status": "ai_drafted_unreviewed"
+}

@@ -480,11 +480,21 @@ fact_reviews(fact_id, reviewer, verdict, notes, at)   fact_reports(fact_id, prof
 
 **Guardrails** — Global guardrail 6 in full. Leaderboard shows nickname + points only.
 
+**Status (done, behind `?ff=leaderboard`, needs `?ff=board,discovery,leaderboard`):**
+- [x] `POST /api/me` (`create` / `recover` / `sync` / `nickname` / `delete`, plus `DELETE /api/me`), `GET /api/leaderboard?board=all|week|<eraId>` and `?nick=` (public showcase, named players only). Code: `server/profile/`.
+- [x] Anonymous profile: random id + **8-word recovery code** (256-word list, 64 bits) which is the only credential; stored server-side only as a salted hash. Creation, recovery attempts and sync are rate limited per hashed IP.
+- [x] Nickname: 3–20 chars, letters/digits/`_`/`-`, reserved names, small fa+en profanity list with leet/ZWNJ normalisation (**starter list, extend `BANNED` in `server/profile/nickname.ts`**), unique case/separator-insensitive. Default public name "Explorer #NNNN".
+- [x] Sync is idempotent; points are **recomputed from the inventory on every sync**: +1 per fact, +1 rarity (first 3 claimants), +5 first claimant of an AI fact once it is verified; facts the owner later rejects/disputes stop counting at the next sync (revocation).
+- [x] Anti-cheat: unknown ids rejected; AI facts need the server to have served them to that device (`/api/facts/dig` records `sv:<deviceHash>:<id>`, 2 days); 80 new claims per profile per UTC day; rejects raise an anomaly counter.
+- [x] UI: trophy button beside Discover → profile sheet (join, nickname, show/copy code, restore, tabs All time / This week / per era, sign out, delete) and `#/u/<nickname>` showcase. fa + en, RTL.
+- [ ] Not yet: per-profile anomaly review screen (flags are counted, not shown); leaderboard caching; weekly board history; revocation is lazy (next sync), not pushed.
+- Audit: `server/profile/profile.test.ts › privacy audit` dumps every key/value and log line after a full session and asserts no raw IP, device id or recovery code is present.
+
 **DoD**
-- [ ] Profile, nickname, recovery and deletion tested end-to-end.
-- [ ] Claiming an unserved fact is rejected (automated test).
-- [ ] Weekly board resets correctly (time-travel test).
-- [ ] No raw IP or user key in any table or log (audit query in the PR).
+- [x] Profile, nickname, recovery and deletion tested end-to-end (unit + Playwright).
+- [x] Claiming an unserved fact is rejected (automated test).
+- [x] Weekly board resets correctly (time-travel test).
+- [x] No raw IP or user key in any table or log (audit test above).
 
 ---
 
@@ -505,6 +515,12 @@ fact_reviews(fact_id, reviewer, verdict, notes, at)   fact_reports(fact_id, prof
 
 **Guardrails** — No personal data on cards beyond the chosen nickname. Card text stays inside the
 safe area for Telegram/X/WhatsApp crops.
+
+**Status (done, behind `?ff=share`; full try-out URL `/?ff=board,discovery,leaderboard,share`):**
+- [x] Image cards drawn on a canvas in the browser (`src/share/card.ts`, lazy-loaded): 1080×1350, 96px safe area, Persian shaping by the browser, Vazirmatn/Inter. Shared as a file via Web Share (mobile), PNG download otherwise. Cards: **fact** (Share button on the fact card) and **my collection** (count, points, weekly rank when the weekly tab is open, a found fact as flavour) from the profile sheet.
+- [x] Link unfurls: `/f/:factId` and `/u/:nickname` (rewrites in `vercel.json` → `api/unfurl.js`) return OG/Twitter tags (fa/en by `?lang=` or Accept-Language; HTML-escaped; 404 for unknown/hidden facts and for players without a nickname) and send visitors on to `/?ff=…&fact=<id>` / `#/u/<nick>`. `?fact=` opens that fact card.
+- [x] **Satori spike decision:** not used. Persian shaping in server-side renderers cannot be verified from CI, so OG uses the static brand image (`og-preview.png`) with the Persian/English hook as title/description text; the fully shaped image card is the in-app one.
+- [ ] Open (needs a real phone): Telegram from Android + iPhone, unfurl in Telegram, dark/light Telegram theme check. Per-fact OG images and a weekly-rank-only card are not built.
 
 **DoD**
 - [ ] Sharing a fact to Telegram from Android and iPhone shows image + correct Persian text.
@@ -527,10 +543,16 @@ safe area for Telegram/X/WhatsApp crops.
   Taagepera empire sizes, Seshat, Chandler / Reba et al. city populations — **licenses checked and
   recorded** in `data/meanwhile/SOURCES.md`.
 
+**Status (done, behind `?ff=meanwhile`, e.g. `/?ff=board,meanwhile`; no backend needed):**
+- [x] Dataset `data/meanwhile/*.json`: six neighbours (Rome→Byzantium→Ottomans, China, India, Egypt/Arabia, Europe, plus the Steppe/Russia because the Mongols and Turks shaped Iran), an Iran series, and a largest-city series. Stored as contiguous **periods** (each with bilingual title + line, size in million km², sources) that cover every 25-year bucket from 700 BC to 1979; `snapshotAt(year)` looks the bucket up.
+- [x] Edge arrows for each neighbour (compass direction from Iran) and a **Meanwhile** panel with versus bars (Iran highlighted), the neighbours' one-liners and the world's largest city. fa + en, RTL, Persian digits; lazy-loaded chunk.
+- [x] `data/meanwhile/SOURCES.md` lists every reference and licence note.
+- [ ] **Not human-reviewed**: all figures are AI-drafted rounded estimates (the panel says so). Licences still to be confirmed by the owner (Reba et al.; Seshat deliberately not used, it is non-commercial). Arrows are screen-edge pills, not anchored to the map camera; "notable firsts" are inside the one-liners rather than a separate stat.
+
 **DoD**
-- [ ] Coverage for every 25-year bucket from 700 BC to 1979.
-- [ ] Every metric has a source; licence notes complete.
-- [ ] Works with no backend.
+- [x] Coverage for every 25-year bucket from 700 BC to 1979 (unit test).
+- [~] Every metric has a source (unit test); licence notes written but unconfirmed.
+- [x] Works with no backend (e2e fails on any /api call).
 
 ---
 
@@ -549,8 +571,17 @@ safe area for Telegram/X/WhatsApp crops.
 - Deep links `/journey/:eraId/:beat`. Journey becomes the default mode; Atlas stays one tap away.
 - The Joyride tour is retired (chapter 1 teaches the app).
 
+**Status (rebuilt on the board, behind `?ff=journey`; try `/?ff=journey` — it switches the board on by itself):**
+- First version was a card game beside the map; owner feedback: "a flash card game running in a void". Rebuilt so **the board is the stage**:
+- [x] Every beat is a scene: the timeline **sweeps** to the beat's year (realms change on the way), a realm is **spotlit** (reach lens, others dimmed), story places are **pinned** on the board, the camera **frames** realm + pins (`src/journey/stage.ts` → `MapBoard`). A unit test guarantees every beat does something on the map and every spotlit realm really holds land that year.
+- [x] **"Where?" beats** (one per chapter): the player answers by tapping a region; wrong = red flash + hint, right = green flash; "Show me" after two misses. Each answer is tested against the pin's real position on the board (point-in-polygon).
+- [x] **Map challenge** ends each chapter: three "tap a region ruled by X in year Y" questions **derived from the realm data**, so the answer is always what the board shows; after each answer the true realm lights up. First-try answers → 1–3 stars → next chapter unlocks.
+- [x] Caption is a slim subtitle bar on the map's lower edge (above the bottom sheet on phones); side panels collapse on desktop while a chapter plays; the lens caption is hidden during the journey; journey taps never open the region drawer.
+- [x] 15 chapters (the data has 15 eras, not 16), 76 beats, en + fa; hash deep links `#/journey/<era>/<beat|challenge>`; Joyride tour not started when journey is on.
+- [ ] Not yet: beat markers on the timeline itself, year-to-year border morphing, a reward card in the inventory, 90 s timing, hallway test; content is AI-drafted and unreviewed.
+
 **DoD**
-- [ ] All 16 chapters authored in en + fa; each ≤ 90 s.
+- [~] All chapters authored in en + fa (15 eras, 76 beats; each ≤ 90 s not yet timed).
 - [ ] Hallway test: 4 of 5 non-history people finish chapter 1 and start chapter 2 unprompted.
 - [ ] Deep links open the exact beat; shared from Telegram.
 

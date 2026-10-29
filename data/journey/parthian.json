@@ -1,0 +1,106 @@
+{
+ "eraId": "parthian",
+ "title": {
+  "en": "The Parthians",
+  "fa": "اشکانیان"
+ },
+ "sources": [
+  "Persian history: Cambridge History of Iran (relevant volumes); Encyclopaedia Iranica; Herodotus, Histories (for traditional accounts, marked as such)",
+  "Strabo, Geography; Plutarch, Crassus"
+ ],
+ "beats": [
+  {
+   "year": -141,
+   "text": {
+    "en": "Mithridates I takes Media and Babylonia. The Parthians become the great power between Rome and China.",
+    "fa": "مهرداد یکم ماد و بابل را می‌گیرد. اشکانیان قدرت بزرگ میان روم و چین می‌شوند."
+   },
+   "lens": "parthian",
+   "pins": [
+    {
+     "lat": 34.8,
+     "lng": 48.52,
+     "label": {
+      "en": "Ecbatana (Hamadan)",
+      "fa": "اکباتان (همدان)"
+     }
+    }
+   ]
+  },
+  {
+   "year": -53,
+   "text": {
+    "en": "At Carrhae, the Parthians defeat the Roman general Crassus.",
+    "fa": "در حران، اشکانیان کراسوس سردار رومی را شکست می‌دهند."
+   },
+   "lens": "parthian",
+   "pins": [
+    {
+     "lat": 33.09,
+     "lng": 44.58,
+     "label": {
+      "en": "Ctesiphon",
+      "fa": "تیسفون"
+     }
+    }
+   ]
+  },
+  {
+   "year": 50,
+   "text": {
+    "en": "Silk Road trade links China, Parthia and Rome. Parthia controls the middle links, taxing the caravans.",
+    "fa": "تجارت جاده ابریشم چین، پارت و روم را به هم می‌پیوندد. پارت حلقه میانی را دارد و کاروان‌ها را مالیات می‌گیرد."
+   },
+   "lens": "parthian",
+   "pins": [
+    {
+     "lat": 37.66,
+     "lng": 62.19,
+     "label": {
+      "en": "Merv",
+      "fa": "مرو"
+     }
+    }
+   ]
+  },
+  {
+   "year": 63,
+   "text": {
+    "en": "Rome and Parthia agree a compromise on Armenia, with a Parthian prince crowned in Rome.",
+    "fa": "روم و پارت بر سر ارمنستان به توافق می‌رسند؛ شاهزاده‌ای پارتی در روم تاج می‌گیرد."
+   },
+   "lens": "parthian",
+   "focus": [
+    "caucasus"
+   ]
+  },
+  {
+   "year": 220,
+   "text": {
+    "en": "Ardashir, a ruler of Persis, defeats the last Parthian kings. The Sasanian age begins.",
+    "fa": "اردشیر، فرمانروای پارس، آخرین شاهان اشکانی را شکست می‌دهد. دوران ساسانیان آغاز می‌شود."
+   },
+   "lens": "parthian",
+   "pins": [
+    {
+     "lat": 29.98,
+     "lng": 52.91,
+     "label": {
+      "en": "Istakhr",
+      "fa": "استخر"
+     }
+    }
+   ],
+   "ask": {
+    "prompt": {
+     "en": "Ardashir rises in Persis. Tap Persis.",
+     "fa": "اردشیر در پارس برمی‌خیزد. روی پارس بزنید."
+    },
+    "regions": [
+     "fars"
+    ]
+   }
+  }
+ ],
+ "status": "ai_drafted_unreviewed"
+}

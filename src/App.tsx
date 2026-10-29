@@ -25,7 +25,9 @@ import { DiscoveryLayer } from './discovery/DiscoveryLayer';
 
 // Heavy components — lazy loaded so they never block first paint
 // ff_board swaps the Leaflet map for the strategy-game board (same props)
-const Map        = lazy(() => isFlagOn('board') ? import('./board/MapBoard') : import('./components/MapLeaflet'));
+const Map        = lazy(() => isFlagOn('board') || isFlagOn('journey') ? import('./board/MapBoard') : import('./components/MapLeaflet'));
+const JourneyLayer = lazy(() => import('./journey/JourneyPanel').then(m => ({ default: m.JourneyLayer })));
+const MeanwhileLayer = lazy(() => import('./meanwhile/MeanwhileLayer'));
 const Timeline   = lazy(() => import('./components/Timeline').then(m => ({ default: m.Timeline })));
 const EventsPanel = lazy(() => import('./components/EventsPanel').then(m => ({ default: m.EventsPanel })));
 const BottomSheet = lazy(() => import('./components/BottomSheet').then(m => ({ default: m.BottomSheet })));
@@ -92,6 +94,9 @@ export default function App() {
     return () => mq.removeEventListener('change', on);
   }, []);
   const discoveryOn = useMemo(() => isFlagOn('discovery'), []);
+  const meanwhileOn = useMemo(() => isFlagOn('meanwhile'), []);
+  // Journey replaces the Joyride tour (chapter 1 teaches the app), so the tour is not started when it is on
+  const journeyOn = useMemo(() => isFlagOn('journey'), []);
   const fragOn = useMemo(() => isFlagOn('fragmentation') || isFlagOn('board'), []);
 
   // Auto-dismiss AI error after 6 seconds
@@ -419,7 +424,7 @@ export default function App() {
           <IntroAnimation 
             onComplete={(autoRun) => {
               setIntroComplete(true);
-              if (autoRun) setRunTour(true);
+              if (autoRun && !journeyOn) setRunTour(true);
             }} 
             lang={lang} 
           />
@@ -519,6 +524,8 @@ export default function App() {
             onVazirClick={(vazir) => setSelectedVazir(vazir)}
           />
             {discoveryOn && <DiscoveryLayer year={mapYear} lang={lang} serverAi={serverAi} />}
+            {meanwhileOn && <Suspense fallback={null}><MeanwhileLayer year={mapYear} lang={lang} /></Suspense>}
+            {journeyOn && <Suspense fallback={null}><JourneyLayer lang={lang} year={year} setYear={setYear} onActive={a => { if (a) { setIsLeftPanelOpen(false); setIsRightPanelOpen(false); } }} /></Suspense>}
         </div>
 
         {/* Timeline ─ always highest z-index in the mobile stack */}
@@ -802,6 +809,8 @@ export default function App() {
               onVazirClick={(vazir) => setSelectedVazir(vazir)}
             />
             {discoveryOn && <DiscoveryLayer year={mapYear} lang={lang} serverAi={serverAi} />}
+            {meanwhileOn && <Suspense fallback={null}><MeanwhileLayer year={mapYear} lang={lang} /></Suspense>}
+            {journeyOn && <Suspense fallback={null}><JourneyLayer lang={lang} year={year} setYear={setYear} onActive={a => { if (a) { setIsLeftPanelOpen(false); setIsRightPanelOpen(false); } }} /></Suspense>}
 
             {/* Control Extent Academic Tooltip — bottom-left of map */}
             <div className="absolute bottom-4 left-4 z-50 pointer-events-auto max-w-xs">

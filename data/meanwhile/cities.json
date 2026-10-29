@@ -1,0 +1,318 @@
+{
+ "id": "cities",
+ "note": "Approximate size of the largest city in the world at the start of each entry, thousands of people. Round numbers; see SOURCES.md.",
+ "entries": [
+  {
+   "from": -700,
+   "name": {
+    "en": "Nineveh",
+    "fa": "نینوا"
+   },
+   "pop": 120,
+   "sources": [
+    "Chandler 1987, Four Thousand Years of Urban Growth",
+    "Reba, Reitsma & Seto 2016, Spatializing 6,000 years of global urbanization (Sci. Data 3)"
+   ]
+  },
+  {
+   "from": -600,
+   "name": {
+    "en": "Babylon",
+    "fa": "بابل"
+   },
+   "pop": 150,
+   "sources": [
+    "Chandler 1987, Four Thousand Years of Urban Growth",
+    "Reba, Reitsma & Seto 2016, Spatializing 6,000 years of global urbanization (Sci. Data 3)"
+   ]
+  },
+  {
+   "from": -500,
+   "name": {
+    "en": "Babylon",
+    "fa": "بابل"
+   },
+   "pop": 200,
+   "sources": [
+    "Chandler 1987, Four Thousand Years of Urban Growth",
+    "Reba, Reitsma & Seto 2016, Spatializing 6,000 years of global urbanization (Sci. Data 3)"
+   ]
+  },
+  {
+   "from": -300,
+   "name": {
+    "en": "Pataliputra",
+    "fa": "پاتالی‌پوترا"
+   },
+   "pop": 300,
+   "sources": [
+    "Chandler 1987, Four Thousand Years of Urban Growth",
+    "Reba, Reitsma & Seto 2016, Spatializing 6,000 years of global urbanization (Sci. Data 3)"
+   ]
+  },
+  {
+   "from": -200,
+   "name": {
+    "en": "Alexandria",
+    "fa": "اسکندریه"
+   },
+   "pop": 300,
+   "sources": [
+    "Chandler 1987, Four Thousand Years of Urban Growth",
+    "Reba, Reitsma & Seto 2016, Spatializing 6,000 years of global urbanization (Sci. Data 3)"
+   ]
+  },
+  {
+   "from": -100,
+   "name": {
+    "en": "Rome",
+    "fa": "روم"
+   },
+   "pop": 400,
+   "sources": [
+    "Chandler 1987, Four Thousand Years of Urban Growth",
+    "Reba, Reitsma & Seto 2016, Spatializing 6,000 years of global urbanization (Sci. Data 3)"
+   ]
+  },
+  {
+   "from": 100,
+   "name": {
+    "en": "Rome",
+    "fa": "روم"
+   },
+   "pop": 450,
+   "sources": [
+    "Chandler 1987, Four Thousand Years of Urban Growth",
+    "Reba, Reitsma & Seto 2016, Spatializing 6,000 years of global urbanization (Sci. Data 3)"
+   ]
+  },
+  {
+   "from": 300,
+   "name": {
+    "en": "Rome",
+    "fa": "روم"
+   },
+   "pop": 400,
+   "sources": [
+    "Chandler 1987, Four Thousand Years of Urban Growth",
+    "Reba, Reitsma & Seto 2016, Spatializing 6,000 years of global urbanization (Sci. Data 3)"
+   ]
+  },
+  {
+   "from": 400,
+   "name": {
+    "en": "Constantinople",
+    "fa": "قسطنطنیه"
+   },
+   "pop": 300,
+   "sources": [
+    "Chandler 1987, Four Thousand Years of Urban Growth",
+    "Reba, Reitsma & Seto 2016, Spatializing 6,000 years of global urbanization (Sci. Data 3)"
+   ]
+  },
+  {
+   "from": 500,
+   "name": {
+    "en": "Constantinople",
+    "fa": "قسطنطنیه"
+   },
+   "pop": 400,
+   "sources": [
+    "Chandler 1987, Four Thousand Years of Urban Growth",
+    "Reba, Reitsma & Seto 2016, Spatializing 6,000 years of global urbanization (Sci. Data 3)"
+   ]
+  },
+  {
+   "from": 600,
+   "name": {
+    "en": "Chang'an",
+    "fa": "چانگ‌آن"
+   },
+   "pop": 400,
+   "sources": [
+    "Chandler 1987, Four Thousand Years of Urban Growth",
+    "Reba, Reitsma & Seto 2016, Spatializing 6,000 years of global urbanization (Sci. Data 3)"
+   ]
+  },
+  {
+   "from": 700,
+   "name": {
+    "en": "Chang'an",
+    "fa": "چانگ‌آن"
+   },
+   "pop": 800,
+   "sources": [
+    "Chandler 1987, Four Thousand Years of Urban Growth",
+    "Reba, Reitsma & Seto 2016, Spatializing 6,000 years of global urbanization (Sci. Data 3)"
+   ]
+  },
+  {
+   "from": 800,
+   "name": {
+    "en": "Baghdad",
+    "fa": "بغداد"
+   },
+   "pop": 700,
+   "sources": [
+    "Chandler 1987, Four Thousand Years of Urban Growth",
+    "Reba, Reitsma & Seto 2016, Spatializing 6,000 years of global urbanization (Sci. Data 3)"
+   ]
+  },
+  {
+   "from": 900,
+   "name": {
+    "en": "Baghdad",
+    "fa": "بغداد"
+   },
+   "pop": 900,
+   "sources": [
+    "Chandler 1987, Four Thousand Years of Urban Growth",
+    "Reba, Reitsma & Seto 2016, Spatializing 6,000 years of global urbanization (Sci. Data 3)"
+   ]
+  },
+  {
+   "from": 1000,
+   "name": {
+    "en": "Córdoba",
+    "fa": "قرطبه"
+   },
+   "pop": 450,
+   "sources": [
+    "Chandler 1987, Four Thousand Years of Urban Growth",
+    "Reba, Reitsma & Seto 2016, Spatializing 6,000 years of global urbanization (Sci. Data 3)"
+   ]
+  },
+  {
+   "from": 1100,
+   "name": {
+    "en": "Kaifeng",
+    "fa": "کایفنگ"
+   },
+   "pop": 400,
+   "sources": [
+    "Chandler 1987, Four Thousand Years of Urban Growth",
+    "Reba, Reitsma & Seto 2016, Spatializing 6,000 years of global urbanization (Sci. Data 3)"
+   ]
+  },
+  {
+   "from": 1200,
+   "name": {
+    "en": "Hangzhou",
+    "fa": "هانگژو"
+   },
+   "pop": 255,
+   "sources": [
+    "Chandler 1987, Four Thousand Years of Urban Growth",
+    "Reba, Reitsma & Seto 2016, Spatializing 6,000 years of global urbanization (Sci. Data 3)"
+   ]
+  },
+  {
+   "from": 1300,
+   "name": {
+    "en": "Hangzhou",
+    "fa": "هانگژو"
+   },
+   "pop": 430,
+   "sources": [
+    "Chandler 1987, Four Thousand Years of Urban Growth",
+    "Reba, Reitsma & Seto 2016, Spatializing 6,000 years of global urbanization (Sci. Data 3)"
+   ]
+  },
+  {
+   "from": 1400,
+   "name": {
+    "en": "Nanjing",
+    "fa": "نانجینگ"
+   },
+   "pop": 490,
+   "sources": [
+    "Chandler 1987, Four Thousand Years of Urban Growth",
+    "Reba, Reitsma & Seto 2016, Spatializing 6,000 years of global urbanization (Sci. Data 3)"
+   ]
+  },
+  {
+   "from": 1500,
+   "name": {
+    "en": "Beijing",
+    "fa": "پکن"
+   },
+   "pop": 670,
+   "sources": [
+    "Chandler 1987, Four Thousand Years of Urban Growth",
+    "Reba, Reitsma & Seto 2016, Spatializing 6,000 years of global urbanization (Sci. Data 3)"
+   ]
+  },
+  {
+   "from": 1600,
+   "name": {
+    "en": "Beijing",
+    "fa": "پکن"
+   },
+   "pop": 700,
+   "sources": [
+    "Chandler 1987, Four Thousand Years of Urban Growth",
+    "Reba, Reitsma & Seto 2016, Spatializing 6,000 years of global urbanization (Sci. Data 3)"
+   ]
+  },
+  {
+   "from": 1700,
+   "name": {
+    "en": "Edo",
+    "fa": "ادو"
+   },
+   "pop": 690,
+   "sources": [
+    "Chandler 1987, Four Thousand Years of Urban Growth",
+    "Reba, Reitsma & Seto 2016, Spatializing 6,000 years of global urbanization (Sci. Data 3)"
+   ]
+  },
+  {
+   "from": 1800,
+   "name": {
+    "en": "Beijing",
+    "fa": "پکن"
+   },
+   "pop": 1100,
+   "sources": [
+    "Chandler 1987, Four Thousand Years of Urban Growth",
+    "Reba, Reitsma & Seto 2016, Spatializing 6,000 years of global urbanization (Sci. Data 3)"
+   ]
+  },
+  {
+   "from": 1900,
+   "name": {
+    "en": "London",
+    "fa": "لندن"
+   },
+   "pop": 6500,
+   "sources": [
+    "Chandler 1987, Four Thousand Years of Urban Growth",
+    "Reba, Reitsma & Seto 2016, Spatializing 6,000 years of global urbanization (Sci. Data 3)"
+   ]
+  },
+  {
+   "from": 1950,
+   "name": {
+    "en": "New York",
+    "fa": "نیویورک"
+   },
+   "pop": 12300,
+   "sources": [
+    "Chandler 1987, Four Thousand Years of Urban Growth",
+    "Reba, Reitsma & Seto 2016, Spatializing 6,000 years of global urbanization (Sci. Data 3)"
+   ]
+  },
+  {
+   "from": 1975,
+   "name": {
+    "en": "Tokyo",
+    "fa": "توکیو"
+   },
+   "pop": 20000,
+   "sources": [
+    "Chandler 1987, Four Thousand Years of Urban Growth",
+    "Reba, Reitsma & Seto 2016, Spatializing 6,000 years of global urbanization (Sci. Data 3)"
+   ]
+  }
+ ]
+}

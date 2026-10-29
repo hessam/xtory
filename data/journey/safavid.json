@@ -1,0 +1,113 @@
+{
+ "eraId": "safavid",
+ "title": {
+  "en": "The Safavids",
+  "fa": "صفویان"
+ },
+ "sources": [
+  "Persian history: Cambridge History of Iran (relevant volumes); Encyclopaedia Iranica; Herodotus, Histories (for traditional accounts, marked as such)",
+  "Chardin, Travels in Persia (for Isfahan)"
+ ],
+ "beats": [
+  {
+   "year": 1501,
+   "text": {
+    "en": "Ismail takes Tabriz and proclaims Twelver Shi'ism as the religion of the state.",
+    "fa": "اسماعیل تبریز را می‌گیرد و تشیع دوازده‌امامی را دین رسمی کشور اعلام می‌کند."
+   },
+   "lens": "safavid",
+   "pins": [
+    {
+     "lat": 38.08,
+     "lng": 46.29,
+     "label": {
+      "en": "Tabriz",
+      "fa": "تبریز"
+     }
+    }
+   ]
+  },
+  {
+   "year": 1514,
+   "text": {
+    "en": "At Chaldiran, the Ottoman sultan Selim defeats Ismail. Iran keeps its Shi'i identity.",
+    "fa": "در چالدران، سلطان عثمانی سلیم اسماعیل را شکست می‌دهد. ایران هویت شیعی خود را حفظ می‌کند."
+   },
+   "lens": "safavid",
+   "pins": [
+    {
+     "lat": 39.07,
+     "lng": 44.38,
+     "label": {
+      "en": "Chaldiran",
+      "fa": "چالدران"
+     }
+    }
+   ]
+  },
+  {
+   "year": 1598,
+   "text": {
+    "en": "Shah Abbas I moves the capital to Isfahan, which becomes one of the great cities of the world.",
+    "fa": "شاه عباس یکم پایتخت را به اصفهان می‌برد؛ شهری که یکی از بزرگ‌ترین شهرهای جهان می‌شود."
+   },
+   "lens": "safavid",
+   "pins": [
+    {
+     "lat": 32.65,
+     "lng": 51.67,
+     "label": {
+      "en": "Isfahan",
+      "fa": "اصفهان"
+     }
+    }
+   ],
+   "ask": {
+    "prompt": {
+     "en": "Shah Abbas moves the capital. Tap the region of Isfahan.",
+     "fa": "شاه عباس پایتخت را جابه‌جا می‌کند. روی منطقه اصفهان بزنید."
+    },
+    "regions": [
+     "jibal"
+    ]
+   }
+  },
+  {
+   "year": 1620,
+   "text": {
+    "en": "Trade with Europe grows. English and Dutch merchants buy Persian silk from Gilan.",
+    "fa": "تجارت با اروپا رشد می‌کند. بازرگانان انگلیسی و هلندی ابریشم گیلان را می‌خرند."
+   },
+   "lens": "safavid",
+   "pins": [
+    {
+     "lat": 37.28,
+     "lng": 49.58,
+     "label": {
+      "en": "Rasht (Gilan)",
+      "fa": "رشت (گیلان)"
+     }
+    }
+   ]
+  },
+  {
+   "year": 1722,
+   "text": {
+    "en": "An Afghan army takes Isfahan. The Safavid dynasty collapses.",
+    "fa": "ارتش افغان اصفهان را می‌گیرد. دودمان صفوی فرو می‌پاشد."
+   },
+   "lens": "hotak",
+   "pins": [
+    {
+     "lat": 32.65,
+     "lng": 51.67,
+     "label": {
+      "en": "Isfahan",
+      "fa": "اصفهان"
+     }
+    }
+   ]
+  }
+ ],
+ "status": "ai_drafted_unreviewed"
+}

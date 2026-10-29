@@ -557,4 +557,6 @@
 .board-burn { stroke-dasharray: 1; animation: board-burn .9s ease-out both; }
 @keyframes xtory-pulse { 0%,100% { transform: scale(1); opacity: .9 } 50% { transform: scale(1.8); opacity: .15 } }
 .xtory-pulse { transform-box: fill-box; transform-origin: center; animation: xtory-pulse 2.2s ease-in-out infinite; }
-@media (prefers-reduced-motion: reduce) { .xtory-pulse { animation: none; } .board-cell-in, .board-burn { animation: none; } .board-burn { stroke-dasharray: none; } }
+@keyframes journey-flash { 0% { opacity: 0 } 15% { opacity: 1 } 70% { opacity: 1 } 100% { opacity: .35 } }
+.journey-flash { animation: journey-flash 1.6s ease-out forwards; }
+@media (prefers-reduced-motion: reduce) { .journey-flash { animation: none; } .xtory-pulse { animation: none; } .board-cell-in, .board-burn { animation: none; } .board-burn { stroke-dasharray: none; } }

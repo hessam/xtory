@@ -1,0 +1,250 @@
+{
+ "id": "china",
+ "name": {
+  "en": "China",
+  "fa": "چین"
+ },
+ "dir": "E",
+ "periods": [
+  {
+   "from": -700,
+   "to": -475,
+   "title": {
+    "en": "Spring and Autumn",
+    "fa": "بهار و پاییز"
+   },
+   "line": {
+    "en": "The Zhou kings are figureheads while dozens of states compete.",
+    "fa": "پادشاهان ژو نمادین‌اند و ده‌ها دولت با هم رقابت می‌کنند."
+   },
+   "sizeMkm2": 1.0,
+   "sources": [
+    "Turchin, Adams & Hall 2006, East-West orientation of historical empires (J. World-Systems Res. 12)"
+   ]
+  },
+  {
+   "from": -475,
+   "to": -221,
+   "title": {
+    "en": "Warring States",
+    "fa": "دولت‌های متخاصم"
+   },
+   "line": {
+    "en": "Seven great states fight; Confucius's and Laozi's ideas spread.",
+    "fa": "هفت دولت بزرگ می‌جنگند؛ اندیشه‌های کنفوسیوس و لائوزی گسترش می‌یابد."
+   },
+   "sizeMkm2": 1.5,
+   "sources": [
+    "Turchin, Adams & Hall 2006, East-West orientation of historical empires (J. World-Systems Res. 12)"
+   ]
+  },
+  {
+   "from": -221,
+   "to": -206,
+   "title": {
+    "en": "Qin unifies China",
+    "fa": "چین یکپارچه با چین"
+   },
+   "line": {
+    "en": "The first emperor unifies writing, weights and roads.",
+    "fa": "نخستین امپراتور خط، اوزان و راه‌ها را یکسان می‌کند."
+   },
+   "sizeMkm2": 2.3,
+   "sources": [
+    "Taagepera 1979, Size and duration of empires (Soc. Sci. Hist. 3)"
+   ]
+  },
+  {
+   "from": -206,
+   "to": 220,
+   "title": {
+    "en": "Han Dynasty",
+    "fa": "سلسله هان"
+   },
+   "line": {
+    "en": "The Silk Road opens, linking China to Parthian Iran.",
+    "fa": "جاده ابریشم باز می‌شود و چین را به ایران اشکانی پیوند می‌دهد."
+   },
+   "sizeMkm2": 6.0,
+   "sources": [
+    "Taagepera 1979, Size and duration of empires (Soc. Sci. Hist. 3)"
+   ]
+  },
+  {
+   "from": 220,
+   "to": 581,
+   "title": {
+    "en": "Division",
+    "fa": "دوران تفرقه"
+   },
+   "line": {
+    "en": "Three Kingdoms, then North and South rule separately.",
+    "fa": "سه پادشاهی، سپس شمال و جنوب جداگانه اداره می‌شوند."
+   },
+   "sizeMkm2": 2.5,
+   "sources": [
+    "Turchin, Adams & Hall 2006, East-West orientation of historical empires (J. World-Systems Res. 12)"
+   ]
+  },
+  {
+   "from": 581,
+   "to": 618,
+   "title": {
+    "en": "Sui reunification",
+    "fa": "وحدت سوی"
+   },
+   "line": {
+    "en": "The Grand Canal is dug and China is reunited.",
+    "fa": "کانال بزرگ کنده می‌شود و چین دوباره یکی می‌شود."
+   },
+   "sizeMkm2": 4.6,
+   "sources": [
+    "Turchin, Adams & Hall 2006, East-West orientation of historical empires (J. World-Systems Res. 12)"
+   ]
+  },
+  {
+   "from": 618,
+   "to": 907,
+   "title": {
+    "en": "Tang Dynasty",
+    "fa": "سلسله تانگ"
+   },
+   "line": {
+    "en": "Chang'an is the world's biggest city; the last Sasanians seek refuge here.",
+    "fa": "چانگ‌آن بزرگ‌ترین شهر جهان است؛ واپسین ساسانیان به آن پناه می‌برند."
+   },
+   "sizeMkm2": 5.4,
+   "sources": [
+    "Taagepera 1997, Expansion and contraction patterns of large polities (Int. Studies Q. 41)"
+   ]
+  },
+  {
+   "from": 907,
+   "to": 960,
+   "title": {
+    "en": "Five Dynasties",
+    "fa": "پنج دودمان"
+   },
+   "line": {
+    "en": "Fragmentation after Tang.",
+    "fa": "پراکندگی پس از تانگ."
+   },
+   "sizeMkm2": 2.0,
+   "sources": [
+    "Turchin, Adams & Hall 2006, East-West orientation of historical empires (J. World-Systems Res. 12)"
+   ]
+  },
+  {
+   "from": 960,
+   "to": 1127,
+   "title": {
+    "en": "Northern Song",
+    "fa": "سونگ شمالی"
+   },
+   "line": {
+    "en": "Printing, paper money and gunpowder flourish.",
+    "fa": "چاپ، پول کاغذی و باروت شکوفا می‌شود."
+   },
+   "sizeMkm2": 2.8,
+   "sources": [
+    "Taagepera 1997, Expansion and contraction patterns of large polities (Int. Studies Q. 41)"
+   ]
+  },
+  {
+   "from": 1127,
+   "to": 1279,
+   "title": {
+    "en": "Southern Song and rivals",
+    "fa": "سونگ جنوبی و رقیبان"
+   },
+   "line": {
+    "en": "The Jin hold the north; the Song hold the south.",
+    "fa": "جین‌ها شمال و سونگ‌ها جنوب را دارند."
+   },
+   "sizeMkm2": 2.3,
+   "sources": [
+    "Taagepera 1997, Expansion and contraction patterns of large polities (Int. Studies Q. 41)"
+   ]
+  },
+  {
+   "from": 1279,
+   "to": 1368,
+   "title": {
+    "en": "Mongol Yuan",
+    "fa": "یوآن مغول"
+   },
+   "line": {
+    "en": "Kublai Khan rules China; his cousins rule Iran as Ilkhans.",
+    "fa": "قوبیلای خان بر چین حکم می‌راند؛ پسرعموهایش ایلخانان ایران‌اند."
+   },
+   "sizeMkm2": 11.0,
+   "sources": [
+    "Taagepera 1997, Expansion and contraction patterns of large polities (Int. Studies Q. 41)"
+   ]
+  },
+  {
+   "from": 1368,
+   "to": 1644,
+   "title": {
+    "en": "Ming Dynasty",
+    "fa": "سلسله مینگ"
+   },
+   "line": {
+    "en": "Treasure fleets sail as far as Hormuz and East Africa.",
+    "fa": "ناوگان گنج تا هرمز و شرق آفریقا می‌رود."
+   },
+   "sizeMkm2": 6.5,
+   "sources": [
+    "Taagepera 1997, Expansion and contraction patterns of large polities (Int. Studies Q. 41)"
+   ]
+  },
+  {
+   "from": 1644,
+   "to": 1912,
+   "title": {
+    "en": "Qing Dynasty",
+    "fa": "سلسله چینگ"
+   },
+   "line": {
+    "en": "The largest Chinese empire ever, then the Opium Wars.",
+    "fa": "بزرگ‌ترین امپراتوری چین، سپس جنگ‌های تریاک."
+   },
+   "sizeMkm2": 14.7,
+   "sources": [
+    "Taagepera 1997, Expansion and contraction patterns of large polities (Int. Studies Q. 41)"
+   ]
+  },
+  {
+   "from": 1912,
+   "to": 1949,
+   "title": {
+    "en": "Republic of China",
+    "fa": "جمهوری چین"
+   },
+   "line": {
+    "en": "Warlords, Japanese invasion and civil war.",
+    "fa": "جنگ‌سالاران، حمله ژاپن و جنگ داخلی."
+   },
+   "sizeMkm2": 9.0,
+   "sources": [
+    "Cambridge Histories (Ancient / Medieval / Early Modern) for the period"
+   ]
+  },
+  {
+   "from": 1949,
+   "to": 1980,
+   "title": {
+    "en": "People's Republic",
+    "fa": "جمهوری خلق"
+   },
+   "line": {
+    "en": "A communist state, 9.6 million km².",
+    "fa": "دولتی کمونیستی با ۹٫۶ میلیون کیلومتر مربع."
+   },
+   "sizeMkm2": 9.6,
+   "sources": [
+    "Cambridge Histories (Ancient / Medieval / Early Modern) for the period"
+   ]
+  }
+ ]
+}

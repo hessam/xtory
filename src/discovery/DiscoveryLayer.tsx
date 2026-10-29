@@ -5,7 +5,9 @@ import { badgeOf, type Fact } from '../facts/model';
 import { nextFact, pickSparkles } from './pick';
 import { markFound, openFact, progress, setSparkles, useDiscovery } from './store';
 import { getDeviceId } from '../services/aiTransport';
-import { toPersianDigits } from '../utils/format';
+import { formatYear, toPersianDigits } from '../utils/format';
+import { isFlagOn } from '../lib/flags';
+import { ProfileButton, ProfileSheet } from '../profile/ProfilePanel';
 
 interface Props { year: number; lang: 'en' | 'fa'; /** shared server AI is on → "Dig deeper" can run */ serverAi: boolean }
 const fa = (lang: string) => (lang === 'fa' ? 'font-vazirmatn' : '');
@@ -43,8 +45,15 @@ export const DiscoveryLayer: React.FC<Props> = ({ year, lang, serverAi }) => {
   const [digState, setDigState] = useState<'idle' | 'busy' | 'none' | 'failed'>('idle');
   const [note, setNote] = useState<'' | 'copied' | 'reported'>('');
   const [empty, setEmpty] = useState(false);
+  const boardOn = useMemo(() => isFlagOn('leaderboard'), []);
+  const [profileOpen, setProfileOpen] = useState(false);
   useEffect(() => { setExtra([]); setDigState('idle'); setNote(''); }, [openId]);
   useEffect(() => { setEmpty(false); }, [year]);
+
+  useEffect(() => {
+    const id = new URLSearchParams(window.location.search).get('fact');
+    if (id && factById(id)) openFact(id);   // arriving from a shared link
+  }, []);
 
   const open = openId ? (factById(openId) ?? null) : null;
   const dir = lang === 'fa' ? 'rtl' : 'ltr';
@@ -71,9 +80,19 @@ export const DiscoveryLayer: React.FC<Props> = ({ year, lang, serverAi }) => {
     } catch { setDigState('failed'); }
   };
 
+  const shareOn = useMemo(() => isFlagOn('share'), []);
   const share = async (f: Fact) => {
+    if (shareOn) {
+      try {
+        const { renderCard, shareCard } = await import('../share/card');
+        const blob = await renderCard({ lang, eyebrow: `${lang === 'fa' ? 'واقعیت پنهان' : 'Hidden fact'}${f.year != null ? ' · ' + formatYear(f.year, lang) : ''}`, title: f.hook[lang], body: f.claim[lang], footer: 'xtory.sbs' });
+        const r = await shareCard(blob, `xtory-${f.id}`, f.hook[lang], `${location.origin}/f/${f.id}`);
+        if (r === 'downloaded') setNote('copied');
+        return;
+      } catch { /* fall through to the plain text share */ }
+    }
     const text = `${f.hook[lang]} — Xtory`;
-    const url = typeof location !== 'undefined' ? location.origin : '';
+    const url = typeof location !== 'undefined' ? (shareOn ? `${location.origin}/f/${f.id}` : location.origin) : '';
     try {
       if (navigator.share) { await navigator.share({ text, url }); return; }
       await navigator.clipboard.writeText(`${text} ${url}`);
@@ -90,7 +109,8 @@ export const DiscoveryLayer: React.FC<Props> = ({ year, lang, serverAi }) => {
 
   return (
     <>
-      <div className="absolute left-3 top-3 z-[1000] pointer-events-auto" dir={dir} data-testid="discovery-hud">
+      <div className="absolute left-3 top-3 z-[1000] pointer-events-auto flex items-start gap-2" dir="ltr" data-testid="discovery-hud">
+        <div dir={dir}>
         <button type="button" onClick={discover} data-testid="discover-btn"
                 className="liquid-glass-heavy border border-amber-300/40 rounded-2xl ps-2.5 pe-3 py-1.5 flex items-center gap-2 shadow-xl active:scale-95 calm-transition min-h-[44px]">
           <Sparkles className="w-4 h-4 text-amber-300" aria-hidden />
@@ -103,7 +123,11 @@ export const DiscoveryLayer: React.FC<Props> = ({ year, lang, serverAi }) => {
           </span>
         </button>
         {empty && <p className={`mt-1.5 max-w-[14rem] text-[11px] text-slate-300 liquid-glass rounded-xl px-2.5 py-1.5 ${fa(lang)}`} role="status">{prog.found >= prog.total ? t('all', lang) : t('nothing', lang)}</p>}
+        </div>
+        {boardOn && <ProfileButton lang={lang} onClick={() => setProfileOpen(o => !o)} />}
       </div>
+
+      {boardOn && <ProfileSheet lang={lang} open={profileOpen} onClose={() => setProfileOpen(false)} />}
 
       {open && (
         // phones: the bottom sheet covers the lower map, so the card hangs from the top (clear of the right-hand controls)

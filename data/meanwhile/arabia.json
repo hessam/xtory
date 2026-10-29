@@ -1,0 +1,202 @@
+{
+ "id": "arabia",
+ "name": {
+  "en": "Egypt · Arabia",
+  "fa": "مصر · عربستان"
+ },
+ "dir": "SW",
+ "periods": [
+  {
+   "from": -700,
+   "to": -525,
+   "title": {
+    "en": "Late Period Egypt",
+    "fa": "مصر دوره متأخر"
+   },
+   "line": {
+    "en": "Kushite and Saite pharaohs; Assyria invades.",
+    "fa": "فرعون‌های کوشی و سائیسی؛ آشور حمله می‌کند."
+   },
+   "sizeMkm2": 0.5,
+   "sources": [
+    "Cambridge Histories (Ancient / Medieval / Early Modern) for the period"
+   ]
+  },
+  {
+   "from": -525,
+   "to": -332,
+   "title": {
+    "en": "Persian Egypt",
+    "fa": "مصر ایرانی"
+   },
+   "line": {
+    "en": "Egypt is a satrapy of the Achaemenid Empire.",
+    "fa": "مصر ساتراپی شاهنشاهی هخامنشی است."
+   },
+   "sizeMkm2": null,
+   "sources": [
+    "Cambridge Histories (Ancient / Medieval / Early Modern) for the period"
+   ]
+  },
+  {
+   "from": -332,
+   "to": -30,
+   "title": {
+    "en": "Ptolemaic Egypt",
+    "fa": "مصر بطلمیوسی"
+   },
+   "line": {
+    "en": "Alexandria becomes the world's centre of learning.",
+    "fa": "اسکندریه مرکز دانش جهان می‌شود."
+   },
+   "sizeMkm2": 1.5,
+   "sources": [
+    "Taagepera 1979, Size and duration of empires (Soc. Sci. Hist. 3)"
+   ]
+  },
+  {
+   "from": -30,
+   "to": 632,
+   "title": {
+    "en": "Roman Egypt and pre-Islamic Arabia",
+    "fa": "مصر رومی و عربستان پیش از اسلام"
+   },
+   "line": {
+    "en": "Egypt feeds Rome; Arabia is a web of caravan kingdoms and tribes.",
+    "fa": "مصر روم را سیر می‌کند؛ عربستان شبکه‌ای از پادشاهی‌های کاروانی و قبایل است."
+   },
+   "sizeMkm2": null,
+   "sources": [
+    "Cambridge Histories (Ancient / Medieval / Early Modern) for the period"
+   ]
+  },
+  {
+   "from": 632,
+   "to": 750,
+   "title": {
+    "en": "Rashidun and Umayyad Caliphate",
+    "fa": "خلافت راشدین و اموی"
+   },
+   "line": {
+    "en": "Islam spreads from Spain to the Indus; the Sasanian Empire falls.",
+    "fa": "اسلام از اسپانیا تا سند گسترش می‌یابد؛ شاهنشاهی ساسانی فرومی‌پاشد."
+   },
+   "sizeMkm2": 11.1,
+   "sources": [
+    "Taagepera 1997, Expansion and contraction patterns of large polities (Int. Studies Q. 41)"
+   ]
+  },
+  {
+   "from": 750,
+   "to": 969,
+   "title": {
+    "en": "Abbasid Caliphate",
+    "fa": "خلافت عباسی"
+   },
+   "line": {
+    "en": "Baghdad, with Persian viziers and scholars, leads the world in science.",
+    "fa": "بغداد با وزیران و دانشمندان ایرانی در دانش پیشتاز جهان است."
+   },
+   "sizeMkm2": 9.3,
+   "sources": [
+    "Taagepera 1997, Expansion and contraction patterns of large polities (Int. Studies Q. 41)"
+   ]
+  },
+  {
+   "from": 969,
+   "to": 1171,
+   "title": {
+    "en": "Fatimid Caliphate",
+    "fa": "خلافت فاطمی"
+   },
+   "line": {
+    "en": "Cairo is founded and Al-Azhar opens.",
+    "fa": "قاهره بنیان نهاده می‌شود و الازهر گشوده می‌شود."
+   },
+   "sizeMkm2": 2.0,
+   "sources": [
+    "Cambridge Histories (Ancient / Medieval / Early Modern) for the period"
+   ]
+  },
+  {
+   "from": 1171,
+   "to": 1250,
+   "title": {
+    "en": "Ayyubids",
+    "fa": "ایوبیان"
+   },
+   "line": {
+    "en": "Saladin retakes Jerusalem.",
+    "fa": "صلاح‌الدین بیت‌المقدس را بازمی‌گیرد."
+   },
+   "sizeMkm2": 1.5,
+   "sources": [
+    "Cambridge Histories (Ancient / Medieval / Early Modern) for the period"
+   ]
+  },
+  {
+   "from": 1250,
+   "to": 1517,
+   "title": {
+    "en": "Mamluk Sultanate",
+    "fa": "سلطنت ممالیک"
+   },
+   "line": {
+    "en": "Slave-soldiers stop the Mongols at Ain Jalut (1260).",
+    "fa": "سربازان برده مغولان را در عین جالوت متوقف می‌کنند (۱۲۶۰)."
+   },
+   "sizeMkm2": 1.5,
+   "sources": [
+    "Cambridge Histories (Ancient / Medieval / Early Modern) for the period"
+   ]
+  },
+  {
+   "from": 1517,
+   "to": 1805,
+   "title": {
+    "en": "Ottoman Egypt and Hejaz",
+    "fa": "مصر و حجاز عثمانی"
+   },
+   "line": {
+    "en": "Egypt and Mecca are provinces of the Ottoman Empire.",
+    "fa": "مصر و مکه ایالت‌های امپراتوری عثمانی‌اند."
+   },
+   "sizeMkm2": null,
+   "sources": [
+    "Cambridge Histories (Ancient / Medieval / Early Modern) for the period"
+   ]
+  },
+  {
+   "from": 1805,
+   "to": 1952,
+   "title": {
+    "en": "Muhammad Ali dynasty, Hejaz, Gulf states",
+    "fa": "دودمان محمدعلی، حجاز، خلیج فارس"
+   },
+   "line": {
+    "en": "Modernising Egypt; the Suez Canal (1869); Saudi Arabia is founded (1932).",
+    "fa": "مصر نوسازی می‌شود؛ کانال سوئز (۱۸۶۹)؛ عربستان سعودی بنیان‌گذاری می‌شود (۱۹۳۲)."
+   },
+   "sizeMkm2": null,
+   "sources": [
+    "Cambridge Histories (Ancient / Medieval / Early Modern) for the period"
+   ]
+  },
+  {
+   "from": 1952,
+   "to": 1980,
+   "title": {
+    "en": "Republics and oil states",
+    "fa": "جمهوری‌ها و دولت‌های نفتی"
+   },
+   "line": {
+    "en": "Nasser's Egypt; oil wealth transforms Arabia.",
+    "fa": "مصر ناصر؛ ثروت نفت عربستان را دگرگون می‌کند."
+   },
+   "sizeMkm2": null,
+   "sources": [
+    "Cambridge Histories (Ancient / Medieval / Early Modern) for the period"
+   ]
+  }
+ ]
+}

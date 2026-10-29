@@ -2213,13 +2213,14 @@ function sameOrigin(req, deps) {
   }) || !c.isProduction && /^(localhost|127\.0\.0\.1)(:\d+)?$/.test(host);
 }
 var denied = (d) => fail(d.scope === "daily_budget" ? 503 : 429, d.scope === "daily_budget" ? "budget_exhausted" : "rate_limited", { scope: d.scope, retryAfterSec: d.retryAfterSec }, { "Retry-After": String(d.retryAfterSec) });
-async function gate(req, deps, maxBody = 2048) {
+async function gate(req, deps, maxBody = 2048, methods = ["POST"], needsAi = true) {
   const c = deps.config;
-  if (req.method !== "POST") return { res: fail(405, "method_not_allowed", {}, { Allow: "POST" }) };
-  if (!c.enabled) return { res: fail(503, "ai_disabled") };
-  if (!c.apiKey || !c.hashSalt) return { res: fail(503, "ai_misconfigured") };
+  if (!methods.includes(req.method)) return { res: fail(405, "method_not_allowed", {}, { Allow: methods.join(", ") }) };
+  if (needsAi && !c.enabled) return { res: fail(503, "ai_disabled") };
+  if (needsAi ? !c.apiKey || !c.hashSalt : !c.hashSalt) return { res: fail(503, "ai_misconfigured") };
   if (c.isProduction && !deps.store.durable) return { res: fail(503, "store_unavailable") };
   if (!sameOrigin(req, deps)) return { res: fail(403, "forbidden_origin") };
+  if (req.method === "GET") return { body: {} };
   const raw = await req.text();
   if (new TextEncoder().encode(raw).length > maxBody) return { res: fail(413, "body_too_large") };
   let body;
@@ -2259,6 +2260,8 @@ async function handleDig(req, deps) {
     for (const u of out.usage) await recordUsage(store, { day, hour, task: u.task, cache: "miss", tokensIn: u.tokensIn, tokensOut: u.tokensOut, ok: u.ok, deviceHash: id.deviceHash }).catch(() => {
     });
     if (!out.usage.length) await recordUsage(store, { day, hour, task: "dig_deeper", cache: "hit", tokensIn: 0, tokensOut: 0, ok: true, deviceHash: id.deviceHash }).catch(() => {
+    });
+    for (const f of out.facts) await store.set(`sv:${id.deviceHash}:${f.id}`, "1", 2 * 86400).catch(() => {
     });
     return json(200, { ok: true, facts: out.facts, pending: out.pending, meta: { fromStore: out.fromStore, checker: out.checker } });
   } catch (e) {
@@ -2305,6 +2308,10 @@ var MemoryStore = class {
   /** test helper */
   get size() {
     return this.m.size;
+  }
+  /** test helper: every key and value currently held (privacy audits) */
+  dump() {
+    return { kv: [...this.m].map(([k, e]) => [k, e.v]), sets: [...this.sets].map(([k, v]) => [k, [...v]]), zsets: [...this.zsets].map(([k, v]) => [k, [...v]]) };
   }
   async sadd(key, member) {
     const s = this.sets.get(key) ?? /* @__PURE__ */ new Set();

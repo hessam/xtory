@@ -1,0 +1,111 @@
+{
+ "eraId": "mongol_invasion",
+ "title": {
+  "en": "The Mongol Invasion",
+  "fa": "حمله مغول"
+ },
+ "sources": [
+  "Persian history: Cambridge History of Iran (relevant volumes); Encyclopaedia Iranica; Herodotus, Histories (for traditional accounts, marked as such)",
+  "Juvayni, Tarikh-i Jahangushay; Rashid al-Din, Jami al-tawarikh"
+ ],
+ "beats": [
+  {
+   "year": 1220,
+   "text": {
+    "en": "Genghis Khan destroys the Khwarazmian empire. Bukhara, Samarkand and Nishapur fall in 1220–21.",
+    "fa": "چنگیزخان خوارزمشاهیان را نابود می‌کند. بخارا، سمرقند و نیشابور در ۱۲۲۰–۲۱ سقوط می‌کنند."
+   },
+   "lens": "mongol",
+   "pins": [
+    {
+     "lat": 39.77,
+     "lng": 64.42,
+     "label": {
+      "en": "Bukhara",
+      "fa": "بخارا"
+     }
+    },
+    {
+     "lat": 36.21,
+     "lng": 58.8,
+     "label": {
+      "en": "Nishapur",
+      "fa": "نیشابور"
+     }
+    }
+   ]
+  },
+  {
+   "year": 1258,
+   "text": {
+    "en": "Hulagu founds the Ilkhanate. Baghdad falls in 1258 and the Abbasid caliphate ends.",
+    "fa": "هولاکو ایلخانان را بنیان می‌گذارد. بغداد در ۱۲۵۸ سقوط می‌کند و خلافت عباسی پایان می‌یابد."
+   },
+   "lens": "mongol_ilkhanate",
+   "pins": [
+    {
+     "lat": 33.31,
+     "lng": 44.36,
+     "label": {
+      "en": "Baghdad",
+      "fa": "بغداد"
+     }
+    }
+   ]
+  },
+  {
+   "year": 1295,
+   "text": {
+    "en": "Ghazan converts to Islam. His minister Rashid al-Din rebuilds the state with Persian administrators.",
+    "fa": "غازان اسلام می‌آورد. وزیرش رشیدالدین دولت را با کارگزاران ایرانی بازسازی می‌کند."
+   },
+   "lens": "mongol_ilkhanate",
+   "pins": [
+    {
+     "lat": 38.08,
+     "lng": 46.29,
+     "label": {
+      "en": "Tabriz",
+      "fa": "تبریز"
+     }
+    }
+   ],
+   "ask": {
+    "prompt": {
+     "en": "Tabriz, the Ilkhan capital: tap its region.",
+     "fa": "تبریز، پایتخت ایلخانان: روی منطقه‌اش بزنید."
+    },
+    "regions": [
+     "azerbaijan"
+    ]
+   }
+  },
+  {
+   "year": 1310,
+   "text": {
+    "en": "Rashid al-Din writes a world history, the Jami al-tawarikh, mixing Mongol and Persian sources.",
+    "fa": "رشیدالدین تاریخ جهان جامع‌التواریخ را می‌نویسد که منابع مغولی و ایرانی را می‌آمیزد."
+   },
+   "lens": "mongol_ilkhanate",
+   "pins": [
+    {
+     "lat": 36.43,
+     "lng": 48.8,
+     "label": {
+      "en": "Soltaniyeh",
+      "fa": "سلطانیه"
+     }
+    }
+   ]
+  },
+  {
+   "year": 1335,
+   "text": {
+    "en": "After Abu Said dies without an heir, the Ilkhanate fragments into regional dynasties.",
+    "fa": "پس از مرگ ابوسعید بی‌وارث، ایلخانان به دودمان‌های منطقه‌ای تجزیه می‌شوند."
+   },
+   "lens": "jalayirid"
+  }
+ ],
+ "status": "ai_drafted_unreviewed"
+}

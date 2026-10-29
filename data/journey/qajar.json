@@ -1,0 +1,106 @@
+{
+ "eraId": "qajar",
+ "title": {
+  "en": "The Qajars",
+  "fa": "قاجاریان"
+ },
+ "sources": [
+  "Persian history: Cambridge History of Iran (relevant volumes); Encyclopaedia Iranica; Herodotus, Histories (for traditional accounts, marked as such)",
+  "Treaties of Gulistan (1813) and Turkmenchay (1828)"
+ ],
+ "beats": [
+  {
+   "year": 1796,
+   "text": {
+    "en": "Agha Mohammad Khan is crowned in Tehran, which becomes the Qajar capital.",
+    "fa": "آقامحمدخان در تهران تاج‌گذاری می‌کند؛ تهران پایتخت قاجاریان می‌شود."
+   },
+   "lens": "qajar",
+   "pins": [
+    {
+     "lat": 35.69,
+     "lng": 51.39,
+     "label": {
+      "en": "Tehran",
+      "fa": "تهران"
+     }
+    }
+   ]
+  },
+  {
+   "year": 1813,
+   "text": {
+    "en": "The Treaty of Gulistan gives Russia Georgia and much of the Caucasus.",
+    "fa": "عهدنامه گلستان گرجستان و بخش بزرگی از قفقاز را به روسیه می‌دهد."
+   },
+   "lens": "russian",
+   "focus": [
+    "caucasus"
+   ],
+   "ask": {
+    "prompt": {
+     "en": "Which region did Iran lose to Russia? Tap it.",
+     "fa": "ایران کدام منطقه را به روسیه باخت؟ روی آن بزنید."
+    },
+    "regions": [
+     "caucasus"
+    ]
+   }
+  },
+  {
+   "year": 1828,
+   "text": {
+    "en": "The Treaty of Turkmenchay gives Russia Erivan and Nakhchivan. Many Iranians and Armenians are displaced.",
+    "fa": "عهدنامه ترکمانچای ایروان و نخجوان را به روسیه می‌دهد. بسیاری از ایرانیان و ارامنه آواره می‌شوند."
+   },
+   "lens": "russian",
+   "pins": [
+    {
+     "lat": 40.18,
+     "lng": 44.51,
+     "label": {
+      "en": "Erivan",
+      "fa": "ایروان"
+     }
+    }
+   ]
+  },
+  {
+   "year": 1891,
+   "text": {
+    "en": "The Tobacco Protest: a national boycott forces the Shah to cancel a concession to a British company.",
+    "fa": "اعتراض تنباکو: تحریم سراسری شاه را وادار به لغو امتیاز شرکت انگلیسی می‌کند."
+   },
+   "lens": "qajar",
+   "pins": [
+    {
+     "lat": 35.69,
+     "lng": 51.39,
+     "label": {
+      "en": "Tehran",
+      "fa": "تهران"
+     }
+    }
+   ]
+  },
+  {
+   "year": 1906,
+   "text": {
+    "en": "The Constitutional Revolution opens the first Majles (parliament), and a constitution limits royal power.",
+    "fa": "انقلاب مشروطه نخستین مجلس را می‌گشاید و قانون اساسی قدرت شاه را محدود می‌کند."
+   },
+   "lens": "qajar",
+   "pins": [
+    {
+     "lat": 35.69,
+     "lng": 51.39,
+     "label": {
+      "en": "Tehran",
+      "fa": "تهران"
+     }
+    }
+   ]
+  }
+ ],
+ "status": "ai_drafted_unreviewed"
+}

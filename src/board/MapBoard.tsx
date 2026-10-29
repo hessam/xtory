@@ -20,6 +20,7 @@ import { toPersianDigits } from '../utils/format';
 import { pushToDataLayer } from '../services/tagManager';
 import { FragmentationHud } from '../components/fragmentation/FragmentationHud';
 import { openFact, useDiscovery } from '../discovery/store';
+import { getStage, tapRegion, useStage, type Stage } from '../journey/stage';
 
 type Mode = 'political' | 'family' | 'fragmentation' | 'terrain';
 const W = geometry.width, H = geometry.height;
@@ -53,6 +54,32 @@ const Defs = () => (
     <EmblemDefs />
   </defs>
 );
+
+/** Journey scene on the board: story pins and the answer flash when the player taps a region. */
+const StageLayer = memo(({ stage, view, lang }: { stage: Stage; view: { k: number; s: number }; lang: 'en' | 'fa' }) => {
+  if (!stage.active) return null;
+  const scale = view.s * view.k, font = lang === 'fa' ? 'Vazirmatn, sans-serif' : 'Inter, system-ui, sans-serif';
+  const fb = stage.feedback;
+  return (
+    <svg style={{ ...layerBox, pointerEvents: 'none' }} viewBox={`0 0 ${W} ${H}`} data-testid="journey-stage">
+      {fb && REGION_PATH[fb.regionId] && (
+        <path key={fb.at} d={REGION_PATH[fb.regionId]} className="journey-flash" data-testid={`journey-flash-${fb.ok ? 'ok' : 'no'}`}
+              fill={fb.ok ? '#34d399' : '#f43f5e'} fillOpacity="0.35" stroke={fb.ok ? '#6ee7b7' : '#fda4af'} strokeWidth={3 / scale} />
+      )}
+      {stage.pins.map((p, i) => {
+        const [x, y] = project(p.lat, p.lng);
+        return (
+          <g key={i} data-testid="journey-pin">
+            <circle cx={x} cy={y} r={14 / scale} fill="#34d399" fillOpacity="0.25" className="xtory-pulse" />
+            <circle cx={x} cy={y} r={6 / scale} fill="#34d399" stroke="#fff" strokeWidth={2 / scale} />
+            <text x={x} y={y - 12 / scale} textAnchor="middle" fontFamily={font} fontSize={15 / scale} fontWeight={700}
+                  fill="#ecfdf5" stroke="#04110b" strokeWidth={4 / scale} paintOrder="stroke">{p.label[lang]}</text>
+          </g>
+        );
+      })}
+    </svg>
+  );
+});
 
 const BaseLayer = memo(({ lang }: { lang: 'en' | 'fa' }) => {
   const font = lang === 'fa' ? 'Vazirmatn, sans-serif' : 'Inter, system-ui, sans-serif';
@@ -225,6 +252,7 @@ export default function MapBoard(props: MapProps) {
   const [mode, setMode] = useState<Mode>('political');
   const [view, setView] = useState<View>({ k: 1, s: 0.5 });
   const lens = useLens();
+  const stage = useStage();
   const box = useRef<HTMLDivElement>(null);
   const layer = useRef<HTMLDivElement>(null);
 
@@ -267,6 +295,7 @@ export default function MapBoard(props: MapProps) {
     if (kind === 'emblem') toggleLens(el.getAttribute('data-dyn')!);
     else if (kind === 'cell') {
       const regionId = el.getAttribute('data-region')!;
+      if (tapRegion(regionId)) return;   // the journey is asking "where?": the tap is the answer, not a request for details
       onRegionClick(regionId);
       pushToDataLayer('map_region_click', { region_id: regionId, current_year: year, renderer: 'board' });
     } else if (kind === 'event') { const e = byId.current.events.get(el.getAttribute('data-id')!); if (e) onHistoricalEventClick?.(e); }
@@ -291,15 +320,37 @@ export default function MapBoard(props: MapProps) {
     ro.observe(b); return () => ro.disconnect();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps -- frame once; `camera` is a fresh object each render
 
-  // reach lens → fly to the regions that dynasty held
+  // reach lens → fly to the regions that dynasty held (the journey frames its own scenes)
   useEffect(() => {
-    const b = box.current; if (!lens || !b?.clientWidth) return;
+    const b = box.current; if (!lens || !b?.clientWidth || getStage().active) return;
     const held = [...getRealmsByRegion(year)].filter(([, l]) => l.some(r => r.dynastyId === lens)).map(([id]) => id).filter(id => geometry.regions[id]);
     if (!held.length) return;
     const pts = held.flatMap(id => geometry.regions[id].rings.flat());
     const box4: [number, number, number, number] = [Math.min(...pts.map(p => p[0])), Math.min(...pts.map(p => p[1])), Math.max(...pts.map(p => p[0])), Math.max(...pts.map(p => p[1]))];
     camera.flyTo(camFitBox(box4, b.clientWidth, b.clientHeight, 0.25));
   }, [lens]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // re-frame the journey scene when the map area changes size (e.g. side panels collapse when a chapter starts)
+  const [boxSize, setBoxSize] = useState('');
+  useEffect(() => {
+    const b = box.current; if (!b) return;
+    const ro = new ResizeObserver(() => setBoxSize(`${Math.round(b.clientWidth / 40)}x${Math.round(b.clientHeight / 40)}`));
+    ro.observe(b); return () => ro.disconnect();
+  }, []);
+
+  // journey scene → frame the spotlit realm, the pins and the focus regions; a question shows the whole plateau
+  useEffect(() => {
+    const b = box.current; if (!b?.clientWidth) return;
+    const fit = (box4: [number, number, number, number], pad: number) => camera.flyTo(camFitBox(box4, b.clientWidth, b.clientHeight, pad));
+    if (!stage.active || stage.expect) { fit(PLATEAU_BOX, b.clientWidth < 640 ? 0.1 : 0.04); return; }
+    const held = stage.lens && stage.year != null ? [...getRealmsByRegion(stage.year)].filter(([id, l]) => geometry.regions[id] && l.some(r => r.dynastyId === stage.lens)).map(([id]) => id) : [];
+    const pts: [number, number][] = [...new Set([...held, ...stage.focus])].flatMap(id => geometry.regions[id]?.rings.flat() ?? []) as [number, number][];
+    for (const p of stage.pins) { const [x, y] = project(p.lat, p.lng); pts.push([x - 60, y - 60], [x + 60, y + 60]); }
+    if (!pts.length) return;
+    const x0 = Math.min(...pts.map(p => p[0])), y0 = Math.min(...pts.map(p => p[1])), x1 = Math.max(...pts.map(p => p[0])), y1 = Math.max(...pts.map(p => p[1]));
+    // leave room under the scene for the journey caption, which sits at the bottom of the map
+    fit([x0, y0, x1, y1 + (y1 - y0) * (b.clientWidth < 640 ? 0.55 : 0.3)], 0.14);
+  }, [stage.seq, stage.active ? boxSize : '']); // eslint-disable-line react-hooks/exhaustive-deps
 
   const zoomBy = (f: number) => { const b = box.current!; camera.zoomAtScreen(b.clientWidth / 2, b.clientHeight / 2, f); };
   const reset = () => { const b = box.current!; camera.flyTo(camFitBox(PLATEAU_BOX, b.clientWidth, b.clientHeight, b.clientWidth < 640 ? 0.1 : 0.04)); };
@@ -313,6 +364,7 @@ export default function MapBoard(props: MapProps) {
           <BaseLayer lang={lang} />
           <RealmsLayer cells={cells} mode={mode} lens={lens} counts={counts} />
           <OverlayLayer cells={cells} mode={mode} lens={lens} lang={lang} view={view} tokens={tokens} counts={counts} />
+          <StageLayer stage={stage} view={view} lang={lang} />
         </div>
       </div>
 
